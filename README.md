@@ -1,2 +1,2 @@
 # PlugInk
-Gestore di plugin per test di attacco dei network. 5C 2024/2025 Group 2
+Tool per test di attacchi di rete. 5C 2024/2025 Group 2
