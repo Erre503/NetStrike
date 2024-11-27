@@ -1,1 +1,2 @@
-# Punto d'ingresso per hostare il servizio
+# Punto d'ingresso dell'app
+
