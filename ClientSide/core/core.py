@@ -34,7 +34,10 @@ Questa classe si occupa di gestire la logica centrale per:
         Richiedere dettagli di un plugin.
         Avviare un test.
         Salvare risultati dei test.
-
+        
+Attributes:
+    server_url (str): URL del server a cui inoltrare le richieste.
+    ui_handler (object): Oggetto che gestisce l'aggiornamento dell'interfaccia grafica.
 """
 class ClientCore:
 
@@ -43,7 +46,7 @@ class ClientCore:
 
     Args:
         server_url (str): URL del server a cui inoltrare le richieste.
-        ui_handler (object): Oggetto che gestisce l'aggiornamento dell'interfaccia grafica.
+        ui_handler (UIUpdater): Oggetto che gestisce l'aggiornamento dell'interfaccia grafica.
     """
     def __init__(self, server_url, ui_handler):
         self.server_url = server_url
@@ -61,11 +64,11 @@ class ClientCore:
         - Tipo di aggiornamento non riconosciuto.
     """
     def aggiorna_ui(self, data, update_type):
-        if(update_type == UpdateType.LISTA_PLUGIN):
-            self.ui_handler.update_list(data)
-        elif(update_type == UpdateType.DETTAGLI_PLUGIN):
+        if update_type == UpdateType.LISTA_PLUGIN:
+            self.ui_handler.aggiorna_lista_plugin(data)
+        elif update_type == UpdateType.DETTAGLI_PLUGIN:
             self.ui_handler.update_details(data)
-        elif(update_type == UpdateType.RISULTATI_TEST):
+        elif update_type == UpdateType.RISULTATI_TEST:
             self.ui_handler.update_results(data)
         else:
             raise ValueError(f"Tipo di aggiornamento non riconosciuto: {update_type}")
@@ -131,14 +134,14 @@ class ClientCore:
     Ottiene i dettagli di un plugin disponibile dal server.
     
     Args:
-        nome_plugin (str): Identifica il plugin di cui si richiedono i dettagli.
+        id_plugin (id): Identifica il plugin di cui si richiedono i dettagli.
 
     Effetti:
        - Invia una richiesta POST all'endpoint '/plugin_details'.
        - Aggiorna l'interfaccia grafica con i dati ricevuti.
     """
-    def ottieni_dettagli_plugin(self, nome_plugin):
-        dati = self.invia_richiesta('/plugin_details', 'POST', nome_plugin)
+    def ottieni_dettagli_plugin(self, id_plugin):
+        dati = self.invia_richiesta('/plugin_details', 'POST', id_plugin)
         if dati:
             self.aggiorna_ui(dati, UpdateType.DETTAGLI_PLUGIN)
 
@@ -177,13 +180,84 @@ class ClientCore:
             self.aggiorna_ui(conferma, UpdateType.SALVATAGGIO_RISULTATI)
 
 
+"""
+Gestisce l'aggiornamento dell'interfaccia grafica.
+
+Questa classe fornisce metodi per aggiornare diversi elementi
+dell'interfaccia utente, come la lista dei plugin, i dettagli di un
+plugin selezionato e i risultati dei test eseguiti.
+
+Attributi:
+    ui: Un riferimento all'interfaccia grafica da aggiornare.
+        Questo oggetto rappresenta il framework UI utilizzato, come
+        PyQt, Tkinter o un altro sistema di interfaccia grafica.
+"""
+class UIUpdater:
+    """
+    Inizializza un'istanza di UIUpdater.
+
+    Args:
+        ui: Il riferimento all'interfaccia grafica che sarà aggiornata
+            tramite i metodi di questa classe.
+    """
+    def __init__(self, ui):
+        self.ui = ui
+
+    """
+    Aggiorna la lista dei plugin nell'interfaccia grafica.
+
+    Args:
+        plugins (dict): Dati per aggiornare la lista dei plugin.
+            Struttura attesa:
+            - name (str): Nome del plugin.
+            - id (str): ID univoco del plugin.
+    """
+    def aggiorna_lista_plugin(self, plugins):
+        self.ui.svuota_lista_plugin()
+
+        for plugin in plugins:
+            self.ui.aggiungi_plugin(plugin["name"], plugin["id"])
+
+    """
+    Mostra i dettagli di un plugin selezionato nell'interfaccia grafica.
+
+    Args:
+        plugin_details (dict): Un dizionario contenente i dettagli del plugin.
+            Struttura attesa:
+            - description (str): Descrizione del plugin.
+            - parameters (dict, opzionale): Parametri del plugin come chiave-valore.
+    """
+    def aggiorna_dettagli_plugin(self, plugin_details):
+        self.ui.mostra_dettagli_plugin(
+            name=plugin_details["name"],
+            description=plugin_details["description"],
+            parameters=plugin_details.get("parameters", {})  # Parametri opzionali
+        )
+
+    """
+    Mostra i risultati di un test eseguito nell'interfaccia grafica.
+
+    Args:
+        results (dict): Un dizionario contenente i risultati del test.
+            Struttura attesa:
+            - status (str): Stato del test (es. "success", "failed").
+            - log (str): Log dettagliato del test.
+            - datetime (str): Timestamp del test formattato (es. "YYYY-MM-DD HH:MM:SS").
+    """
+    def aggiorna_risultato_test(self, results):
+        # Estrarre le informazioni (presenza di valori di default se mancanti)
+        status = results.get("status", "unknown")
+        log = results.get("log", "")
+        datetime = results.get("datetime", "N/A")
+
+        # Visualizzare i dati nella UI
+        self.ui.mostra_risultato_test(
+            status=status,
+            log=log,
+            datetime=datetime
+        )
+
 #Piccolo test (ancora da completare)
 if(__name__ == "__main__"):
-    i = ""
-    c = ClientCore('http://127.0.0.1/', None)
-    while(i != "exit"):
-        i = input("Enter command: ")
-        if(i =='0'):
-            print(c.aggiorna_ui(None, UpdateType.RISULTATI_TEST))
-        elif(i == '1'):
-            print(c.invia_richiesta(None))
+    u_h = UIUpdater(ui=None)
+    c = ClientCore(server_url='http://127.0.0.1/', ui_handler=u_h)
