@@ -1,11 +1,13 @@
-# Punto d'ingresso per hostare il servizio
+# Punto d'ingresso del servizio
+from doctest import debug
 
-import mysql.connector
-import connectorPySql
-import dbInitiatior
+from flask import Flask, request, jsonify
 
-host_name = ''
-user_name = ''
-password = ''
-connection = connectorPySql.createServerConnection(host_name, user_name, password)
-dbInitiatior.create_database(connection)
+app = Flask(__name__)
+
+@app.route("/")
+def home():
+    return "Home"
+
+if __name__ == "__main__":
+      app.run(debug = true)
