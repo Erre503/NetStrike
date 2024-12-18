@@ -10,34 +10,41 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI']  = 'sqlite:///sqlite.db'
 db = SQLAlchemy(app)
 
-#creazione delle classi per le tabelle nel database:
+
+
+
+
+#classi per le tabelle nel database:
+
 # plugTable:
-#   id : Integer           //(mi rifiuto di spiegarlo)
+#   id : Integer           
 #   name : String          //nome del plugin
 #   params : String        //parametri modificabili di un plugin 
 #   description : String   //descrizione del plugin
 
-# log:
-#   idLog : Integer        //(mi rifiuto di spiegarlo)
-#   dateLog : String       //data dell'esecuzione
-#   success : Boolean      //esito dell'attacco (riuscito? true:false)
-#   result : String        //Informazioni ottenute dall'attacco sul suo esito
-
-class plugTable(db.Model):
+class PlugTable(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
     params = db.Column(db.String(300), default="")
     description = db.Column(db.String(300), default="Il plugin non esiste")
     def __repr__(self):
         return '<Name %r>' % self.id
-    def to_dict(self):
+    def list(self):
        return { 
            'id': self.id,
-           'name': self.name,
+           'name': self.name}
+    def description(self):
+       return { 
            'params': self.params,
            'description': self.description }
 
-class log(db.Model):
+# log:
+#   idLog : Integer        
+#   dateLog : String       //data dell'esecuzione
+#   success : Boolean      //esito dell'attacco (riuscito? true:false)
+#   result : String        //Informazioni ottenute dall'attacco sul suo esito
+
+class Log(db.Model):
     idLog = db.Column(db.Integer, primary_key=True)
     dateLog = db.Column(db.DateTime, nullable=False)
     success = db.Column(db.Boolean, default=False)
@@ -60,16 +67,26 @@ class log(db.Model):
 def index():
     return "This server is hosting a service and every access is saved, nor the host or the team of development takes accuntabilty for the inoformations collected."
 
-# Funzione per i dettagli del plugin 
+# Funzione per la lista dei plugin
+# Questa funzione permette di chiedere la lista dei plugin con relativi id:
+# la lista consiste di "id" e "nome".
+# La funzione viene eseguita ogni volta che il client viene aperto.
 
-#Interfaccia con la tabella del database che permette di chiedere le informazioni di un plugin tramite id
+@app.route("/plugin_list")
+def plug_table():
+    plugin = PlugTable.query.get() 
+    return jsonify(plugin.list()) 
+
+
+# Funzione per i dettagli del plugin 
+# Questa funzione permette di chiedere la descrizione del plugin tramite id:
+# la lista consiste di "descizione" e "parametri".
+# La funzione viene eseguita ogni volta che il client selezione un plugin
+
 @app.route("/plugin_details")
-def plugTable(id = 0):
-    plugin = plugTable.query.get(id) 
-    if plugin:
-       return jsonify(plugin.to_dict()) 
-    else:
-       return jsonify({'error': 'Plug not found'}), 404
+def plug_table(id = 0):
+    plugin = PlugTable.query.get(id) 
+    return jsonify(plugin.description()) 
 
 
 if __name__ == "__main__":
