@@ -82,7 +82,7 @@ def plug_table(id):
 # la lista consiste di "descizione" e "parametri".
 # La funzione viene eseguita ogni volta che il client selezione un plugin
 
-@app.route("/plugin_details", endpoint='plugin_details')
+@app.route("/plugin_details<int:id>", endpoint='plugin_details')
 def plug_table(id = 0):
     plugin = PlugTable.query.get(id) 
     return jsonify(plugin.description()) 
