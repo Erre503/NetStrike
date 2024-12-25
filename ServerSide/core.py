@@ -2,14 +2,13 @@
 from asyncio.windows_events import NULL
 from doctest import debug
 from email.policy import default
-
+#from core import app, db 
 from flask import Flask, request, jsonify
 from sqlalchemy import Nullable
 from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI']  = 'sqlite:///sqlite.db'
 db = SQLAlchemy(app)
-
 
 
 
@@ -60,9 +59,9 @@ class Log(db.Model):
 
 # Output di default
 
-#output di default all'accesso alla route del server con disclaimer
-#Le persone che hanno partecipato a questo progetto non hanno responsabilità
-#nella raccolta dei dati di chi accede a questo servizio
+# output di default all'accesso alla route del server con disclaimer
+# Le persone che hanno partecipato a questo progetto non hanno responsabilità
+# nella raccolta dei dati di chi accede a questo servizio
 @app.route("/")
 def index():
     return "This server is hosting a service and every access is saved, nor the host or the team of development takes accuntabilty for the inoformations collected."
@@ -72,9 +71,9 @@ def index():
 # la lista consiste di "id" e "nome".
 # La funzione viene eseguita ogni volta che il client viene aperto.
 
-@app.route("/plugin_list")
-def plug_table():
-    plugin = PlugTable.query.get() 
+@app.route("/plugin_list/<int:id>", endpoint='plugin_list')
+def plug_table(id):
+    plugin = PlugTable.query.get(id) 
     return jsonify(plugin.list()) 
 
 
@@ -83,11 +82,12 @@ def plug_table():
 # la lista consiste di "descizione" e "parametri".
 # La funzione viene eseguita ogni volta che il client selezione un plugin
 
-@app.route("/plugin_details")
+@app.route("/plugin_details", endpoint='plugin_details')
 def plug_table(id = 0):
     plugin = PlugTable.query.get(id) 
     return jsonify(plugin.description()) 
 
 
-if __name__ == "__main__":
+if __name__ == "__core__":
       app.run(debug = true)
+
