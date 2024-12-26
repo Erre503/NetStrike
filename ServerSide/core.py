@@ -4,13 +4,13 @@ from doctest import debug
 from email.policy import default
 #from core import app, db 
 from flask import Flask, request, jsonify
-from sqlalchemy import Nullable
+from sqlalchemy import Nullable, null
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import create_engine, Column, Integer, String, Sequence
+from sqlalchemy.ext.declarative import declarative_base
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI']  = 'sqlite:///sqlite.db'
 db = SQLAlchemy(app)
-
-
 
 
 #classi per le tabelle nel database:
@@ -22,7 +22,8 @@ db = SQLAlchemy(app)
 #   description : String   //descrizione del plugin
 
 class PlugTable(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    __tablename__ = 'plugTable'
+    id = db.Column(db.Integer,Sequence('plugin_id_seq'), primary_key=True)
     name = db.Column(db.String(50), nullable=False)
     params = db.Column(db.String(300), default="")
     description = db.Column(db.String(300), default="Il plugin non esiste")
@@ -44,7 +45,8 @@ class PlugTable(db.Model):
 #   result : String        //Informazioni ottenute dall'attacco sul suo esito
 
 class Log(db.Model):
-    idLog = db.Column(db.Integer, primary_key=True)
+    __tablename__ = 'Log'
+    idLog = db.Column(db.Integer,Sequence('logId'), primary_key=True)
     dateLog = db.Column(db.DateTime, nullable=False)
     success = db.Column(db.Boolean, default=False)
     result = db.Column(db.String(300), default="Il test non ha fornito risultati")
@@ -71,9 +73,12 @@ def index():
 # la lista consiste di "id" e "nome".
 # La funzione viene eseguita ogni volta che il client viene aperto.
 
-@app.route("/plugin_list/<int:id>", endpoint='plugin_list')
-def plug_table(id):
-    plugin = PlugTable.query.get(id) 
+@app.route("/plugin_list", endpoint='plugin_list', methods=["GET"])
+def plug_table():
+    id = request.args.get("id", type=int)       #gestione dell'id tramite il metodo http GET
+    plugin = PlugTable.query.get(id)
+    if plugin==None or plugin==any:
+        return "error 404, no such plugin has been found"
     return jsonify(plugin.list()) 
 
 
@@ -82,9 +87,11 @@ def plug_table(id):
 # la lista consiste di "descizione" e "parametri".
 # La funzione viene eseguita ogni volta che il client selezione un plugin
 
-@app.route("/plugin_details<int:id>", endpoint='plugin_details')
+@app.route("/plugin_details", endpoint='plugin_details',  methods=["GET"])
 def plug_table(id = 0):
-    plugin = PlugTable.query.get(id) 
+    plugin = PlugTable.query.get(id)
+    if plugin==None or plugin==any:
+        return "error 404, no such plugin has been found"
     return jsonify(plugin.description()) 
 
 
