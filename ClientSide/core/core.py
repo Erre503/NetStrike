@@ -52,7 +52,6 @@ class ClientCore:
         self.server_url = server_url
         self.ui_handler = ui_handler
 
-
     """
     Invoca metodi del gestore dell'interfaccia grafica per aggiornarla.
     
@@ -240,7 +239,4 @@ class UIUpdater:
             datetime=datetime
         )
 
-#Piccolo test (ancora da completare)
-if(__name__ == "__main__"):
-    u_h = UIUpdater(ui=None)
-    c = ClientCore(server_url='http://127.0.0.1/', ui_handler=u_h)
+
