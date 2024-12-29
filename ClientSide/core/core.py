@@ -110,10 +110,11 @@ class ClientCore:
             if response.status_code == 200:
                 ret = response.json()
             else:
-                # Logga l'errore (opzionale) e restituisci None
+                # Logga l'errore e restituisci None
                 print(f"Errore: {response.status_code}: {response.text}")
 
         except Exception as e:
+            # Logga l'errore e restituisci None
             print(f"Errore durante la richiesta: {e}")
 
         return ret
@@ -161,24 +162,6 @@ class ClientCore:
         risultati  = self.invia_richiesta('/tests_start', 'POST', payload)
         if risultati:
             self.aggiorna_ui(risultati, UpdateType.RISULTATI_TEST)
-
-    """
-    Salva i risultati di un test.
-    
-    Args:
-        nome_plugin (str): Identifica il plugin che si e' utilizzato per il test.
-        risultati (dict): Risultati del test.
-    
-    Effetti:
-        - Invia una richiesta POST all'endpoint '/tests_save'.
-        - Aggiorna l'interfaccia con il risultato del test.
-    """
-    def salva_risultati(self, nome_plugin, risultati):
-        payload = {"nome_plugin": nome_plugin, "risultati": risultati}
-        conferma = self.invia_richiesta('/tests_save', 'POST', payload)
-        if conferma:
-            self.aggiorna_ui(conferma, UpdateType.SALVATAGGIO_RISULTATI)
-
 
 """
 Gestisce l'aggiornamento dell'interfaccia grafica.
