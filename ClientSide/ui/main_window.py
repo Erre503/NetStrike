@@ -1,110 +1,113 @@
-#VERSIONE DA CAMBIARE , GIUSTO PER PROVARE IL CARICAMENTO DEI FILE
 import tkinter as tk
 from tkinter import filedialog, messagebox
 import os
 
-# Variabili globali per memorizzare il percorso dei file
-file_caricato = None
-files_caricati = []
+""" CLASSE DELLA GUI """
+class MainInterfaccia(tk.Frame):
+    def __init__(self, finestraPrincipale, coreApplicazione):
+        super().__init__(finestraPrincipale)  # X inizializzare il frame "finestraPrincipale"
+        self.finestraPrincipale = finestraPrincipale  # X riferirsi al frame 
+        self.coreApplicazione = coreApplicazione  # X collegamento al core
+        self.initUI()  # X definire la gui
 
-def seleziona_file():
-    """Apre la finestra di dialogo per la selezione del file .py"""
-    global file_caricato
+    """ GLI ELEMENTI DELLA GUI """
+    def initUI(self):
+        self.finestraPrincipale.title("PlugInc")  # x il titolo della finestra
+        self.finestraPrincipale.geometry("1000x1000")  # X la dimesione della finestra
 
-    # Finestra di dialogo per la selezione del file
-    file_path = filedialog.askopenfilename(
-        title="Seleziona un file .py",
-        filetypes=[("File Python", "*.py")]
-    )
-    
-    if file_path:
-        # Verifica se il file è già stato caricato
-        if file_path in files_caricati:
-            messagebox.showinfo("Info", "Hai già caricato questo file.")
-            return
-        
-        # Aggiungi il file alla lista dei file caricati
-        files_caricati.append(file_path)
-        aggiorna_lista_files()
-        
-        # Aggiorna il percorso del file caricato
-        file_caricato = file_path
+        """ BOTTONE LOAD """
+        self.bottoneLoad = tk.Button(self, text="LOAD", command=self.caricaPlugin)
+        self.bottoneLoad.pack(pady=10)  # x aggiungere load alla gui
 
-def carica_da_entry(event=None):
-    """Carica il file dal percorso scritto nella casella di testo"""
-    global file_caricato
+        """ BOTTONE CLEAR """
+        self.bottoneClear = tk.Button(self, text="CLEAR", command=self.pulisciPlugin)
+        self.bottoneClear.pack(pady=10) # ...
 
-    # Ottieni il percorso del file dalla casella di testo
-    file_path = input_file.get().strip()
-    
-    if not file_path:
-        messagebox.showwarning("Avviso", "Inserisci un percorso valido.")
-        return
-    
-    # Verifica se il percorso è valido e il file esiste
-    if not os.path.isfile(file_path) or not file_path.endswith('.py'):
-        messagebox.showerror("Errore", "Per favore seleziona un file Python valido.")
-        return
-    
-    # Verifica se il file è già stato caricato
-    if file_path in files_caricati:
-        messagebox.showinfo("Info", "Hai già caricato questo file.")
-        return
-    
-    # Aggiungi il file alla lista dei file caricati
-    files_caricati.append(file_path)
-    aggiorna_lista_files()
-    
-    # Aggiorna il percorso del file caricato
-    file_caricato = file_path
+        """ BOX DEI PLUGIN CARICATI """
+        self.listaPlugin = tk.Listbox(self, selectmode=tk.SINGLE, width=50, height=10)
+        self.listaPlugin.pack(pady=10) # x aggiungere il box alla gui
+        self.listaPlugin.bind("<Double-1>", self.dettagliPlugin) # x fare il doppio click
 
-def aggiorna_lista_files():
-    """Aggiorna la lista dei file caricati nel Listbox"""
-    lista_box.delete(0, tk.END)  # Pulisce la lista
-    for file in files_caricati:
-        lista_box.insert(tk.END, os.path.basename(file))  # Aggiunge il nome del file alla lista
+        """ DETTAGLI DEL TEST """
+        self.testoDettagli = tk.Text(self, height=5, wrap=tk.WORD)
+        self.testoDettagli.pack(pady=10, fill=tk.X) # ...
 
-# Creazione della finestra principale
-finestra = tk.Tk()
-finestra.geometry("1920x1080")  
-finestra.title("PLUG INC") 
-finestra.config(bg='#eeeeee') 
+        """ BOTTONE CONFIGURE """
+        self.bottoneConfigure = tk.Button(self, text="Configure", command=self.configuraPlugin)
+        self.bottoneConfigure.pack(pady=10) # ...
 
-# Etichetta "Plug Inc"
-scrittaInCima = tk.Label(finestra, text="Plug Inc", font=("Arial", 24), bg="white")
-scrittaInCima.place(relx=0.5, rely=0.05, anchor="center") 
+        """ BOTTONE START """
+        self.bottoneStart = tk.Button(self, text="START", command=self.iniziaTest)
+        self.bottoneStart.pack(pady=10) # ...
 
-# Linea orizzontale
-lineaOrizzontale = tk.Canvas(finestra, width=1920, height=2, bg="black", bd=0, highlightthickness=0)
-lineaOrizzontale.place(relx=0.5, rely=0.1, anchor="center") 
+        self.pack()  # x mettere il frame nella gui
 
-# Linea verticale
-lineaVerticale = tk.Canvas(finestra, width=2, height=1150, bg="black", bd=0, highlightthickness=0)
-lineaVerticale.place(relx=0.5, rely=0.65, anchor="center") 
+        """ FUNZIONE X LA BOX DEI PLUGIN """
+        self.aggiornaListaPlugin()
 
-# Sezione a sinistra della linea verticale
-frame_left = tk.Frame(finestra, bg='#eeeeee')
-frame_left.place(relx=0.05, rely=0.3, anchor="nw")  # Spostato vicinissimo al bordo sinistro
+    """ FUNZIONE X PRENDERE LISTA E AGGIORNARLA """
+    def aggiornaListaPlugin(self):
+        self.listaPlugin.delete(0, tk.END)  # X vedere solo i plugin attualmente caricati
+        nomiPlugin = self.coreApplicazione.PluginList()  # X prendere la lista dal Core
+        for nome in nomiPlugin:  # X inserire i nomi dei plugin nella box
+            self.listaPlugin.insert(tk.END, nome)
 
-# Label "LOAD PLUG-IN:"
-label_load = tk.Label(frame_left, text="LOAD PLUG-IN:", font=("Arial", 12), bg='#eeeeee')
-label_load.grid(row=0, column=0, padx=10, pady=10, sticky="w")
+    """ FUNZIONE X APRIRE GESTIONE FILE E SELEZIONARE IL FILE """
+    def caricaPlugin(self):
+        percorsoFile = filedialog.askopenfilename(filetypes=[("Python Files", "*.py")])
+        if percorsoFile:  # Se un file viene selezionato dall'utente
+            try:
+                self.coreApplicazione.carPlugin(percorsoFile)  # X caricare il plugin dal Core
+                self.aggiornaListaPlugin()
+            except Exception as e:
+                messagebox.showerror("Error", f"Errore nel caricamento: {e}")  # X mostrare un errore se qualcosa non va
 
-# Input per il nome del file (sullo stesso livello della riga 0)
-input_file = tk.Entry(frame_left, font=("Arial", 12), width=30)
-input_file.grid(row=1, column=0, padx=10, pady=10)
+    """ FUNZIONE X RIMUOVERE I PLUGIN """
+    def pulisciPlugin(self):
+        try:
+            self.coreApplicazione.rimuoviPlugin()  # X rimuovere i plugin dal Core
+            self.aggiornaListaPlugin()
+        except Exception as e:
+            messagebox.showerror("Error", f"Errore nella rimozione: {e}")  # X mostrare un errore se qualcosa non va
 
-# Bottone "BROWSE"
-button_browse = tk.Button(frame_left, text="BROWSE", font=("Arial", 12), command=seleziona_file)
-button_browse.grid(row=1, column=1, padx=10, pady=10)
+    """ FUNZIONE X MOSTRARE I DETTAGLI DEL PLUGIN """
+    def dettagliPlugin(self, event):
+        pluginSelezionato = self.listaPlugin.get(self.listaPlugin.curselection())  # X ottenre il plugin selezionato
+        dettagliPlugin = self.coreApplicazione.ottieniDettagli(pluginSelezionato)  # Ottiene i dettagli dal core
+        self.testoDettagli.delete(1.0, tk.END)  # Pulisce la TextBox dei dettagli
+        self.testoDettagli.insert(tk.END, dettagliPlugin)  # Inserisce i dettagli del plugin nella TextBox
 
-# Label "AVAILABLE PLUG-IN:" (riga separata dalla Listbox)
-label_available = tk.Label(frame_left, text="AVAILABLE PLUG-IN:", font=("Arial", 12), bg='#eeeeee')
-label_available.grid(row=2, column=0, padx=10, pady=10, sticky="w")
+    """ FUNZIONE X CONFIGURARE I DETTAGLI DEL PLUGIN """
+    def configuraPlugin(self):
+        pluginSelezionato = self.listaPlugin.get(self.listaPlugin.curselection())  # ...
+        if pluginSelezionato:
+            finestraConfig = tk.Toplevel(self)  # X creare una finestra secondaria
+            finestraConfig.title(f"Configurazione di: {pluginSelezionato}")  # X il titolo della finestra
+            finestraConfig.geometry("350x350")  # X la dimesione della finestra
 
-# Lista per visualizzare i file caricati
-lista_box = tk.Listbox(frame_left, width=30, height=10, font=("Arial", 12))
-lista_box.grid(row=3, column=0, columnspan=3, padx=10, pady=10)
+            tk.Label(finestraConfig, text="Parametro del test:").pack(pady=10)  # Label x il parametro da inserire
+            parametriInseriti = tk.Entry(finestraConfig, width=30)  # X scrivere il valore del parametro
+            parametriInseriti.pack(pady=10) # ...
 
-# Avvia la finestra principale
-finestra.mainloop()
+            """ FUNZIONE X INVIARE AL CORE LA CONFIGURAZIONE """
+            def inviaConfigurazione():
+                parametriTest = parametriInseriti.get()  # Ottiene il valore del parametro dal campo di testo
+                try:
+                    self.coreApplicazione.confPlugin(pluginSelezionato, parametriTest)  # X configurare il plugin dal core
+                    finestraConfig.destroy()  # X chiudere la finestra
+                except Exception as e:
+                    messagebox.showerror("Error", f"Errore nella configurazione: {e}")  # X mostrare un errore se qualcosa non va
+
+            """ BOTTONE X INVIARE AL CORE LA CONFIGURAZIONE """
+            tk.Button(finestraConfig, text="Submit", command=inviaConfigurazione).pack(pady=10)
+
+    """ FUNZIONE X AVVIARE IL TEST """
+    def iniziaTest(self):
+        pluginSelezionato = self.listaPlugin.get(self.listaPlugin.curselection())  # ...
+        if pluginSelezionato:
+            try:
+                risultatoTest = self.core.startPlugin(pluginSelezionato)  # X iniziare il test dal core
+                messagebox.showinfo("Test Result", f"RISULTATO: {risultatoTest}")  # X mostrare l'output
+            except Exception as e:
+                messagebox.showerror("Error", f"Errore nell'inzializzazione del test: {e}")  # X mostrare un errore se qualcosa non va
+
