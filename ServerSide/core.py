@@ -64,6 +64,7 @@ class Log(db.Model):
 # output di default all'accesso alla route del server con disclaimer
 # Le persone che hanno partecipato a questo progetto non hanno responsabilità
 # nella raccolta dei dati di chi accede a questo servizio
+
 @app.route("/")
 def index():
     return "This server is hosting a service and every access is saved, nor the host or the team of development takes accuntabilty for the inoformations collected."
@@ -74,12 +75,11 @@ def index():
 # La funzione viene eseguita ogni volta che il client viene aperto.
 
 @app.route("/plugin_list", endpoint='plugin_list', methods=["GET"])
-def plug_table():
-    id = request.args.get("id", type=int)       #gestione dell'id tramite il metodo http GET
-    plugin = PlugTable.query.get(id)
-    if plugin==None or plugin==any:
+def plug_table(): 
+    pluginT = PlugTable.query.all()
+    if pluginT==None or pluginT==any:
         return "error 404, no such plugin has been found"
-    return jsonify(plugin.list()) 
+    return jsonify(pluginT.list()) 
 
 
 # Funzione per i dettagli del plugin 
@@ -89,11 +89,22 @@ def plug_table():
 
 @app.route("/plugin_details", endpoint='plugin_details',  methods=["GET"])
 def plug_table(id = 0):
-    plugin = PlugTable.query.get(id)
+    plugin = PlugTable.query.get(id)    #gestione dell'id tramite il metodo http GET
     if plugin==None or plugin==any:
         return "error 404, no such plugin has been found"
     return jsonify(plugin.description()) 
 
+# Funzione per i dettagli dei log degli attacchi
+# Questa funzione permette di chiedere la lista dei log:
+# la lista consiste in "id" e "name".
+# La funzione viene eseguita ogni volta che il client richiede una cronologia
+
+@app.route("/log_list", endpoint='log_list',  methods=["GET"])
+def log():
+    log = Log.query.all()
+    if log==None or log==any:
+        return "error 404"
+    return jsonify(log.to_dict()) 
 
 if __name__ == "__core__":
       app.run(debug = true)
