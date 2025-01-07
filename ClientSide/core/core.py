@@ -126,7 +126,7 @@ class ClientCore:
        - Aggiorna l'interfaccia grafica con i dati ricevuti.
     """
     def ottieni_lista_plugin(self):
-        dati = self.invia_richiesta('/plugins')
+        dati = self.invia_richiesta('/plugin_list')
         if dati:
             self.aggiorna_ui(dati, UpdateType.LISTA_PLUGIN)
 

@@ -7,7 +7,7 @@ import tkinter as tk
 def main():
     finestra = tk.Tk()
     uihandler = UIUpdater(finestra)
-    c = ClientCore('192.168.10.234', uihandler)
+    c = ClientCore('http://127.0.0.1:5000', uihandler)
     MainInterfaccia(finestra, c)
 
     finestra.mainloop()

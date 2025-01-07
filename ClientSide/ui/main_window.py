@@ -33,14 +33,15 @@ class MainInterfaccia(tk.Frame):
         self.bottoneStart.pack(pady=10)
 
         self.pack()
-        # DEBUG self.aggiornaListaPlugin()
+        self.aggiornaListaPlugin()
 
     def aggiornaListaPlugin(self):
         self.listaPlugin.delete(0, tk.END)
         # Assuming you have a method in ClientCore to get the list of plugins
         nomiPlugin = self.coreApplicazione.ottieni_lista_plugin()  # Update this line
-        for nome in nomiPlugin:
-            self.listaPlugin.insert(tk.END, nome)
+        if nomiPlugin != None:
+            for nome in nomiPlugin:
+                self.listaPlugin.insert(tk.END, nome)
 
     def caricaPlugin(self):
         percorsoFile = filedialog.askopenfilename(filetypes=[("Python Files", "*.py")])
