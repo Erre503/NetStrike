@@ -173,8 +173,8 @@ class ClientCore:
     """
     def aggiungi_plugin(self, file_path):
         try:
-            with open(file_path, 'rb') as file:
-                self.invia_richiesta('/aggiungi_plugin', 'POST', file)
+            with open(file_path, 'r') as file:
+                self.invia_richiesta('/aggiungi_plugin', 'POST', file.read())
 
         except Exception as e:
             print(f"Errore durante il caricamento del plugin: {e}")
