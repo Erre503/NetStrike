@@ -1,17 +1,16 @@
 # Punto d'ingresso dell'app
 from core.core import ClientCore
 from core.core import UIUpdater
-from ui.main_window import UserInterface
+from ui.main_window import MainInterfaccia
+import tkinter as tk
 
-# Dummy implementation
 def main():
-    ui = UserInterface()
+    finestra = tk.Tk()
+    uihandler = UIUpdater(finestra)
+    c = ClientCore('192.168.10.234', uihandler)
+    MainInterfaccia(finestra, c)
 
-    ui_updater = UIUpdater(ui)
-    core_client = ClientCore("127.0.0.1",ui_updater)
-
-    print("\n\tSuccessful start")
-
+    finestra.mainloop()
 
 if __name__ == "__main__":
     main()

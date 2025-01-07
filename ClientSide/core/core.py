@@ -162,6 +162,23 @@ class ClientCore:
         if risultati:
             self.aggiorna_ui(risultati, UpdateType.RISULTATI_TEST)
 
+    """
+    Aggiunge un plugin al server inviando un file .py.
+
+    Args:
+        file_path (str): Il percorso del file .py da caricare.
+
+    Effetti:
+        - Invia una richiesta POST all'endpoint '/aggiungi_plugin'.
+    """
+    def aggiungi_plugin(self, file_path):
+        try:
+            with open(file_path, 'rb') as file:
+                self.invia_richiesta('/aggiungi_plugin', 'POST', file)
+
+        except Exception as e:
+            print(f"Errore durante il caricamento del plugin: {e}")
+
 """
 Gestisce l'aggiornamento dell'interfaccia grafica.
 
