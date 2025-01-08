@@ -31,31 +31,6 @@ def lista_plugin(folder): #crea una lista con tutti i file python all'interno de
             var.append(file)
     return var
 
-def avvia_plugin(): #funzione del diagramma richiesta per avviare il plugin
-    plugin.execute()
-    return 
-
-def creaPlugin(nome_file, contenuto):
-    """
-    Crea un file con il nome e contenuto specificato nella cartella 'plugins'.
-    Si assume che la cartella 'plugins' esista già.
-    -vero se il file rispetta i requisiti 
-    -falso:
-        -non risdpetta i requisiti
-        -è già presente un file con lo stesso nome
-    """
-    # Percorso della cartella 'plugins'
-    cartella_plugins = Path(__file__).resolve().parent.parent / "plugins"
-    
-    # Percorso completo del file
-    percorso_file = os.path.join(cartella_plugins, nome_file)
-    
-    # Crea e scrivi il contenuto nel file
-    with open(percorso_file, "w", encoding="utf-8") as file:
-        file.write(contenuto)
-        print(f"File '{nome_file}' creato con successo nella cartella '{cartella_plugins}'.")
-
-
 if(__name__ == "__main__"):
     print("Quale file PY vuoi eseguire?")
     nome_plugin = input() #il nome per fare i test e' dato in input
