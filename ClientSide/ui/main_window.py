@@ -2,112 +2,99 @@ import tkinter as tk
 from tkinter import filedialog, messagebox
 import os
 
-""" CLASSE DELLA GUI """
 class MainInterfaccia(tk.Frame):
     def __init__(self, finestraPrincipale, coreApplicazione):
-        super().__init__(finestraPrincipale)  # X inizializzare il frame "finestraPrincipale"
-        self.finestraPrincipale = finestraPrincipale  # X riferirsi al frame 
-        self.coreApplicazione = coreApplicazione  # X collegamento al core
-        self.initUI()  # X definire la gui
+        super().__init__(finestraPrincipale)
+        self.finestraPrincipale = finestraPrincipale
+        self.coreApplicazione = coreApplicazione
+        self.initUI()
 
-    """ GLI ELEMENTI DELLA GUI """
     def initUI(self):
-        self.finestraPrincipale.title("PlugInc")  # x il titolo della finestra
-        self.finestraPrincipale.geometry("1000x1000")  # X la dimesione della finestra
+        self.finestraPrincipale.title("PlugInc")
+        self.finestraPrincipale.geometry("1000x1000")
 
-        """ BOTTONE LOAD """
         self.bottoneLoad = tk.Button(self, text="LOAD", command=self.caricaPlugin)
-        self.bottoneLoad.pack(pady=10)  # x aggiungere load alla gui
+        self.bottoneLoad.pack(pady=10)
 
-        """ BOTTONE CLEAR """
         self.bottoneClear = tk.Button(self, text="CLEAR", command=self.pulisciPlugin)
-        self.bottoneClear.pack(pady=10) # ...
+        self.bottoneClear.pack(pady=10)
 
-        """ BOX DEI PLUGIN CARICATI """
         self.listaPlugin = tk.Listbox(self, selectmode=tk.SINGLE, width=50, height=10)
-        self.listaPlugin.pack(pady=10) # x aggiungere il box alla gui
-        self.listaPlugin.bind("<Double-1>", self.dettagliPlugin) # x fare il doppio click
+        self.listaPlugin.pack(pady=10)
+        self.listaPlugin.bind("<Double-1>", self.dettagliPlugin)
 
-        """ DETTAGLI DEL TEST """
         self.testoDettagli = tk.Text(self, height=5, wrap=tk.WORD)
-        self.testoDettagli.pack(pady=10, fill=tk.X) # ...
+        self.testoDettagli.pack(pady=10, fill=tk.X)
 
-        """ BOTTONE CONFIGURE """
         self.bottoneConfigure = tk.Button(self, text="Configure", command=self.configuraPlugin)
-        self.bottoneConfigure.pack(pady=10) # ...
+        self.bottoneConfigure.pack(pady=10)
 
-        """ BOTTONE START """
         self.bottoneStart = tk.Button(self, text="START", command=self.iniziaTest)
-        self.bottoneStart.pack(pady=10) # ...
+        self.bottoneStart.pack(pady=10)
 
-        self.pack()  # x mettere il frame nella gui
-
-        """ FUNZIONE X LA BOX DEI PLUGIN """
+        self.pack()
         self.aggiornaListaPlugin()
 
-    """ FUNZIONE X PRENDERE LISTA E AGGIORNARLA """
     def aggiornaListaPlugin(self):
-        self.listaPlugin.delete(0, tk.END)  # X vedere solo i plugin attualmente caricati
-        nomiPlugin = self.coreApplicazione.PluginList()  # X prendere la lista dal Core
-        for nome in nomiPlugin:  # X inserire i nomi dei plugin nella box
-            self.listaPlugin.insert(tk.END, nome)
+        self.listaPlugin.delete(0, tk.END)
+        # Assuming you have a method in ClientCore to get the list of plugins
+        nomiPlugin = self.coreApplicazione.ottieni_lista_plugin()  # Update this line
+        if nomiPlugin != None:
+            for nome in nomiPlugin:
+                self.listaPlugin.insert(tk.END, nome)
 
-    """ FUNZIONE X APRIRE GESTIONE FILE E SELEZIONARE IL FILE """
     def caricaPlugin(self):
         percorsoFile = filedialog.askopenfilename(filetypes=[("Python Files", "*.py")])
-        if percorsoFile:  # Se un file viene selezionato dall'utente
+        if percorsoFile:
             try:
-                self.coreApplicazione.carPlugin(percorsoFile)  # X caricare il plugin dal Core
+                self.coreApplicazione.aggiungi_plugin(percorsoFile)  # Update this line
                 self.aggiornaListaPlugin()
             except Exception as e:
-                messagebox.showerror("Error", f"Errore nel caricamento: {e}")  # X mostrare un errore se qualcosa non va
+                messagebox.showerror("Error", f"Errore nel caricamento: {e}")
 
-    """ FUNZIONE X RIMUOVERE I PLUGIN """
     def pulisciPlugin(self):
         try:
-            self.coreApplicazione.rimuoviPlugin()  # X rimuovere i plugin dal Core
+            self.coreApplicazione.rimuovi_plugin()  # Update this line
             self.aggiornaListaPlugin()
         except Exception as e:
-            messagebox.showerror("Error", f"Errore nella rimozione: {e}")  # X mostrare un errore se qualcosa non va
+            messagebox.showerror("Error", f"Errore nella rimozione: {e}")
 
-    """ FUNZIONE X MOSTRARE I DETTAGLI DEL PLUGIN """
     def dettagliPlugin(self, event):
-        pluginSelezionato = self.listaPlugin.get(self.listaPlugin.curselection())  # X ottenre il plugin selezionato
-        dettagliPlugin = self.coreApplicazione.ottieniDettagli(pluginSelezionato)  # Ottiene i dettagli dal core
-        self.testoDettagli.delete(1.0, tk.END)  # Pulisce la TextBox dei dettagli
-        self.testoDettagli.insert(tk.END, dettagliPlugin)  # Inserisce i dettagli del plugin nella TextBox
+        pluginSelezionato = self.listaPlugin.get(self.listaPlugin.curselection())
+        dettagliPlugin = self.coreApplicazione.ottieni_dettagli_plugin(pluginSelezionato)  # Update this line
+        self.testoDettagli.delete(1.0, tk.END)
+        self.testoDettagli.insert(tk.END, dettagliPlugin)
 
-    """ FUNZIONE X CONFIGURARE I DETTAGLI DEL PLUGIN """
     def configuraPlugin(self):
-        pluginSelezionato = self.listaPlugin.get(self.listaPlugin.curselection())  # ...
+        pluginSelezionato = self .listaPlugin.get(self.listaPlugin.curselection())
         if pluginSelezionato:
-            finestraConfig = tk.Toplevel(self)  # X creare una finestra secondaria
-            finestraConfig.title(f"Configurazione di: {pluginSelezionato}")  # X il titolo della finestra
-            finestraConfig.geometry("350x350")  # X la dimesione della finestra
+            finestraConfig = tk.Toplevel(self)
+            finestraConfig.title(f"Configurazione di: {pluginSelezionato}")
+            finestraConfig.geometry("350x350")
 
-            tk.Label(finestraConfig, text="Parametro del test:").pack(pady=10)  # Label x il parametro da inserire
-            parametriInseriti = tk.Entry(finestraConfig, width=30)  # X scrivere il valore del parametro
-            parametriInseriti.pack(pady=10) # ...
+            tk.Label(finestraConfig, text="Parametro del test:").pack(pady=10)
+            parametriInseriti = tk.Entry(finestraConfig, width=30)
+            parametriInseriti.pack(pady=10)
 
-            """ FUNZIONE X INVIARE AL CORE LA CONFIGURAZIONE """
             def inviaConfigurazione():
-                parametriTest = parametriInseriti.get()  # Ottiene il valore del parametro dal campo di testo
+                parametriTest = parametriInseriti.get()
                 try:
-                    self.coreApplicazione.confPlugin(pluginSelezionato, parametriTest)  # X configurare il plugin dal core
-                    finestraConfig.destroy()  # X chiudere la finestra
+                    self.coreApplicazione.configura_plugin(pluginSelezionato, parametriTest)  # Update this line
+                    finestraConfig.destroy()
                 except Exception as e:
-                    messagebox.showerror("Error", f"Errore nella configurazione: {e}")  # X mostrare un errore se qualcosa non va
+                    messagebox.showerror("Error", f"Errore nella configurazione: {e}")
 
-            """ BOTTONE X INVIARE AL CORE LA CONFIGURAZIONE """
             tk.Button(finestraConfig, text="Submit", command=inviaConfigurazione).pack(pady=10)
 
-    """ FUNZIONE X AVVIARE IL TEST """
     def iniziaTest(self):
-        pluginSelezionato = self.listaPlugin.get(self.listaPlugin.curselection())  # ...
+        pluginSelezionato = self.listaPlugin.get(self.listaPlugin.curselection())
         if pluginSelezionato:
             try:
-                risultatoTest = self.core.startPlugin(pluginSelezionato)  # X iniziare il test dal core
-                messagebox.showinfo("Test Result", f"RISULTATO: {risultatoTest}")  # X mostrare l'output
+                parametriTest = {}  # You may want to collect parameters from the UI
+                risultatoTest = self.coreApplicazione.avvia_test(pluginSelezionato, parametriTest)  # Update this line
+                self.testoDettagli.delete(1.0, tk.END)
+                self.testoDettagli.insert(tk.END, risultatoTest)
+                messagebox.showinfo("Test Result", f"Test eseguito con successo.")
             except Exception as e:
-                messagebox.showerror("Error", f"Errore nell'inzializzazione del test: {e}")  # X mostrare un errore se qualcosa non va
-
+                messagebox.showerror("Error", f"Errore nell'inizializzazione del test: {e}")
+    
