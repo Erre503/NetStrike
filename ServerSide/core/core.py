@@ -69,7 +69,7 @@ def __init__(self):
 # Output di default
 
 # output di default all'accesso alla route del server con disclaimer
-# Le persone che hanno partecipato a questo progetto non hanno responsabilità
+# Le persone che hanno partecipato a questo progetto non hanno responsabilitï¿½
 # nella raccolta dei dati di chi accede a questo servizio
 
 @app.route("/")
