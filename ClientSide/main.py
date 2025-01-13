@@ -6,9 +6,11 @@ import tkinter as tk
 
 def main():
     finestra = tk.Tk()
-    uihandler = UIUpdater(finestra)
+    uihandler = UIUpdater()
     c = ClientCore('http://127.0.0.1:5000', uihandler)
-    MainInterfaccia(finestra, c)
+    m = MainInterfaccia(finestra, c)
+    uihandler.initUI(m)
+    m.initUI()
 
     finestra.mainloop()
 

@@ -1,13 +1,12 @@
 import tkinter as tk
 from tkinter import filedialog, messagebox
-import os
 
 class MainInterfaccia(tk.Frame):
     def __init__(self, finestraPrincipale, coreApplicazione):
         super().__init__(finestraPrincipale)
         self.finestraPrincipale = finestraPrincipale
         self.coreApplicazione = coreApplicazione
-        self.initUI()
+        self.plugin_files = {}  # Dictionary to store plugin names and their file paths and IDs
 
     def initUI(self):
         self.finestraPrincipale.title("PlugInc")
@@ -37,36 +36,43 @@ class MainInterfaccia(tk.Frame):
 
     def aggiornaListaPlugin(self):
         self.listaPlugin.delete(0, tk.END)
-        # Assuming you have a method in ClientCore to get the list of plugins
-        nomiPlugin = self.coreApplicazione.ottieni_lista_plugin()  # Update this line
-        if nomiPlugin != None:
-            for nome in nomiPlugin:
-                self.listaPlugin.insert(tk.END, nome)
+        self.coreApplicazione.ottieni_lista_plugin()
 
     def caricaPlugin(self):
         percorsoFile = filedialog.askopenfilename(filetypes=[("Python Files", "*.py")])
         if percorsoFile:
             try:
-                self.coreApplicazione.aggiungi_plugin(percorsoFile)  # Update this line
+                # Assuming the ID is generated or retrieved from the core application
+                plugin_id = self.coreApplicazione.aggiungi_plugin(percorsoFile)  # This should return the ID
+                plugin_name = percorsoFile.split('/')[-1]  # Get the file name
+                # Store the file path and ID in the dictionary
+                self.plugin_files[plugin_name] = {'id': plugin_id}
                 self.aggiornaListaPlugin()
             except Exception as e:
                 messagebox.showerror("Error", f"Errore nel caricamento: {e}")
 
     def pulisciPlugin(self):
         try:
-            self.coreApplicazione.rimuovi_plugin()  # Update this line
+            self.coreApplicazione.rimuovi_plugin()
             self.aggiornaListaPlugin()
         except Exception as e:
             messagebox.showerror("Error", f"Errore nella rimozione: {e}")
 
     def dettagliPlugin(self, event):
         pluginSelezionato = self.listaPlugin.get(self.listaPlugin.curselection())
-        dettagliPlugin = self.coreApplicazione.ottieni_dettagli_plugin(pluginSelezionato)  # Update this line
-        self.testoDettagli.delete(1.0, tk.END)
-        self.testoDettagli.insert(tk.END, dettagliPlugin)
+        # Retrieve the file path and ID using the selected plugin name
+        plugin_info = self.plugin_files.get(pluginSelezionato)
+        if plugin_info:
+            plugin_id = plugin_info['id']
+            # Assuming you have a method to get details based on the file path
+            dettagli = self.coreApplicazione.ottieni_dettagli_plugin((str)(plugin_id))  # Use the ID to get details
+            # Display the details
+            self.mostra_dettagli_plugin(plugin_id, dettagli['description'], dettagli['parameters'])
+        else:
+            messagebox.showerror("Error", "No details found for the selected plugin.")
 
     def configuraPlugin(self):
-        pluginSelezionato = self .listaPlugin.get(self.listaPlugin.curselection())
+        pluginSelezionato = self.listaPlugin.get(self.listaPlugin.curselection())
         if pluginSelezionato:
             finestraConfig = tk.Toplevel(self)
             finestraConfig.title(f"Configurazione di: {pluginSelezionato}")
@@ -76,22 +82,29 @@ class MainInterfaccia(tk.Frame):
             parametriInseriti = tk.Entry(finestraConfig, width=30)
             parametriInseriti.pack(pady=10)
 
-            def inviaConfigurazione():
-                parametriTest = parametriInseriti.get()
-                try:
-                    self.coreApplicazione.configura_plugin(pluginSelezionato, parametriTest)  # Update this line
-                    finestraConfig.destroy()
-                except Exception as e:
-                    messagebox.showerror("Error", f"Errore nella configurazione: {e}")
-
-            tk.Button(finestraConfig, text="Submit", command=inviaConfigurazione).pack(pady=10)
-
     def iniziaTest(self):
         pluginSelezionato = self.listaPlugin.get(self.listaPlugin.curselection())
         if pluginSelezionato:
             try:
-                parametriTest = {}  # You may want to collect parameters from the UI
-                risultatoTest = self.coreApplicazione.avvia_test(pluginSelezionato, parametriTest)  # Update this line
-                messagebox.showinfo("Test Result", f"RISULTATO: {risultatoTest}")
+                plugin_info = self.plugin_files.get(pluginSelezionato)
+                if plugin_info:
+                    plugin_id = plugin_info['id']
+                    parametriTest = {}  # You may want to collect parameters from the UI
+                    self.coreApplicazione.avvia_test((str)(plugin_id), parametriTest)
             except Exception as e:
                 messagebox.showerror("Error", f"Errore nell'inizializzazione del test: {e}")
+
+    def svuota_lista_plugin(self):
+        self.listaPlugin.delete(0, tk.END)
+
+    def aggiungi_plugin(self, name, plugin_id):
+        self.listaPlugin.insert(tk.END, name)
+        self.plugin_files[name] = {'id': plugin_id}
+
+    def mostra_dettagli_plugin(self, description, parameters):
+        self.testoDettagli.delete(1.0, tk.END)
+        dettagli = f"Description: {description}\nParameters: {parameters}"
+        self.testoDettagli.insert(tk.END, dettagli)
+
+    def mostra_risultato_test(self, status, log, datetime):
+        messagebox.showinfo("Test Result", f"Status: {status}\nLog: {log}\nDateTime: {datetime}")
