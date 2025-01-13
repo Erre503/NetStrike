@@ -2,12 +2,13 @@
 from asyncio.windows_events import NULL
 from doctest import debug
 from email.policy import default
-import json
 from flask import Flask, request, jsonify
+from numpy import _no_nep50_warning
 from sqlalchemy import Nullable, null
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine, Column, Integer, String, Sequence
 from sqlalchemy.ext.declarative import declarative_base
+import plugin_loader
 #from flask_classful import FlaskView,route   Prossima implementazione
 
 app = Flask(__name__)
@@ -109,17 +110,11 @@ def plug_table(id = 0):
 
 @app.route("/upload_plugin", endpoint='upload_plugin',  methods=["POST"])
 def new_plugin():
-    with open('data.json', 'r') as file:
-        data = json.load(file)
-    if not data or 'name' not in data or 'params' not in data or 'description' not in data:
-        return "error 404, not valid record"
-    new_plugin = PlugTable(
-            name=data['name'],
-            params=data['params'],
-            description=data['description']
-        )
-    db.session.add(new_plugin)
-    db.session.commit()
+    created = plugin_loader.creaPlugin("name",json)
+    if created:
+        new_plugin = ()
+        db.session.add(new_plugin)
+        db.session.commit()
 
 @app.route("/dummy", endpoint='dummy',  methods=["GET"])
 def dummy():
@@ -127,6 +122,7 @@ def dummy():
     db.session.add(new_plugin)
     db.session.commit()
     return "the dummy has been placed"
+
 # Funzione per i dettagli dei log degli attacchi
 # Questa funzione permette di chiedere la lista dei log:
 # la lista consiste in "id" e "name".
