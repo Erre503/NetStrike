@@ -45,11 +45,15 @@ class MainInterfaccia(tk.Frame):
                 # Assuming the ID is generated or retrieved from the core application
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
                 plugin_id = self.coreApplicazione.aggiungi_plugin(percorsoFile)  # This should return the ID
                 plugin_name = percorsoFile.split('/')[-1]  # Get the file name
                 # Store the file path and ID in the dictionary
                 self.plugin_files[plugin_name] = {'id': plugin_id}
                 self.aggiornaListaPlugin()
+=======
+                self.coreApplicazione.aggiungi_plugin(percorsoFile)  # This should return the ID
+>>>>>>> Stashed changes
 =======
                 self.coreApplicazione.aggiungi_plugin(percorsoFile)  # This should return the ID
 >>>>>>> Stashed changes
@@ -75,9 +79,13 @@ class MainInterfaccia(tk.Frame):
             # Assuming you have a method to get details based on the file path
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             dettagli = self.coreApplicazione.ottieni_dettagli_plugin((str)(plugin_id))  # Use the ID to get details
             # Display the details
             self.mostra_dettagli_plugin(plugin_id, dettagli['description'], dettagli['parameters'])
+=======
+            self.coreApplicazione.ottieni_dettagli_plugin((str)(plugin_id))  # Use the ID to get details
+>>>>>>> Stashed changes
 =======
             self.coreApplicazione.ottieni_dettagli_plugin((str)(plugin_id))  # Use the ID to get details
 >>>>>>> Stashed changes
@@ -104,6 +112,10 @@ class MainInterfaccia(tk.Frame):
             try:
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+                print(self.plugin_files)
+>>>>>>> Stashed changes
 =======
                 print(self.plugin_files)
 >>>>>>> Stashed changes
