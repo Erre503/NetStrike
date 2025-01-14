@@ -37,8 +37,9 @@ def lista_plugin():
     return vet  # Restituisce la lista di file Python
 
 # Funzione che esegue la funzione "execute" di un plugin caricato
-def avvia_plugin():
-    plugin.execute()  # Chiama la funzione "execute" del plugin caricato
+def avvia_plugin(nome_plugin):
+    modulo = importlib.import_module(nome_plugin)
+    return modulo.execute()  # Chiama la funzione "execute" del plugin caricato
 
 # Funzione che crea un nuovo plugin con il contenuto specificato
 def creaPlugin(nome_file, contenuto):
@@ -75,8 +76,8 @@ if(__name__ == "__main__"):
     sys.path.append(str(folder))  # Aggiunge la cartella "plugins" alla lista dei percorsi di ricerca dei moduli Python
 
     print("Nome del Plug In da creare: ")
-    nome = input()  # Chiede il nome del plugin da creare
-    print(creaPlugin(nome, "def execute(): print(2)"))  # Crea il plugin con una funzione di esempio
+    nome_plugin = input()  # Chiede il nome del plugin da creare
+    print(creaPlugin(nome_plugin, "def execute(): print(2)"))  # Crea il plugin con una funzione di esempio
 
     # Carica e stampa i nomi di tutti i plugin presenti
     for i in lista_plugin(): 
@@ -86,4 +87,4 @@ if(__name__ == "__main__"):
     plugin = caricaPlugin()  # Viene caricato il modulo del file richiesto
 
     if(plugin != None):  # Se il plugin è stato trovato
-        avvia_plugin()  # Esegui il plugin
+        avvia_plugin(nome_plugin)  # Esegui il plugin
