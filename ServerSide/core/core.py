@@ -146,6 +146,6 @@ def log():
 def start():
     with app.app_context():
         db.create_all()  # This will create the tables again
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True)
 
 # creaPlugin
