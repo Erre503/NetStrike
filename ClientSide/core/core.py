@@ -188,19 +188,7 @@ class ClientCore:
         try:
             with open(file_path, 'r') as file:
                 self.invia_richiesta('/upload_plugin', 'POST', {'file_content': file.read(), 'name': os.path.basename(file_path)})
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-
-=======
             self.ottieni_lista_plugin()
->>>>>>> Stashed changes
-=======
-            self.ottieni_lista_plugin()
->>>>>>> Stashed changes
-=======
-            self.ottieni_lista_plugin()
->>>>>>> Stashed changes
         except Exception as e:
             print(f"Errore durante il caricamento del plugin: {e}")
 
