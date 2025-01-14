@@ -6,9 +6,6 @@ from pathlib import Path  # Per ottenere il percorso assoluto della cartella cor
 
 # Funzione che carica un plugin dal folder "plugins" e lo esegue se esistente
 def caricaPlugin():
-    folder = Path(__file__).resolve().parent.parent / "plugins"  # Imposta il percorso della cartella "plugins"
-    req = "execute"  # Nome della funzione da cercare nel file del plugin
-
     print("Quale file PY vuoi eseguire?")
     nome_plugin = input()  # Chiede il nome del plugin da eseguire
 
@@ -17,7 +14,7 @@ def caricaPlugin():
 
     guardia = False
     for file in os.listdir(folder):  # Esamina tutti i file nella cartella "plugins"
-        if nome_plugin == file[:-3] and file.endswith('.py'):  # Se il nome del file corrisponde
+        if nome_plugin == file[:-3]:  # Se il nome del file corrisponde
             modulo = importlib.import_module(nome_plugin)  # Importa dinamicamente il modulo
             guardia = True
 
@@ -30,16 +27,14 @@ def caricaPlugin():
 # Funzione che restituisce una lista di tutti i file Python nella cartella "plugins"
 def lista_plugin():
     vet = []  # Lista che conterrà i nomi dei file Python
-    folder = Path(__file__).resolve().parent.parent / "plugins"  # Imposta il percorso della cartella "plugins"
     for file in os.listdir(folder):  # Esamina tutti i file nella cartella "plugins"
         if file[:-3] and file.endswith('.py'):  # Se il file è un file Python
             vet.append(file)  # Aggiunge il nome del file alla lista
     return vet  # Restituisce la lista di file Python
 
 # Funzione che esegue la funzione "execute" di un plugin caricato
-def avvia_plugin(nome_plugin):
-    modulo = importlib.import_module(nome_plugin)
-    return modulo.execute()  # Chiama la funzione "execute" del plugin caricato
+def avvia_plugin(plugin):
+    return plugin.execute()  # Chiama la funzione "execute" del plugin caricato
 
 # Funzione che crea un nuovo plugin con il contenuto specificato
 def creaPlugin(nome_file, contenuto):
@@ -47,9 +42,6 @@ def creaPlugin(nome_file, contenuto):
         nome_file = nome_file + ".py"
 
     req = "def execute():"  # La funzione che il file deve contenere
-
-    # Percorso della cartella "plugins"
-    folder = Path(__file__).resolve().parent.parent / "plugins"
     
     # Percorso completo del file
     percorso_file = os.path.join(folder, nome_file)
@@ -77,7 +69,7 @@ if(__name__ == "__main__"):
 
     print("Nome del Plug In da creare: ")
     nome_plugin = input()  # Chiede il nome del plugin da creare
-    print(creaPlugin(nome_plugin, "def execute(): print(2)"))  # Crea il plugin con una funzione di esempio
+    print(creaPlugin(nome_plugin, "def execute(): print(1)"))  # Crea il plugin con una funzione di esempio
 
     # Carica e stampa i nomi di tutti i plugin presenti
     for i in lista_plugin(): 
@@ -87,4 +79,4 @@ if(__name__ == "__main__"):
     plugin = caricaPlugin()  # Viene caricato il modulo del file richiesto
 
     if(plugin != None):  # Se il plugin è stato trovato
-        avvia_plugin(nome_plugin)  # Esegui il plugin
+        avvia_plugin(plugin)  # Esegui il plugin
