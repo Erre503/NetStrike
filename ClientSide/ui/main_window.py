@@ -1,110 +1,104 @@
-#VERSIONE DA CAMBIARE , GIUSTO PER PROVARE IL CARICAMENTO DEI FILE
 import tkinter as tk
 from tkinter import filedialog, messagebox
-import os
 
-# Variabili globali per memorizzare il percorso dei file
-file_caricato = None
-files_caricati = []
+class MainInterfaccia(tk.Frame):
+    def __init__(self, finestraPrincipale, coreApplicazione):
+        super().__init__(finestraPrincipale)
+        self.finestraPrincipale = finestraPrincipale
+        self.coreApplicazione = coreApplicazione
+        self.plugin_files = {}  # Dictionary to store plugin names and their file paths and IDs
 
-def seleziona_file():
-    """Apre la finestra di dialogo per la selezione del file .py"""
-    global file_caricato
+    def initUI(self):
+        self.finestraPrincipale.title("PlugInc")
+        self.finestraPrincipale.geometry("1000x1000")
 
-    # Finestra di dialogo per la selezione del file
-    file_path = filedialog.askopenfilename(
-        title="Seleziona un file .py",
-        filetypes=[("File Python", "*.py")]
-    )
-    
-    if file_path:
-        # Verifica se il file è già stato caricato
-        if file_path in files_caricati:
-            messagebox.showinfo("Info", "Hai già caricato questo file.")
-            return
-        
-        # Aggiungi il file alla lista dei file caricati
-        files_caricati.append(file_path)
-        aggiorna_lista_files()
-        
-        # Aggiorna il percorso del file caricato
-        file_caricato = file_path
+        self.bottoneLoad = tk.Button(self, text="LOAD", command=self.caricaPlugin)
+        self.bottoneLoad.pack(pady=10)
 
-def carica_da_entry(event=None):
-    """Carica il file dal percorso scritto nella casella di testo"""
-    global file_caricato
+        self.bottoneClear = tk.Button(self, text="CLEAR", command=self.pulisciPlugin)
+        self.bottoneClear.pack(pady=10)
 
-    # Ottieni il percorso del file dalla casella di testo
-    file_path = input_file.get().strip()
-    
-    if not file_path:
-        messagebox.showwarning("Avviso", "Inserisci un percorso valido.")
-        return
-    
-    # Verifica se il percorso è valido e il file esiste
-    if not os.path.isfile(file_path) or not file_path.endswith('.py'):
-        messagebox.showerror("Errore", "Per favore seleziona un file Python valido.")
-        return
-    
-    # Verifica se il file è già stato caricato
-    if file_path in files_caricati:
-        messagebox.showinfo("Info", "Hai già caricato questo file.")
-        return
-    
-    # Aggiungi il file alla lista dei file caricati
-    files_caricati.append(file_path)
-    aggiorna_lista_files()
-    
-    # Aggiorna il percorso del file caricato
-    file_caricato = file_path
+        self.listaPlugin = tk.Listbox(self, selectmode=tk.SINGLE, width=50, height=10)
+        self.listaPlugin.pack(pady=10)
+        self.listaPlugin.bind("<Double-1>", self.dettagliPlugin)
 
-def aggiorna_lista_files():
-    """Aggiorna la lista dei file caricati nel Listbox"""
-    lista_box.delete(0, tk.END)  # Pulisce la lista
-    for file in files_caricati:
-        lista_box.insert(tk.END, os.path.basename(file))  # Aggiunge il nome del file alla lista
+        self.testoDettagli = tk.Text(self, height=5, wrap=tk.WORD)
+        self.testoDettagli.pack(pady=10, fill=tk.X)
 
-# Creazione della finestra principale
-finestra = tk.Tk()
-finestra.geometry("1920x1080")  
-finestra.title("PLUG INC") 
-finestra.config(bg='#eeeeee') 
+        self.bottoneConfigure = tk.Button(self, text="Configure", command=self.configuraPlugin)
+        self.bottoneConfigure.pack(pady=10)
 
-# Etichetta "Plug Inc"
-scrittaInCima = tk.Label(finestra, text="Plug Inc", font=("Arial", 24), bg="white")
-scrittaInCima.place(relx=0.5, rely=0.05, anchor="center") 
+        self.bottoneStart = tk.Button(self, text="START", command=self.iniziaTest)
+        self.bottoneStart.pack(pady=10)
 
-# Linea orizzontale
-lineaOrizzontale = tk.Canvas(finestra, width=1920, height=2, bg="black", bd=0, highlightthickness=0)
-lineaOrizzontale.place(relx=0.5, rely=0.1, anchor="center") 
+        self.pack()
+        self.aggiornaListaPlugin()
 
-# Linea verticale
-lineaVerticale = tk.Canvas(finestra, width=2, height=1150, bg="black", bd=0, highlightthickness=0)
-lineaVerticale.place(relx=0.5, rely=0.65, anchor="center") 
+    def aggiornaListaPlugin(self):
+        self.listaPlugin.delete(0, tk.END)
+        self.coreApplicazione.ottieni_lista_plugin()
 
-# Sezione a sinistra della linea verticale
-frame_left = tk.Frame(finestra, bg='#eeeeee')
-frame_left.place(relx=0.05, rely=0.3, anchor="nw")  # Spostato vicinissimo al bordo sinistro
+    def caricaPlugin(self):
+        percorsoFile = filedialog.askopenfilename(filetypes=[("Python Files", "*.py")])
+        if percorsoFile:
+            try:
+                # Assuming the ID is generated or retrieved from the core application
+                self.coreApplicazione.aggiungi_plugin(percorsoFile)  # This should return the ID
+            except Exception as e:
+                messagebox.showerror("Error", f"Errore nel caricamento: {e}")
 
-# Label "LOAD PLUG-IN:"
-label_load = tk.Label(frame_left, text="LOAD PLUG-IN:", font=("Arial", 12), bg='#eeeeee')
-label_load.grid(row=0, column=0, padx=10, pady=10, sticky="w")
+    def pulisciPlugin(self):
+        try:
+            self.coreApplicazione.rimuovi_plugin()
+            self.aggiornaListaPlugin()
+        except Exception as e:
+            messagebox.showerror("Error", f"Errore nella rimozione: {e}")
 
-# Input per il nome del file (sullo stesso livello della riga 0)
-input_file = tk.Entry(frame_left, font=("Arial", 12), width=30)
-input_file.grid(row=1, column=0, padx=10, pady=10)
+    def dettagliPlugin(self, event):
+        pluginSelezionato = self.listaPlugin.get(self.listaPlugin.curselection())
+        # Retrieve the file path and ID using the selected plugin name
+        plugin_info = self.plugin_files.get(pluginSelezionato)
+        if plugin_info:
+            plugin_id = plugin_info['id']
+            # Assuming you have a method to get details based on the file path
+            self.coreApplicazione.ottieni_dettagli_plugin((str)(plugin_id))  # Use the ID to get details
+        else:
+            messagebox.showerror("Error", "No details found for the selected plugin.")
 
-# Bottone "BROWSE"
-button_browse = tk.Button(frame_left, text="BROWSE", font=("Arial", 12), command=seleziona_file)
-button_browse.grid(row=1, column=1, padx=10, pady=10)
+    def configuraPlugin(self):
+        pluginSelezionato = self.listaPlugin.get(self.listaPlugin.curselection())
+        if pluginSelezionato:
+            finestraConfig = tk.Toplevel(self)
+            finestraConfig.title(f"Configurazione di: {pluginSelezionato}")
+            finestraConfig.geometry("350x350")
 
-# Label "AVAILABLE PLUG-IN:" (riga separata dalla Listbox)
-label_available = tk.Label(frame_left, text="AVAILABLE PLUG-IN:", font=("Arial", 12), bg='#eeeeee')
-label_available.grid(row=2, column=0, padx=10, pady=10, sticky="w")
+            tk.Label(finestraConfig, text="Parametro del test:").pack(pady=10)
+            parametriInseriti = tk.Entry(finestraConfig, width=30)
+            parametriInseriti.pack(pady=10)
 
-# Lista per visualizzare i file caricati
-lista_box = tk.Listbox(frame_left, width=30, height=10, font=("Arial", 12))
-lista_box.grid(row=3, column=0, columnspan=3, padx=10, pady=10)
+    def iniziaTest(self):
+        pluginSelezionato = self.listaPlugin.get(self.listaPlugin.curselection())
+        if pluginSelezionato:
+            try:
+                plugin_info = self.plugin_files.get(pluginSelezionato)
+                if plugin_info:
+                    plugin_id = plugin_info['id']
+                    parametriTest = {}  # You may want to collect parameters from the UI
+                    self.coreApplicazione.avvia_test((str)(plugin_id), parametriTest)
+            except Exception as e:
+                messagebox.showerror("Error", f"Errore nell'inizializzazione del test: {e}")
 
-# Avvia la finestra principale
-finestra.mainloop()
+    def svuota_lista_plugin(self):
+        self.listaPlugin.delete(0, tk.END)
+
+    def aggiungi_plugin(self, name, plugin_id):
+        self.listaPlugin.insert(tk.END, name)
+        self.plugin_files[name] = {'id': plugin_id}
+
+    def mostra_dettagli_plugin(self, description, parameters):
+        self.testoDettagli.delete(1.0, tk.END)
+        dettagli = f"Description: {description}\nParameters: {parameters}"
+        self.testoDettagli.insert(tk.END, dettagli)
+
+    def mostra_risultato_test(self, status, log, datetime):
+        messagebox.showinfo("Test Result", f"Status: {status}\nLog: {log}\nDateTime: {datetime}")
