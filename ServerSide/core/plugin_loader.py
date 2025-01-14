@@ -51,7 +51,7 @@ def creaPlugin(nome_file, contenuto):
         nome_file = nome_file + ".py"
 
     req = "def execute():"  # La funzione che il file deve contenere
-
+    folder = Path(__file__).resolve().parent.parent / "plugins"
     # Percorso completo del file
     percorso_file = os.path.join(folder, nome_file)
 
