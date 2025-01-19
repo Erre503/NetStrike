@@ -1,10 +1,8 @@
-from core.core import ServerCore
-import requests
+from core.core import start
+
 
 def main():
-
-    c = ServerCore();
-    
+    start()
 
 
 if __name__ == "__main__":
