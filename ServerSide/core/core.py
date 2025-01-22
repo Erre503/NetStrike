@@ -143,20 +143,9 @@ def log():
         return "error 404"
     return jsonify([entry.to_dict() for entry in log_entries])
 
-@app.route("/edit_description<int:id>", endpoint='edit_description',  methods=["PATCH"])
-def edit_description(id):
-    description = request.json
-    plugin = PlugTable.query.get(id)
-    plugin.description = description
-    db.session.commit()
-    return jsonify(plugin), 200
-
 def start():
     with app.app_context():
         db.create_all()  # This will create the tables again
     app.run(host="0.0.0.0", port=5000, debug=True)
 
 # creaPlugin
-
-
-
