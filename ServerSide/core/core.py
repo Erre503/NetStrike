@@ -1,5 +1,4 @@
 # Punto d'ingresso del servizio
-from asyncio.windows_events import NULL
 from doctest import debug
 from email.policy import default
 from flask import Flask, request, jsonify
