@@ -6,3 +6,5 @@
 
 # Visual Studio
 .vs/
+
+__pycache__
