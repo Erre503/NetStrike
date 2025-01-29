@@ -1,13 +1,8 @@
 # Punto d'ingresso del servizio
-from asyncio.windows_events import NULL
-from doctest import debug
-from email.policy import default
+
 from flask import Flask, request, jsonify
-from numpy import _no_nep50_warning
-from sqlalchemy import Nullable, null
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine, Column, Integer, String, Sequence
-from sqlalchemy.ext.declarative import declarative_base
 from .plugin_loader import caricaPlugin, lista_plugin, avvia_plugin, creaPlugin
 # from flask_classful import FlaskView, route   Prossima implementazione
 
