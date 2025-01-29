@@ -3,6 +3,8 @@ import importlib #va a sostituire la funzione manuale di import dato che non sia
                  #e per rendere l'importazione dinamica
 import sys  #serve per modificare a riga 38 i percorsi da cui prendere i file python
 
+import inspect #serve per vedere i parametri
+
 from pathlib import Path #serve per ottenere il riferimento al percorso del file corrente
 
 def caricaPlugin(folder, req, nome_plugin): #folder e req si possono dichiarare come variabili globale se necessario
@@ -31,7 +33,10 @@ def lista_plugin(folder): #crea una lista con tutti i file python all'interno de
             var.append(file)
     return var
 
-def avvia_plugin(): #funzione del diagramma richiesta per avviare il plugin
+def avvia_plugin(vet_param): #funzione del diagramma richiesta per avviare il plugin
+
+    plugin.set_param(vet_param)
+
     plugin.execute()
     return 
 
@@ -56,11 +61,22 @@ def creaPlugin(nome_file, contenuto):
         print(f"File '{nome_file}' creato con successo nella cartella '{cartella_plugins}'.")
 
 
+#funzione per i parametri dinamica - problema, info per il parametro non disponibili
+
+#def paramPlugin(nome_plugin):
+#    modulo = importlib.import_module(nome_plugin)
+#    parametri = inspect.signature(modulo.execute)
+#    paramVet = []
+#    for param in parametri.parameters.values():
+#        paramVet.append(param.name)
+#    return paramVet
+
+
 if(__name__ == "__main__"):
     print("Quale file PY vuoi eseguire?")
     nome_plugin = input() #il nome per fare i test e' dato in input
     req = "execute" # Requisiti: la funzione 'esegui' deve essere presente
-    creaPlugin("prova.py", "def execute(): print(1)")
+    #creaPlugin("prova.py", "def execute(): print(1)")
     folder = Path(__file__).resolve().parent.parent / "plugins"  # assegna il percorso della cartella basandosi su quello del plugin loader
                                                                  #(Path(__file__).resolve()) per avere il percorso assoluto
     sys.path.append(str(folder))  #aggiunge la cartella folder ai percorsi da cui vengono importati i file python
@@ -72,4 +88,10 @@ if(__name__ == "__main__"):
     plugin = caricaPlugin(folder, req, nome_plugin) #viene caricato il modulo del file richiesto in una variabile per poter essere eseguita
 
     if(plugin!=None):#se e' None non provo ad eseguire il plugin
-        avvia_plugin()
+        parametri = plugin.get_param()
+        key_values = []
+        for parametro in parametri:
+            key_values.append(parametro['key'])
+        vet_param = [{key_values[0]:'192.168.0.0'}, 
+                     {key_values[1] : 'forte'}]
+        avvia_plugin(vet_param)
