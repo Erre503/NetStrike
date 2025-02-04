@@ -4,12 +4,13 @@ from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine, Column, Integer, String, Sequence
 from .plugin_loader import caricaPlugin, lista_plugin, avvia_plugin, creaPlugin
+import time
 # from flask_classful import FlaskView, route   Prossima implementazione
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///sqlite.db'
 db = SQLAlchemy(app)
-
+last_update = round(time.time())
 # classi per le tabelle nel database:
 
 # plugTable:
@@ -90,9 +91,33 @@ def plug_table_details(id=0):
         return "error 404, no such plugin has been found"
     return jsonify(plugin.get_description())  # Use the renamed method
 
+@app.route("/test_list", endpoint='test_list', methods=["GET"])
+def test_table():
+    testT = Log.query.all()
+    if testT is None or not testT:
+        return "error 404, no such test has been found"
+    return jsonify([test.list() for test in testT])
+
+@app.route("/test_details/<int:id>", endpoint='test_details', methods=["GET"])
+def test_table_details(id=0):
+    test = Log.query.get(id)  # gestione dell'id tramite il metodo http GET
+    if test is None:
+        return "error 404, no such plugin has been found"
+    return jsonify(test.to_dict())  # Use the renamed method
+
+@app.route("/notification/<int:timestamp>", endpoint='notification', methods=["GET"])
+def get_notification(timestamp):
+    print("Check update \t client:",timestamp, "\t server: ", last_update, "\tsum: ", last_update-timestamp)
+    if last_update-timestamp > 0:
+        print('return')
+        return jsonify(last_update)
+    return jsonify(0)
+
+
 # Funzione per caricare il plugin
 @app.route("/upload_plugin", endpoint='upload_plugin', methods=["POST"])
 def new_plugin():
+    global last_update
     # Get the JSON data from the request
     data = request.get_json()
 
@@ -110,6 +135,8 @@ def new_plugin():
         # Add the new plugin to the database
         db.session.add(new_plugin)
         db.session.commit()
+        last_update = round(time.time())
+        print("Updated time: "+str(last_update))
         # Return a success response
         return jsonify({"message": "Plugin uploaded successfully"}), 201
     else:

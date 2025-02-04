@@ -5,7 +5,8 @@ from enum import Enum
 # Libreria per comunicare tramite i protocolli HTTP/HTTPS.
 import requests
 from flask import jsonify
-
+import time
+import threading
 """
 Enumeratore che definisce i tipi di aggiornamenti per l'interfaccia grafica.
 
@@ -23,8 +24,11 @@ Membri:
 class UpdateType(Enum):
     LISTA_PLUGIN = "lista_plugin"
     DETTAGLI_PLUGIN = "dettagli_plugin"
+    LISTA_TEST = "lista_test"
+    DETTAGLI_TEST = "dettagli_test"
     RISULTATI_TEST = "risultati_test"
     SALVATAGGIO_RISULTATI = "salvataggio_risultati"
+    AGGIORNA_LISTA = "aggiorna_lista"
 
 
 """
@@ -57,6 +61,8 @@ class ClientCore:
     def __init__(self, server_url, ui_handler):
         self.server_url = server_url
         self.ui_handler = ui_handler
+        self.last_update = round(time.time())
+        self.start_polling()
 
     """
     Invoca metodi del gestore dell'interfaccia grafica per aggiornarla.
@@ -76,6 +82,8 @@ class ClientCore:
             self.ui_handler.aggiorna_dettagli_plugin(data)
         elif update_type == UpdateType.RISULTATI_TEST:
             self.ui_handler.aggiorna_risultato_test(data)
+        elif update_type == UpdateType.AGGIORNA_LISTA:
+            print("AGGIORNA LA CAZZO DI LISTA")
         else:
             raise ValueError(f"Tipo di aggiornamento non riconosciuto: {update_type}")
         # eccetera
@@ -85,9 +93,9 @@ class ClientCore:
 
     Args:
         endpoint (str): Endpoint specifico del server (es. '/plugins').
-        metodo (str): Metodo HTTP da usare ('GET' o 'POST'). 
+        metodo (str): Metodo HTTP da usare ('GET' o 'POST').
             Default: 'GET'.
-        dati (dict, opzionale): Payload da inviare in caso di richiesta POST. 
+        dati (dict, opzionale): Payload da inviare in caso di richiesta POST.
             Default: None.
 
     Returns:
@@ -139,6 +147,7 @@ class ClientCore:
         dati = self.invia_richiesta('/plugin_list')
         if dati:
             self.aggiorna_ui(dati, UpdateType.LISTA_PLUGIN)
+            self.last_update = round(time.time())
 
     """
     Ottiene i dettagli di un plugin disponibile dal server.
@@ -155,6 +164,35 @@ class ClientCore:
         dati = self.invia_richiesta('/plugin_details/'+id_plugin, 'GET')
         if dati:
             self.aggiorna_ui(dati, UpdateType.DETTAGLI_PLUGIN)
+
+    """
+    Ottiene la lista dei plugin disponibili dal server.
+
+    Effetti:
+       - Invia una richiesta GET all'endpoint '/plugins'.
+       - Aggiorna l'interfaccia grafica con i dati ricevuti.
+    """
+
+    def ottieni_lista_test(self):
+        dati = self.invia_richiesta('/test_list')
+        if dati:
+            self.aggiorna_ui(dati, UpdateType.LISTA_TEST)
+
+    """
+    Ottiene i dettagli di un plugin disponibile dal server.
+
+    Args:
+        id_plugin (id): Identifica il plugin di cui si richiedono i dettagli.
+
+    Effetti:
+       - Invia una richiesta POST all'endpoint '/plugin_details'.
+       - Aggiorna l'interfaccia grafica con i dati ricevuti.
+    """
+
+    def ottieni_dettagli_test(self, id_test):
+        dati = self.invia_richiesta('/test_details/'+id_test)
+        if dati:
+            self.aggiorna_ui(dati, UpdateType.DETTAGLI_TEST)
 
     """
     Avvia un test per un plugin specifico con i parametri forniti.
@@ -191,6 +229,22 @@ class ClientCore:
             self.ottieni_lista_plugin()
         except Exception as e:
             print(f"Errore durante il caricamento del plugin: {e}")
+
+    def start_polling(self):
+        polling_thread = threading.Thread(target=self.poll_notifications)
+        polling_thread.daemon = True
+        polling_thread.start()
+
+    def poll_notifications(self):
+        while True:
+            print('check')
+            dati = self.invia_richiesta("/notification/"+str(self.last_update))
+            if dati > 0:
+                print(dati)
+                self.last_update = dati
+                self.aggiorna_ui('', UpdateType.AGGIORNA_LISTA)
+
+            time.sleep(5)
 
 
 """
