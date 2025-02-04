@@ -1,34 +1,13 @@
 # Libreria per la classe UpdateType
-import os
-from enum import Enum
+from core.updateType import UpdateType
+
 
 # Libreria per comunicare tramite i protocolli HTTP/HTTPS.
 import requests
 from flask import jsonify
 import time
 import threading
-"""
-Enumeratore che definisce i tipi di aggiornamenti per l'interfaccia grafica.
 
-Questo enumeratore viene utilizzato per identificare il tipo di aggiornamento da effettuare
-nell'interfaccia grafica, consentendo al core client-side di comunicare chiaramente con
-il gestore dell'interfaccia (UI handler).
-
-Membri:
-    PLUGIN_LIST (str): Indica che l'interfaccia deve aggiornare la lista dei plugin.
-    PLUGIN_DETAILS (str): Indica che l'interfaccia deve mostrare i dettagli di un singolo plugin.
-    TEST_RESULTS (str): Indica che l'interfaccia deve visualizzare i risultati di un test.
-"""
-
-
-class UpdateType(Enum):
-    LISTA_PLUGIN = "lista_plugin"
-    DETTAGLI_PLUGIN = "dettagli_plugin"
-    LISTA_TEST = "lista_test"
-    DETTAGLI_TEST = "dettagli_test"
-    RISULTATI_TEST = "risultati_test"
-    SALVATAGGIO_RISULTATI = "salvataggio_risultati"
-    AGGIORNA_LISTA = "aggiorna_lista"
 
 
 """
@@ -82,6 +61,7 @@ class ClientCore:
             self.ui_handler.aggiorna_dettagli_plugin(data)
         elif update_type == UpdateType.RISULTATI_TEST:
             self.ui_handler.aggiorna_risultato_test(data)
+
         elif update_type == UpdateType.AGGIORNA_LISTA:
             print("AGGIORNA LA CAZZO DI LISTA")
         else:
@@ -120,6 +100,8 @@ class ClientCore:
                 response = requests.get(url)
             elif metodo == "POST":
                 response = requests.post(url, json=dati)
+            elif metodo == "PATCH":
+                response = requests.patch(url, json=dati)
             else:
                 raise ValueError("Metodo HTTP non supportato.")
 
@@ -139,15 +121,15 @@ class ClientCore:
     Ottiene la lista dei plugin disponibili dal server.
 
     Effetti:
-       - Invia una richiesta GET all'endpoint '/plugins'.
+       - Invia una richiesta GET all'endpoint '/plugin_list'.
        - Aggiorna l'interfaccia grafica con i dati ricevuti.
     """
 
     def ottieni_lista_plugin(self):
         dati = self.invia_richiesta('/plugin_list')
         if dati:
-            self.aggiorna_ui(dati, UpdateType.LISTA_PLUGIN)
             self.last_update = round(time.time())
+            self.aggiorna_ui(dati, UpdateType.LISTA_PLUGIN)
 
     """
     Ottiene i dettagli di un plugin disponibile dal server.
@@ -156,20 +138,20 @@ class ClientCore:
         id_plugin (id): Identifica il plugin di cui si richiedono i dettagli.
 
     Effetti:
-       - Invia una richiesta POST all'endpoint '/plugin_details'.
+       - Invia una richiesta GET all'endpoint '/plugin_details/<id_plugin>'.
        - Aggiorna l'interfaccia grafica con i dati ricevuti.
     """
 
     def ottieni_dettagli_plugin(self, id_plugin):
-        dati = self.invia_richiesta('/plugin_details/'+id_plugin, 'GET')
+        dati = self.invia_richiesta('/plugin_details/'+id_plugin)
         if dati:
             self.aggiorna_ui(dati, UpdateType.DETTAGLI_PLUGIN)
 
     """
-    Ottiene la lista dei plugin disponibili dal server.
+    Ottiene la lista dei test eseguiti.
 
     Effetti:
-       - Invia una richiesta GET all'endpoint '/plugins'.
+       - Invia una richiesta GET all'endpoint '/test_list'.
        - Aggiorna l'interfaccia grafica con i dati ricevuti.
     """
 
@@ -179,13 +161,13 @@ class ClientCore:
             self.aggiorna_ui(dati, UpdateType.LISTA_TEST)
 
     """
-    Ottiene i dettagli di un plugin disponibile dal server.
+    Ottiene i dettagli di un test eseguito.
 
     Args:
-        id_plugin (id): Identifica il plugin di cui si richiedono i dettagli.
+        id_test (id): Identifica il test di cui si richiedono i dettagli.
 
     Effetti:
-       - Invia una richiesta POST all'endpoint '/plugin_details'.
+       - Invia una richiesta GET all'endpoint '/test_details/<id_test>'.
        - Aggiorna l'interfaccia grafica con i dati ricevuti.
     """
 
@@ -195,20 +177,20 @@ class ClientCore:
             self.aggiorna_ui(dati, UpdateType.DETTAGLI_TEST)
 
     """
-    Avvia un test per un plugin specifico con i parametri forniti.
+    Esegui un test per un plugin specifico con i parametri forniti.
 
     Args:
         id_plugin (id): Identifica il plugin da utilizzare per il test.
         parametri (dict): Parametri necessari per il test.
 
     Effetti:
-        - Invia una richiesta POST all'endpoint '/tests_start'.
+        - Invia una richiesta POST all'endpoint '/test_execute/<id_plugin>'.
         - Aggiorna l'interfaccia con il risultato del test.
     """
 
     def avvia_test(self, id_plugin, parametri):
         risultati = self.invia_richiesta('/test_execute/'+id_plugin, 'POST', parametri)
-        print(risultati)
+        print(risultati) #DEBUG
         if risultati:
             self.aggiorna_ui(risultati, UpdateType.RISULTATI_TEST)
 
@@ -219,7 +201,7 @@ class ClientCore:
         file_path (str): Il percorso del file .py da caricare.
 
     Effetti:
-        - Invia una richiesta POST all'endpoint '/aggiungi_plugin'.
+        - Invia una richiesta POST all'endpoint '/upload_plugin'.
     """
 
     def aggiungi_plugin(self, file_path):
@@ -230,17 +212,55 @@ class ClientCore:
         except Exception as e:
             print(f"Errore durante il caricamento del plugin: {e}")
 
+    """
+    Modifica un plugin presente nel server.
+
+    Args:
+        id_plugin (str): L'ID del plugin da modificare.
+        data (str): Il nuovo valore per il campo specificato (nome o descrizione).
+        is_name (bool, opzionale): Se True, modifica il nome del plugin;
+                                    altrimenti modifica la descrizione.
+                                    Default: False.
+
+    Effetti:
+        - Invia una richiesta PATCH all'endpoint '/edit_plugin/<id_plugin>' con
+          i dati aggiornati.
+        - Specifica il campo da modificare (nome o descrizione) in base al valore di `is_name`.
+    """
+    def modifica_plugin(self, id_plugin, data, is_name=False):
+        self.invia_richiesta('/edit_plugin/'+id_plugin, 'PATCH', { 'name' if is_name else 'description': data })
+
+    """
+    Avvia un thread separato per il polling delle notifiche dal server.
+
+    Effetti:
+        - Crea e avvia un thread in modalità daemon per eseguire la funzione `poll_notifications`
+          senza bloccare il flusso principale del programma.
+        - Il thread esegue continuamente il polling delle notifiche finché il programma è attivo.
+    """
     def start_polling(self):
         polling_thread = threading.Thread(target=self.poll_notifications)
         polling_thread.daemon = True
         polling_thread.start()
 
+    """
+    Esegue il polling periodico per verificare la presenza di nuove notifiche dal server.
+
+    Effetti:
+        - Invia richieste periodiche all'endpoint '/notification/<last_update>'.
+        - Se vengono ricevute nuove notifiche, aggiorna lo stato locale e l'interfaccia utente.
+
+    Logica:
+        - Esegue un ciclo infinito che:
+            1. Invia una richiesta GET al server fornendo il timestamp dell'ultimo aggiornamento ricevuto ('last_update').
+            2. Se il server risponde con dati significativi, aggiorna `self.last_update`.
+            3. Richiama il metodo `aggiorna_ui` per notificare la ricezione dei nuovi dati.
+            4. Attende 5 secondi prima della successiva richiesta.
+    """
     def poll_notifications(self):
         while True:
-            print('check')
             dati = self.invia_richiesta("/notification/"+str(self.last_update))
             if dati > 0:
-                print(dati)
                 self.last_update = dati
                 self.aggiorna_ui('', UpdateType.AGGIORNA_LISTA)
 
@@ -259,8 +279,6 @@ Attributi:
         Questo oggetto rappresenta il framework UI utilizzato, come
         PyQt, Tkinter o un altro sistema di interfaccia grafica.
 """
-
-
 class UIUpdater:
     """
     Inizializza un'istanza di UIUpdater.
@@ -269,11 +287,21 @@ class UIUpdater:
         ui: Il riferimento all'interfaccia grafica che sarà aggiornata
             tramite i metodi di questa classe.
     """
-
     def __init__(self):
         self.ui = None
+
+    """
+    Associa l'interfaccia grafica all'istanza di UIUpdater.
+
+    Args:
+        ui: Istanza della UI che verrà aggiornata dai metodi di questa classe.
+
+    Effetti:
+        - L'attributo `ui` viene aggiornato per puntare alla UI specificata.
+    """
     def initUI(self, ui):
         self.ui = ui
+
     """
     Aggiorna la lista dei plugin nell'interfaccia grafica.
 
@@ -283,12 +311,10 @@ class UIUpdater:
             - name (str): Nome del plugin.
             - id (str): ID univoco del plugin.
     """
-
     def aggiorna_lista_plugin(self, plugins):
         self.ui.svuota_lista_plugin()
 
         for plugin in plugins:
-            print(plugin)
             self.ui.aggiungi_plugin(plugin["name"], plugin["id"])
 
     """
@@ -300,7 +326,6 @@ class UIUpdater:
             - description (str): Descrizione del plugin.
             - parameters (dict, opzionale): Parametri del plugin come chiave-valore.
     """
-
     def aggiorna_dettagli_plugin(self, plugin_details):
         self.ui.mostra_dettagli_plugin(
             description=plugin_details["description"],
@@ -317,7 +342,6 @@ class UIUpdater:
             - log (str): Log dettagliato del test.
             - datetime (str): Timestamp del test formattato (es. "YYYY-MM-DD HH:MM:SS").
     """
-
     def aggiorna_risultato_test(self, results):
         # Estrarre le informazioni (presenza di valori di default se mancanti)
         status = results.get("status", "unknown")
