@@ -5,10 +5,7 @@ def execute():
     response = os.popen("ping -n 3 " + hostname).read()
 
     return response
-
     
-
-
 execute()
 
 
