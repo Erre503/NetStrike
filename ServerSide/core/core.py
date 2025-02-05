@@ -1,19 +1,18 @@
 # Punto d'ingresso del servizio
-from doctest import debug
-from email.policy import default
+
+from asyncio.windows_events import NULL
+from os import name
 from flask import Flask, request, jsonify
-from numpy import _no_nep50_warning
-from sqlalchemy import Nullable, null
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import create_engine, Column, Integer, String, Sequence
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import create_engine, Column, Integer, String, Sequence, exists
 from .plugin_loader import caricaPlugin, lista_plugin, avvia_plugin, creaPlugin
+import time
 # from flask_classful import FlaskView, route   Prossima implementazione
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///sqlite.db'
 db = SQLAlchemy(app)
-
+last_update = round(time.time())
 # classi per le tabelle nel database:
 
 # plugTable:
@@ -94,9 +93,29 @@ def plug_table_details(id=0):
         return "error 404, no such plugin has been found"
     return jsonify(plugin.get_description())  # Use the renamed method
 
+@app.route("/test_list", endpoint='test_list', methods=["GET"])
+def test_table():
+    testT = Log.query.all()
+    if testT is None or not testT:
+        return "error 404, no such test has been found"
+    return jsonify([test.list() for test in testT])
+
+@app.route("/test_details/<int:id>", endpoint='test_details', methods=["GET"])
+def test_table_details(id=0):
+    test = Log.query.get(id)  # gestione dell'id tramite il metodo http GET
+    if test is None:
+        return "error 404, no such plugin has been found"
+    return jsonify(test.to_dict())  # Use the renamed method
+
+@app.route("/notification/<int:timestamp>", endpoint='notification', methods=["GET"])
+def get_notification(timestamp):
+    return jsonify(last_update-timestamp)
+
+
 # Funzione per caricare il plugin
 @app.route("/upload_plugin", endpoint='upload_plugin', methods=["POST"])
 def new_plugin():
+    global last_update
     # Get the JSON data from the request
     data = request.get_json()
 
@@ -114,6 +133,8 @@ def new_plugin():
         # Add the new plugin to the database
         db.session.add(new_plugin)
         db.session.commit()
+        last_update = round(time.time())
+        print("Updated time: "+str(last_update))
         # Return a success response
         return jsonify({"message": "Plugin uploaded successfully"}), 201
     else:
@@ -142,9 +163,26 @@ def log():
         return "error 404"
     return jsonify([entry.to_dict() for entry in log_entries])
 
+# Funzione per modificare i dati di un plugin
+
+@app.route("/edit_plugin/<int:id>", endpoint='edit_plugin', methods=["PATCH"])
+def modifyPlugin(id=0):
+    plugin = PlugTable.query.get(id)
+    data = request.get_json()
+    if data.description == NULL and data.name == NULL:
+        return "nessun parametro passato"
+    if data.name:
+        plugin.name = data.name
+        return "nome aggiornato"
+    else:
+        plugin.description = data.description
+        return "descrizione aggiornata"
+
+    
 def start():
     with app.app_context():
         db.create_all()  # This will create the tables again
     app.run(host="0.0.0.0", port=5000, debug=True)
 
+# creaPlugin
 # creaPlugin
