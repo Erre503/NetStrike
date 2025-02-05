@@ -3,95 +3,91 @@ import importlib #va a sostituire la funzione manuale di import dato che non sia
                  #e per rendere l'importazione dinamica
 import sys  #serve per modificare a riga 38 i percorsi da cui prendere i file python
 
-import inspect #serve per vedere i parametri
-
 from pathlib import Path #serve per ottenere il riferimento al percorso del file corrente
 
-def caricaPlugin(folder, req, nome_plugin): #folder e req si possono dichiarare come variabili globale se necessario
+def caricaPlugin(): #folder e req si possono dichiarare come variabili globale se necessario
                                             #(il diagramma dice di passargli solo nome_plugin)
 
+    folder = Path(__file__).resolve().parent.parent / "plugins"
+    req = "execute"
+
+    print("Quale file PY vuoi eseguire?")
+    nome_plugin = input() #il nome per fare i test e' dato in input
+
+    if(nome_plugin.endswith('.py')):
+        nome_plugin = nome_plugin[:-3]
+
+    guardia = False
     for file in os.listdir(folder): #il for verifica tutti i file all'interno della cartella
         if nome_plugin == file[:-3] and file.endswith('.py'): #verifica se il file e' python e se corrisponde a quello cercato,altrimenti passa al prossimo
-
             modulo = importlib.import_module(nome_plugin) #importa il file python cercato nella variabile modulo
-            
-            if callable(getattr(modulo, req, None)):
-                #getattr prende l'attributo desiderato(req) dal modulo(il file), se non esiste ritorna None, poi verifica che sia una
-                #funzione con callable il quale prova a chiamarla
+            guardia = True
 
-                return modulo  # salvo il plugin se ha tutti i requisiti richiesti
-            else:
-                print("Errore: il file non rispetta i requisiti per essere avviato")
-                return None
-    print("Errore: il file non e' stato trovato all'interno della cartella")
-    return  None
+    if(guardia):
+        return modulo
+    else:
+        print("File NON trovato")
+        return None
 
-def lista_plugin(folder): #crea una lista con tutti i file python all'interno della cartella
-    var = []
+def lista_plugin(): #crea una lista con tutti i file python all'interno della cartella
+    vet = []
+    folder = Path(__file__).resolve().parent.parent / "plugins"
     for file in os.listdir(folder):
         if file[:-3] and file.endswith('.py'):
-            var.append(file)
-    return var
+            vet.append(file)
+    return vet
 
-def avvia_plugin(vet_param): #funzione del diagramma richiesta per avviare il plugin
-
-    plugin.set_param(vet_param)
-
+def avvia_plugin(): #funzione del diagramma richiesta per avviare il plugin
     plugin.execute()
-    return 
+
 
 def creaPlugin(nome_file, contenuto):
-    """
-    Crea un file con il nome e contenuto specificato nella cartella 'plugins'.
-    Si assume che la cartella 'plugins' esista già.
-    -vero se il file rispetta i requisiti 
-    -falso:
-        -non risdpetta i requisiti
-        -è già presente un file con lo stesso nome
-    """
+
+    if not nome_file.endswith('.py'):
+        nome_file = nome_file + ".py"
+
+    req = "def execute():"
+
     # Percorso della cartella 'plugins'
-    cartella_plugins = Path(__file__).resolve().parent.parent / "plugins"
+    folder = Path(__file__).resolve().parent.parent / "plugins"
     
     # Percorso completo del file
-    percorso_file = os.path.join(cartella_plugins, nome_file)
-    
-    # Crea e scrivi il contenuto nel file
-    with open(percorso_file, "w", encoding="utf-8") as file:
-        file.write(contenuto)
-        print(f"File '{nome_file}' creato con successo nella cartella '{cartella_plugins}'.")
+    percorso_file = os.path.join(folder, nome_file)
 
+    #Controllo se il plugin rispetta i requisiti
+    guardia = True
+    for file in os.listdir(folder):
+        if nome_file == file and file.endswith('.py'):
+            guardia = False
 
-#funzione per i parametri dinamica - problema, info per il parametro non disponibili
+    if(guardia):
+        if req in contenuto:
+            #getattr prende l'attributo desiderato(req) dal modulo(il file), se non esiste ritorna None, poi verifica che sia una
+            #funzione con callable il quale prova a chiamarla
+            with open(percorso_file, "w", encoding="utf-8") as file:
+                file.write(contenuto)
+            return "File " + nome_file + " creato con successo nella cartella plugins"
+        else:
+            return "Errore: il file non rispetta i requisiti: " + req
+    else: 
+        return "Nome del File già presente"
 
-#def paramPlugin(nome_plugin):
-#    modulo = importlib.import_module(nome_plugin)
-#    parametri = inspect.signature(modulo.execute)
-#    paramVet = []
-#    for param in parametri.parameters.values():
-#        paramVet.append(param.name)
-#    return paramVet
 
 
 if(__name__ == "__main__"):
-    print("Quale file PY vuoi eseguire?")
-    nome_plugin = input() #il nome per fare i test e' dato in input
-    req = "execute" # Requisiti: la funzione 'esegui' deve essere presente
-    #creaPlugin("prova.py", "def execute(): print(1)")
     folder = Path(__file__).resolve().parent.parent / "plugins"  # assegna il percorso della cartella basandosi su quello del plugin loader
                                                                  #(Path(__file__).resolve()) per avere il percorso assoluto
     sys.path.append(str(folder))  #aggiunge la cartella folder ai percorsi da cui vengono importati i file python
 
+    print("Nome del Plug In da creare: ")
+    nome = input()
+    print(creaPlugin(nome, "def execute(): print(2)"))
+
     # Carica i nomi dei plugin presenti
-    for i in lista_plugin(folder): 
+    for i in lista_plugin(): 
         print(i)
 
-    plugin = caricaPlugin(folder, req, nome_plugin) #viene caricato il modulo del file richiesto in una variabile per poter essere eseguita
+    plugin = caricaPlugin() #viene caricato il modulo del file richiesto in una variabile per poter essere eseguita
 
     if(plugin!=None):#se e' None non provo ad eseguire il plugin
-        parametri = plugin.get_param()
-        key_values = []
-        for parametro in parametri:
-            key_values.append(parametro['key'])
-        vet_param = [{key_values[0]:'192.168.0.0'}, 
-                     {key_values[1] : 'forte'}]
-        avvia_plugin(vet_param)
+        avvia_plugin()
