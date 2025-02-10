@@ -7,7 +7,8 @@ import requests
 from flask import jsonify
 import time
 import threading
-
+import core.security_functions as sf
+import os
 
 
 """
@@ -96,6 +97,12 @@ class ClientCore:
         try:
             url = f"{self.server_url}{endpoint}"
             print(url)
+            if(dati != None):
+                print("Sanifying...")
+                dati = sf.sanitize_dict(dati)
+
+            print("URL:",url + "\t DATA:",dati) #DEBUG
+
             if metodo == "GET":
                 response = requests.get(url)
             elif metodo == "POST":
@@ -107,12 +114,21 @@ class ClientCore:
 
             if response.status_code == 200:
                 ret = response.json()
+
+                if(isinstance(ret, list)):
+                    ret = sf.sanitize_list(ret)
+                else:
+                    ret = sf.sanitize_dict(ret)
+
+                print(ret)
             else:
                 # Logga l'errore e restituisci None
+                response = sf.sanitize_dict(response)
                 print(f"Errore: {response.status_code}: {response.text}")
 
         except Exception as e:
             # Logga l'errore e restituisci None
+            e = sf.sanitize_input(e)
             print(f"Errore durante la richiesta: {e}")
 
         return ret
@@ -259,8 +275,8 @@ class ClientCore:
     """
     def poll_notifications(self):
         while True:
-            dati = self.invia_richiesta("/notification/"+str(self.last_update))
-            if dati > 0:
+            dati = self.invia_richiesta("/notification/"+str(self.last_update))["update"]
+            if dati != None and dati > 0:
                 self.last_update = dati
                 self.aggiorna_ui('', UpdateType.AGGIORNA_LISTA)
 

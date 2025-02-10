@@ -107,7 +107,7 @@ def test_table_details(id=0):
 
 @app.route("/notification/<int:timestamp>", endpoint='notification', methods=["GET"])
 def get_notification(timestamp):
-    return jsonify(last_update-timestamp)
+    return jsonify({"update": last_update-timestamp})
 
 
 # Funzione per caricare il plugin
