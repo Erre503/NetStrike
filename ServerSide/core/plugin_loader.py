@@ -7,25 +7,6 @@ import inspect #serve per vedere i parametri
 
 from pathlib import Path #serve per ottenere il riferimento al percorso del file corrente
 
-def caricaPlugin(folder, req, nome_plugin): #folder e req si possono dichiarare come variabili globale se necessario
-                                            #(il diagramma dice di passargli solo nome_plugin)
-
-    for file in os.listdir(folder): #il for verifica tutti i file all'interno della cartella
-        if nome_plugin == file[:-3] and file.endswith('.py'): #verifica se il file e' python e se corrisponde a quello cercato,altrimenti passa al prossimo
-
-            modulo = importlib.import_module(nome_plugin) #importa il file python cercato nella variabile modulo
-            
-            if callable(getattr(modulo, req, None)):
-                #getattr prende l'attributo desiderato(req) dal modulo(il file), se non esiste ritorna None, poi verifica che sia una
-                #funzione con callable il quale prova a chiamarla
-
-                return modulo  # salvo il plugin se ha tutti i requisiti richiesti
-            else:
-                print("Errore: il file non rispetta i requisiti per essere avviato")
-                return None
-    print("Errore: il file non e' stato trovato all'interno della cartella")
-    return  None
-
 def lista_plugin(folder): #crea una lista con tutti i file python all'interno della cartella
     var = []
     for file in os.listdir(folder):
@@ -41,24 +22,61 @@ def avvia_plugin(plugin, vet_param): #funzione del diagramma richiesta per avvia
     return 
 
 def creaPlugin(nome_file, contenuto):
-    """
-    Crea un file con il nome e contenuto specificato nella cartella 'plugins'.
-    Si assume che la cartella 'plugins' esista già.
-    -vero se il file rispetta i requisiti 
-    -falso:
-        -non risdpetta i requisiti
-        -è già presente un file con lo stesso nome
-    """
+
+    #aggiungo l'estensione se il nome file non la ha
+    if not nome_file.endswith('.py'):
+        nome_file = nome_file + ".py"
+
+    #requisito file
+    req = "def execute():"
+
     # Percorso della cartella 'plugins'
-    cartella_plugins = Path(__file__).resolve().parent.parent / "plugins"
+    folder = Path(__file__).resolve().parent.parent / "plugins"
     
     # Percorso completo del file
-    percorso_file = os.path.join(cartella_plugins, nome_file)
-    
-    # Crea e scrivi il contenuto nel file
+    percorso_file = os.path.join(folder, nome_file)
+
+    # Controlla se il plugin esiste già
+    if nome_file in os.listdir(folder):
+        return "Nome del File già presente"
+
+    # verifica che il file rispetta i requisiti
+    if req not in contenuto:
+        return "Errore: il file non rispetta i requisiti: " + req
+
+    #crea il file con il contenuto passato
     with open(percorso_file, "w", encoding="utf-8") as file:
         file.write(contenuto)
-        print(f"File '{nome_file}' creato con successo nella cartella '{cartella_plugins}'.")
+        return "File " + nome_file + " creato con successo nella cartella " + folder
+
+    try:
+        nome_plugin = nome_file[:-3]  # Rimuove l'estensione .py (verificata in precedenza)
+        modulo = importlib.import_module(nome_plugin) # importo il modulo(il file)
+
+        # Verifica che la classe 'Plugin' sia presente nel modulo
+        if not hasattr(modulo, "Plugin"):
+            return "Errore: Il file non contiene una classe 'Plugin'."
+        
+        # Ottieni la classe Plugin
+        plugin_class = getattr(modulo, "Plugin")
+
+        # Verifica che 'Plugin' sia una classe e che implementi i metodi richiesti
+        if not inspect.isclass(plugin_class):
+            return "Errore: 'Plugin' non è una classe."
+        
+        # Controlla se la classe implementa i metodi richiesti
+        required_methods = ["get_param", "execute"]
+        missing_methods = [method for method in required_methods if not hasattr(plugin_class, method)]
+
+        if missing_methods:
+            return f"Errore: la classe 'Plugin' manca dei seguenti metodi: {', '.join(missing_methods)}"
+
+        return f"File {nome_file} creato con successo nella cartella {folder} e classe Plugin verificata."
+
+    except Exception as e:
+        return f"Errore durante il caricamento del plugin: {str(e)}"
+
+  
 
 
 #funzione per i parametri dinamica - problema, info per il parametro non disponibili
