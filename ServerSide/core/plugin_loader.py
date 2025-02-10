@@ -33,7 +33,7 @@ def lista_plugin(folder): #crea una lista con tutti i file python all'interno de
             var.append(file)
     return var
 
-def avvia_plugin(vet_param): #funzione del diagramma richiesta per avviare il plugin
+def avvia_plugin(plugin, vet_param): #funzione del diagramma richiesta per avviare il plugin
 
     plugin.set_param(vet_param)
 
