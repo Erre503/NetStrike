@@ -59,10 +59,14 @@ class Log(db.Model):
     def __repr__(self):
         return '<Name %r>' % self.idLog
 
-    def to_dict(self):
+    def logList(self):
         return {
             'idLog': self.idLog,
-            'dateLog': self.dateLog.strftime('%Y-%m-%d %H:%M:%S'),
+            'dateLog': self.dateLog.strftime('%Y-%m-%d %H:%M:%S')            
+        }
+
+    def logData(self):
+        return {
             'success': self.success,
             'result': self.result
         }
@@ -155,13 +159,6 @@ def dummy():
     db.session.commit()
     return "the dummy has been placed"
 
-# Funzione per i dettagli dei log degli attacchi
-@app.route("/log_list", endpoint='log_list', methods=["GET"])
-def log():
-    log_entries = Log.query.all()
-    if log_entries is None or not log_entries:
-        return "error 404"
-    return jsonify([entry.to_dict() for entry in log_entries])
 
 # Funzione per modificare i dati di un plugin
 
@@ -178,6 +175,14 @@ def modifyPlugin(id=0):
         plugin.description = data.description
         return "descrizione aggiornata"
 
+# Funzione per ottenere la lista dei messaggi del log
+# Funzione per i dettagli dei log degli attacchi
+@app.route("/log_list", endpoint='log_list', methods=["GET"])
+def log():
+    log_entries = Log.query.all()
+    if log_entries is None or not log_entries:
+        return "error 404"
+    return jsonify([log_entries.logList()])
     
 def start():
     with app.app_context():
