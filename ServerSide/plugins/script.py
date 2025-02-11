@@ -1,2 +1,2 @@
 def execute():
-	return {'log':'Test me'}
+	return 'Test me'

@@ -1,2 +1,2 @@
 def execute():
-	return {'log':'Kebabbino??', 'status':'finished'}
+	return 'Niente kebabbino :('
