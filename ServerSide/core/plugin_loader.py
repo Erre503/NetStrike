@@ -14,6 +14,17 @@ def lista_plugin(folder): #crea una lista con tutti i file python all'interno de
             var.append(file)
     return var
 
+def cambiaNome(folder, nomeVecchio, nomeNuovo): #dato il nome del file da rinominare e quello nuovo, rinomina il file
+    try:
+        for file in os.listdir(folder):
+            if file[:-3]==nomeVecchio:
+                vecchioFile= os.path.join(folder, nomeVecchio+".py")
+                nuovoFile= os.path.join(folder, nomeNuovo+".py")
+                os.rename(vecchioFile,nuovoFile)
+    except Exception:
+        print("Errore: impossibile rinominare il nome del file")
+
+
 def avvia_plugin(plugin, vet_param): #funzione del diagramma richiesta per avviare il plugin
 
     plugin.set_param(vet_param) #setta i parametri della funzione execute(passati in futuro dall'interfaccia)
@@ -36,7 +47,7 @@ def creaPlugin(nome_file, contenuto):
 
     # Controlla se il plugin esiste già
     if nome_file in os.listdir(folder):
-        return "Nome del File già presente"
+        print("Nome del File già presente")
 
     #crea il file con il contenuto passato
     with open(percorso_file, "w", encoding="utf-8") as file:
@@ -50,14 +61,14 @@ def creaPlugin(nome_file, contenuto):
 
         # Verifica che esista un elemento 'Plugin' sia presente nel modulo
         if not hasattr(modulo, "Plugin"):
-            return "Errore: Il file non contiene nessun elemento 'Plugin'."
+            print("Errore: Il file non contiene nessun elemento 'Plugin'.")
         
         # Ottieni la presunta classe Plugin
         classe_plugin = getattr(modulo, "Plugin")
 
         # Verifica che 'Plugin' sia una classe
         if not inspect.isclass(classe_plugin):
-            return "Errore: 'Plugin' non è una classe."
+            print("Errore: 'Plugin' non è una classe.")
         
         #verifica che tutti i metodi astratti siano implementati
         if isinstance(classe_plugin, abc.ABCMeta):
@@ -67,7 +78,7 @@ def creaPlugin(nome_file, contenuto):
         return classe_plugin
 
     except Exception:
-        return "Errore: il Plugin non appartiene alla classe 'Plugin' "
+        print("Errore: il Plugin non appartiene alla classe 'Plugin' ")
 
 
 if(__name__ == "__main__"):
@@ -114,3 +125,4 @@ class Plugin(Interfaccia_Plugin):
             key_values.append(parametro['key'])
         vet_param = {key_values[0]:'192.168.0.0', key_values[1] : 'forte'}
         avvia_plugin(plugin, vet_param)
+        cambiaNome(folder, "testNome", "funziona")
