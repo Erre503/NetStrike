@@ -120,7 +120,7 @@ def new_plugin():
     if not data or 'name' not in data:
         return jsonify({"error": "Invalid record"}), 404
 
-    created = creaPlugin(data['name'], data['file_content'])
+    created = creaPlugin(data['name'], data['content'])
     if created:
         # Create a new plugin instance
         new_plugin = PlugTable(

@@ -92,12 +92,12 @@ class ClientCore:
         La funzione converte automaticamente i dati in formato JSON per il payload POST.
     """
 
-    def invia_richiesta(self, endpoint, metodo="GET", dati=None):
+    def invia_richiesta(self, endpoint, metodo="GET", dati=None, sanitize=True):
         ret = None
         try:
             url = f"{self.server_url}{endpoint}"
             print(url)
-            if(dati != None):
+            if(dati != None and sanitize):
                 print("Sanifying...")
                 dati = sf.sanitize_dict(dati)
 
@@ -114,13 +114,10 @@ class ClientCore:
 
             if response.status_code == 200:
                 ret = response.json()
-
                 if(isinstance(ret, list)):
                     ret = sf.sanitize_list(ret)
                 else:
                     ret = sf.sanitize_dict(ret)
-
-                print(ret)
             else:
                 # Logga l'errore e restituisci None
                 response = sf.sanitize_dict(response)
@@ -223,7 +220,7 @@ class ClientCore:
     def aggiungi_plugin(self, file_path):
         try:
             with open(file_path, 'r') as file:
-                self.invia_richiesta('/upload_plugin', 'POST', {'file_content': file.read(), 'name': os.path.basename(file_path)})
+                self.invia_richiesta('/upload_plugin', 'POST', {'content': file.read(), 'name': os.path.basename(file_path)}, False)
             self.ottieni_lista_plugin()
         except Exception as e:
             print(f"Errore durante il caricamento del plugin: {e}")
