@@ -148,7 +148,7 @@ def new_plugin():
 
 # Esecuzione del plugin
 @app.route("/test_execute/<int:id>", endpoint='test_execute', methods=["POST"])
-def plug_table_details(id=0):
+def plug_table_details(id=0,parametri=''):
     plugin = PlugTable.query.get(id)  # gestione dell'id tramite il metodo http GET
     if plugin is None:
         return "error 404, no such plugin has been found"
@@ -185,7 +185,7 @@ def log():
     if log_entries is None or not log_entries:
         return "error 404"
     return jsonify([log_entries.logList()])
-
+# 
 def logUpdate(result):
     print(type(result['datetime']))
     print(type(datetime.datetime.fromisoformat(result['datetime'])))
