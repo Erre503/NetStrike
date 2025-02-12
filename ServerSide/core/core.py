@@ -1,12 +1,8 @@
 # Punto d'ingresso del servizio
 
-from asyncio.windows_events import NULL
-import datetime
-from os import name
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
-from numpy import void
-from sqlalchemy import create_engine, Column, Integer, String, Sequence, exists
+from sqlalchemy import create_engine, Column, Integer, String, Sequence
 from .plugin_loader import caricaPlugin, lista_plugin, avvia_plugin, creaPlugin
 import time
 # from flask_classful import FlaskView, route   Prossima implementazione
@@ -128,7 +124,7 @@ def new_plugin():
     if not data or 'name' not in data:
         return jsonify({"error": "Invalid record"}), 404
 
-    created = creaPlugin(data['name'], data['file_content'])
+    created = creaPlugin(data['name'], data['content'])
     if created:
         # Create a new plugin instance
         new_plugin = PlugTable(
