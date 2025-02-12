@@ -1,9 +1,11 @@
 # Punto d'ingresso del servizio
 
 from asyncio.windows_events import NULL
+import datetime
 from os import name
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
+from numpy import void
 from sqlalchemy import create_engine, Column, Integer, String, Sequence, exists
 from .plugin_loader import caricaPlugin, lista_plugin, avvia_plugin, creaPlugin
 import time
@@ -150,7 +152,9 @@ def plug_table_details(id=0):
     plugin = PlugTable.query.get(id)  # gestione dell'id tramite il metodo http GET
     if plugin is None:
         return "error 404, no such plugin has been found"
-    return jsonify(avvia_plugin(plugin.name[:-3])) # Use the renamed method
+    result = avvia_plugin(plugin.name[:-3],parametri)
+    logUpdate(result)
+    return jsonify(result) # Use the renamed method
 
 @app.route("/dummy", endpoint='dummy', methods=["GET"])
 def dummy():
@@ -161,7 +165,6 @@ def dummy():
 
 
 # Funzione per modificare i dati di un plugin
-
 @app.route("/edit_plugin/<int:id>", endpoint='edit_plugin', methods=["PATCH"])
 def modifyPlugin(id=0):
     plugin = PlugTable.query.get(id)
@@ -175,19 +178,29 @@ def modifyPlugin(id=0):
         plugin.description = data.description
         return "descrizione aggiornata"
 
-# Funzione per ottenere la lista dei messaggi del log
-# Funzione per i dettagli dei log degli attacchi
+# Funzione per ottenere la lista dei messaggi di log
 @app.route("/log_list", endpoint='log_list', methods=["GET"])
 def log():
     log_entries = Log.query.all()
     if log_entries is None or not log_entries:
         return "error 404"
     return jsonify([log_entries.logList()])
-    
+
+def logUpdate(result):
+    print(type(result['datetime']))
+    print(type(datetime.datetime.fromisoformat(result['datetime'])))
+    newLog = Log(
+        dateLog = datetime.datetime.fromisoformat(result['datetime']),
+        success=(result['status']=='finished'),  # DEBUG
+        result = result['log']  # DEBUG
+    )
+    db.session.add(newLog)
+    db.session.commit()
+    return void
+
 def start():
     with app.app_context():
         db.create_all()  # This will create the tables again
     app.run(host="0.0.0.0", port=5000, debug=True)
 
-# creaPlugin
 # creaPlugin
