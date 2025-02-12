@@ -6,3 +6,11 @@
 
 # Visual Studio
 .vs/
+
+<<<<<<< HEAD
+__pycache__
+=======
+.pyc/
+__pycache__/
+venv/
+>>>>>>> 585c174d4a54bd1595053b31ae2e13d32768b5a0
