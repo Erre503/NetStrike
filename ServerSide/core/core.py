@@ -194,6 +194,6 @@ def log():
 def start():
     with app.app_context():
         db.create_all()  # This will create the tables again
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(ssl_context=("./certificates/server.crt", "./certificates/server.key"), host="0.0.0.0", port=5000, debug=True)
 
 # creaPlugin

@@ -107,11 +107,11 @@ class ClientCore:
             print("URL:",url + "\t DATA:",dati) #DEBUG
 
             if metodo == "GET":
-                response = requests.get(url, headers=headers)
+                response = requests.get(url, headers=headers, verify='./certificates/server.crt')
             elif metodo == "POST":
-                response = requests.post(url, json=dati, headers=headers)
+                response = requests.post(url, json=dati, headers=headers, verify='./certificates/server.crt')
             elif metodo == "PATCH":
-                response = requests.patch(url, json=dati, headers=headers)
+                response = requests.patch(url, json=dati, headers=headers, verify='./certificates/server.crt')
             else:
                 raise ValueError("Metodo HTTP non supportato.")
 
