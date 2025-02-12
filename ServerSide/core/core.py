@@ -1,5 +1,5 @@
 # Punto d'ingresso del servizio
-
+from utils.security_functions import *
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine, Column, Integer, String, Sequence
