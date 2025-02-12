@@ -1,8 +1,5 @@
-import pyotp
-import keyring
 import html
-
-
+import keyring
 """
 Sanifica il parametro inserito rimuovendo caratteri HTML potenzialmente dannosi.
 
@@ -44,12 +41,30 @@ Returns:
 def sanitize_list(input_list: list) -> list:
     return [sanitize_input(item) for item in input_list]
 
+"""
+Salva il token JWT fornito nel keyring.
 
-if __name__ == '__main__':
-    #Testing
-    keyring.set_password("my_app", "access_token", "token_value")
-    print(keyring.get_password("my_app", "access_token"))
-    secret = pyotp.random_base32()
-    print(f"Segreto per Google Authenticator: {secret}")
+Args:
+    token (str): Il token JWT da salvare nel keyring.
+"""
+def save_token(token):
+    keyring.set_password("plugink_token", "jwt_token", token.encode('utf-8'))
 
-    keyring.delete_password("my_app", "access_token")
+"""
+Recupera il token JWT precedentemente salvato nel keyring.
+
+Returns:
+    str or None:
+        Il token JWT se esiste, altrimenti None.
+"""
+def get_token():
+    return keyring.get_password("plugink_token", "jwt_token")
+
+"""
+Elimina il token JWT dal keyring.
+
+Questa funzione rimuove il token associato al nome di servizio "my_app"
+e al nome di chiave "jwt_token", rendendolo non più accessibile.
+"""
+def clear_token():
+    keyring.delete_password("plugink_token", "jwt_token")

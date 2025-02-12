@@ -7,7 +7,7 @@ import requests
 from flask import jsonify
 import time
 import threading
-import core.security_functions as sf
+import utils.security_functions as sf
 import os
 
 
@@ -38,10 +38,12 @@ class ClientCore:
         ui_handler (UIUpdater): Oggetto che gestisce l'aggiornamento dell'interfaccia grafica.
     """
 
-    def __init__(self, server_url, ui_handler):
+    def __init__(self, server_url, ui_handler, username, password):
         self.server_url = server_url
         self.ui_handler = ui_handler
         self.last_update = round(time.time())
+        self.login(username, password)
+
         self.start_polling()
 
     """
@@ -96,8 +98,7 @@ class ClientCore:
         ret = None
         try:
             url = f"{self.server_url}{endpoint}"
-            #headers = {"Authorization": f"Bearer {sf.get_token()}"}
-            headers={}  # CHANGE when server implementatios
+            headers = {"Authorization": f"Bearer {sf.get_token()}"}
             print(url)
             if(dati != None and sanitize):
                 print("Sanifying...")
@@ -146,8 +147,8 @@ class ClientCore:
         - Se l'autenticazione ha successo, salva il token JWT utilizzando la funzione `save_token`.
         - Stampa un messaggio di errore in caso di autenticazione fallita.
     """
-    def login(username, password):
-        token = invia_richiesta('/login', 'POST', {'username': username, 'password': password})
+    def login(self, username, password):
+        token = self.invia_richiesta('/login', 'POST', {'username': username, 'password': password})['access_token']
         if token:
             sf.save_token(token)
             return token
@@ -166,10 +167,11 @@ class ClientCore:
         - Se la registrazione ha successo, esegue il login dell'utente.
         - Stampa un messaggio di errore in caso di registrazione fallita.
     """
-    def register(username, password):
-        success = invia_richiesta('/register', 'POST', {'username': username, 'password': password})
+    def register(self, username, password):
+        success = self.invia_richiesta('/register', 'POST', {'username': username, 'password': password})
         if success:
-            login(username, password)
+            print('Registrato con successo')
+            self.login(username, password)
         else:
             print('Errore di registrazione')
 
@@ -180,7 +182,7 @@ class ClientCore:
         - Elimina il token JWT salvato utilizzando la funzione `clear_token`.
         - Stampa un messaggio di conferma che indica che il logout è stato effettuato con successo.
     """
-    def logout():
+    def logout(self):
         sf.clear_token()
         print("Logout effettuato con successo.")
 
