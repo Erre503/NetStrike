@@ -147,8 +147,9 @@ def scan_tcp(ip, porta, timeout):
 def scan_udp(ip, porta, timeout):
     try:
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # dgram serve per avere un oggetto udp
+        #sock.bind(('127.0.0.1', 12345))
         sock.settimeout(timeout) 
-        sock.sendto(b'', (ip, porta))  # invio 1 byte vuoto per verificare se la porta e' aperta
+        sock.sendto(b'Hello', (ip, porta))  # invio 1 byte vuoto per verificare se la porta e' aperta
         sock.recvfrom(1024)  # funzione per ricevere il pacchetto ( parametro indica il massimo di byte ricevibili in 1 chiamata)
         return "Porta " + str(porta) + " aperta"
     except socket.error:
@@ -184,8 +185,8 @@ def scan_ports(ip, rangePorte, tipoScansione, timeout):
             key_values.append(parametro['key'])
         vet_param = vet_param = {
                         key_values[0]: '127.0.0.1',        # ip
-                        key_values[1]: 'TCP',              # metodo di scansione
-                        key_values[2]: [1, 65535],         # rangePorte
+                        key_values[1]: 'tcp',              # metodo di scansione
+                        key_values[2]: [1,1024],         # rangePorte
                         key_values[3]: 1                   # timeout
                     }
         avvia_plugin(plugin, vet_param)
