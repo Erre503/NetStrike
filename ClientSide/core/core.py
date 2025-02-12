@@ -96,6 +96,8 @@ class ClientCore:
         ret = None
         try:
             url = f"{self.server_url}{endpoint}"
+            #headers = {"Authorization": f"Bearer {sf.get_token()}"}
+            headers={}  # CHANGE when server implementatios
             print(url)
             if(dati != None and sanitize):
                 print("Sanifying...")
@@ -104,11 +106,11 @@ class ClientCore:
             print("URL:",url + "\t DATA:",dati) #DEBUG
 
             if metodo == "GET":
-                response = requests.get(url)
+                response = requests.get(url, headers=headers)
             elif metodo == "POST":
-                response = requests.post(url, json=dati)
+                response = requests.post(url, json=dati, headers=headers)
             elif metodo == "PATCH":
-                response = requests.patch(url, json=dati)
+                response = requests.patch(url, json=dati, headers=headers)
             else:
                 raise ValueError("Metodo HTTP non supportato.")
 
@@ -119,16 +121,69 @@ class ClientCore:
                 else:
                     ret = sf.sanitize_dict(ret)
             else:
-                # Logga l'errore e restituisci None
                 response = sf.sanitize_dict(response)
                 print(f"Errore: {response.status_code}: {response.text}")
 
         except Exception as e:
-            # Logga l'errore e restituisci None
             e = sf.sanitize_input(e)
             print(f"Errore durante la richiesta: {e}")
 
         return ret
+
+    """
+    Esegue il login dell'utente utilizzando le credenziali fornite.
+
+    Args:
+        username (str): Il nome utente dell'utente che desidera effettuare il login.
+        password (str): La password dell'utente.
+
+    Returns:
+        str or None:
+            Il token JWT se l'autenticazione ha successo, altrimenti None.
+
+    Effetti:
+        - Invia una richiesta POST all'endpoint '/login' con le credenziali dell'utente.
+        - Se l'autenticazione ha successo, salva il token JWT utilizzando la funzione `save_token`.
+        - Stampa un messaggio di errore in caso di autenticazione fallita.
+    """
+    def login(username, password):
+        token = invia_richiesta('/login', 'POST', {'username': username, 'password': password})
+        if token:
+            sf.save_token(token)
+            return token
+        print('Errore di autenticazione')
+
+
+    """
+    Registra un nuovo utente con le credenziali fornite.
+
+    Args:
+        username (str): Il nome utente da registrare.
+        password (str): La password da associare al nuovo utente.
+
+    Effetti:
+        - Invia una richiesta POST all'endpoint '/register' con le credenziali dell'utente.
+        - Se la registrazione ha successo, esegue il login dell'utente.
+        - Stampa un messaggio di errore in caso di registrazione fallita.
+    """
+    def register(username, password):
+        success = invia_richiesta('/register', 'POST', {'username': username, 'password': password})
+        if success:
+            login(username, password)
+        else:
+            print('Errore di registrazione')
+
+    """
+    Esegue il logout dell'utente, rimuovendo il token di autenticazione.
+
+    Effetti:
+        - Elimina il token JWT salvato utilizzando la funzione `clear_token`.
+        - Stampa un messaggio di conferma che indica che il logout è stato effettuato con successo.
+    """
+    def logout():
+        sf.clear_token()
+        print("Logout effettuato con successo.")
+
 
     """
     Ottiene la lista dei plugin disponibili dal server.
