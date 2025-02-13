@@ -68,7 +68,7 @@ class Log(db.Model):
     def logList(self):
         return {
             'idLog': self.idLog,
-            'dateLog': self.dateLog.strftime('%Y-%m-%d %H:%M:%S')            
+            'dateLog': self.dateLog.strftime('%Y-%m-%d %H:%M:%S')
         }
 
     def logData(self):
@@ -138,7 +138,7 @@ def test_table_details(id=0):
 @app.route("/notification/<int:timestamp>", endpoint='notification', methods=["GET"])
 @jwt_required()
 def get_notification(timestamp):
-    return jsonify(last_update-timestamp)
+    return jsonify({'update':last_update-timestamp})
 
 
 # Funzione per caricare il plugin
