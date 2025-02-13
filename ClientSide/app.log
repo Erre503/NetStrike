@@ -1,0 +1,110 @@
+
+2025-02-13 12:01:28,444 - INFO - ClientCore initialized with server URL: https://127.0.0.1:5000
+2025-02-13 12:01:28,445 - INFO - Attempting to log in user: test
+2025-02-13 12:01:28,456 - DEBUG - Loading KWallet
+2025-02-13 12:01:28,458 - DEBUG - Loading SecretService
+2025-02-13 12:01:28,486 - DEBUG - Loading Windows
+2025-02-13 12:01:28,488 - DEBUG - Loading chainer
+2025-02-13 12:01:28,489 - DEBUG - Loading libsecret
+2025-02-13 12:01:28,490 - DEBUG - Loading macOS
+2025-02-13 12:01:28,627 - DEBUG - Sending POST request to https://127.0.0.1:5000/login
+2025-02-13 12:01:28,631 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-02-13 12:01:28,641 - DEBUG - https://127.0.0.1:5000 "POST /login HTTP/1.1" 200 354
+2025-02-13 12:01:28,651 - DEBUG - Received response
+2025-02-13 12:01:28,705 - INFO - User test logged in successfully.
+2025-02-13 12:01:28,706 - INFO - Starting polling for notifications.
+2025-02-13 12:01:28,706 - DEBUG - Polling for notifications...
+2025-02-13 12:01:28,747 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1739444488 with data: None
+2025-02-13 12:01:28,750 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-02-13 12:01:28,784 - DEBUG - https://127.0.0.1:5000 "GET /notification/1739444488 HTTP/1.1" 200 21
+2025-02-13 12:01:28,785 - DEBUG - Received response: {
+  "update": -577
+}
+
+2025-02-13 12:01:28,786 - DEBUG - Sending GET request to https://127.0.0.1:5000/plugin_list with data: None
+2025-02-13 12:01:28,788 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-02-13 12:01:28,809 - DEBUG - https://127.0.0.1:5000 "GET /plugin_list HTTP/1.1" 200 677
+2025-02-13 12:01:28,810 - DEBUG - Received response: [
+  {
+    "id": 1,
+    "name": "pluginEs.py"
+  },
+  {
+    "id": 2,
+    "name": "newPlugin.py"
+  },
+  {
+    "id": 3,
+    "name": "main.py"
+  },
+  {
+    "id": 4,
+    "name": "core.py"
+  },
+  {
+    "id": 5,
+    "name": "main_window.py"
+  },
+  {
+    "id": 6,
+    "name": "updater.py"
+  },
+  {
+    "id": 7,
+    "name": "plugin_loader.py"
+  },
+  {
+    "id": 8,
+    "name": "base.py"
+  },
+  {
+    "id": 9,
+    "name": "_termui_impl.py"
+  },
+  {
+    "id": 10,
+    "name": "decorators.py"
+  },
+  {
+    "id": 11,
+    "name": "script.py"
+  },
+  {
+    "id": 12,
+    "name": "script2.py"
+  },
+  {
+    "id": 13,
+    "name": "script3.py"
+  },
+  {
+    "id": 14,
+    "name": "script4.py"
+  }
+]
+
+2025-02-13 12:01:31,100 - DEBUG - Sending GET request to https://127.0.0.1:5000/plugin_details/12 with data: None
+2025-02-13 12:01:31,101 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-02-13 12:01:31,122 - DEBUG - https://127.0.0.1:5000 "GET /plugin_details/12 HTTP/1.1" 200 40
+2025-02-13 12:01:31,123 - DEBUG - Received response: {
+  "description": "",
+  "params": ""
+}
+
+2025-02-13 12:01:32,020 - DEBUG - Sending POST request to https://127.0.0.1:5000/test_execute/12 with data: {}
+2025-02-13 12:01:32,023 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-02-13 12:01:32,038 - DEBUG - https://127.0.0.1:5000 "POST /test_execute/12 HTTP/1.1" 200 85
+2025-02-13 12:01:32,078 - DEBUG - Received response: {
+  "datetime": "2025-02-13 12:01:32",
+  "log": "Potassio",
+  "status": "finished"
+}
+
+2025-02-13 12:01:33,791 - DEBUG - Polling for notifications...
+2025-02-13 12:01:33,826 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1739444489 with data: None
+2025-02-13 12:01:33,829 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-02-13 12:01:33,848 - DEBUG - https://127.0.0.1:5000 "GET /notification/1739444489 HTTP/1.1" 200 21
+2025-02-13 12:01:33,849 - DEBUG - Received response: {
+  "update": -578
+}
+
