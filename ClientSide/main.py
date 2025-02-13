@@ -10,7 +10,9 @@ def main():
 
     finestra = tk.Tk()
     uihandler = UIUpdater()
+
     c = ClientCore('https://'+ip_address+':5000', uihandler, username, password)
+
     m = MainInterfaccia(finestra, c)
     uihandler.initUI(m)
     m.initUI()
