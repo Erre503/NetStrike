@@ -40,7 +40,7 @@ def avvia_plugin(nome_plugin):  # funzione del diagramma richiesta per avviare i
         res = {}
         res['log'] = (modulo.execute())
         res['status'] = 'finished'
-        res['datetime'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        res['datetime'] = datetime.now()
         return res
     except:
         return {'status':'Error', 'log': 'Error during the execution of the plugin: '+nome_plugin, 'datetime': datetime.now().strftime('%Y-%m-%d %H:%M:%S')}

@@ -1,3 +1,6 @@
+
+import pyotp
+import keyring
 import html
 
 
@@ -41,3 +44,12 @@ Returns:
 """
 def sanitize_list(input_list: list) -> list:
     return [sanitize_input(item) for item in input_list]
+
+if __name__ == '__main__':
+    #Testing
+    keyring.set_password("my_app", "access_token", "token_value")
+    print(keyring.get_password("my_app", "access_token"))
+    secret = pyotp.random_base32()
+    print(f"Segreto per Google Authenticator: {secret}")
+
+    keyring.delete_password("my_app", "access_token")

@@ -6,7 +6,7 @@
 
 # Visual Studio
 .vs/
-
 .pyc/
 __pycache__/
+
 venv/

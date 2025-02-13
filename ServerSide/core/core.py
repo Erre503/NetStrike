@@ -1,10 +1,11 @@
 # Punto d'ingresso del servizio
-
+import utils.security_functions
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine, Column, Integer, String, Sequence
 from .plugin_loader import caricaPlugin, lista_plugin, avvia_plugin, creaPlugin
 import time
+import datetime
 from utils.key_manager import KeyManager
 from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity
 
@@ -64,10 +65,14 @@ class Log(db.Model):
     def __repr__(self):
         return '<Name %r>' % self.idLog
 
-    def to_dict(self):
+    def logList(self):
         return {
             'idLog': self.idLog,
-            'dateLog': self.dateLog.strftime('%Y-%m-%d %H:%M:%S'),
+            'dateLog': self.dateLog.strftime('%Y-%m-%d %H:%M:%S')            
+        }
+
+    def logData(self):
+        return {
             'success': self.success,
             'result': self.result
         }
@@ -133,7 +138,7 @@ def test_table_details(id=0):
 @app.route("/notification/<int:timestamp>", endpoint='notification', methods=["GET"])
 @jwt_required()
 def get_notification(timestamp):
-    return jsonify({"update": last_update-timestamp})
+    return jsonify(last_update-timestamp)
 
 
 # Funzione per caricare il plugin
@@ -143,7 +148,7 @@ def new_plugin():
     global last_update
     # Get the JSON data from the request
     data = request.get_json()
-
+    sanitize_dict(data)
     if not data or 'name' not in data:
         return jsonify({"error": "Invalid record"}), 404
 
@@ -168,28 +173,51 @@ def new_plugin():
 # Esecuzione del plugin
 @app.route("/test_execute/<int:id>", endpoint='test_execute', methods=["POST"])
 @jwt_required()
-def plug_table_details(id=0):
+def plug_table_details(id=0,parametri=''):
     plugin = PlugTable.query.get(id)  # gestione dell'id tramite il metodo http GET
     if plugin is None:
         return "error 404, no such plugin has been found"
-    return jsonify(avvia_plugin(plugin.name[:-3])) # Use the renamed method
+    result = avvia_plugin(plugin.name[:-3],parametri)
+    logUpdate(result)
+    return jsonify(result) # Use the renamed method
 
-@app.route("/dummy", endpoint='dummy', methods=["GET"])
-@jwt_required()
-def dummy():
-    new_plugin = PlugTable(name="")
-    db.session.add(new_plugin)
-    db.session.commit()
-    return "the dummy has been placed"
 
-# Funzione per i dettagli dei log degli attacchi
+
+# Funzione per modificare i dati di un plugin
+@app.route("/edit_plugin/<int:id>", endpoint='edit_plugin', methods=["PATCH"])
+def modifyPlugin(id=0):
+    plugin = PlugTable.query.get(id)
+    data = request.get_json()
+    sanitize_dict(data)
+    if data.description == NULL and data.name == NULL:
+        return "nessun parametro passato"
+    if data.name:
+        plugin.name = data.name
+        return "nome aggiornato"
+    else:
+        plugin.description = data.description
+        return "descrizione aggiornata"
+
+# Funzione per ottenere la lista dei messaggi di log
 @app.route("/log_list", endpoint='log_list', methods=["GET"])
 @jwt_required()
 def log():
     log_entries = Log.query.all()
     if log_entries is None or not log_entries:
         return "error 404"
-    return jsonify([entry.to_dict() for entry in log_entries])
+    return jsonify([log_entries.logList()])
+# Update del Log
+def logUpdate(result):
+    print(type(result['datetime']))
+    print(type(datetime.datetime.fromisoformat(result['datetime'])))
+    newLog = Log(
+        dateLog = datetime.datetime.fromisoformat(result['datetime']),
+        success=(result['status']=='finished'),  # DEBUG
+        result = result['log']  # DEBUG
+    )
+    db.session.add(newLog)
+    db.session.commit()
+    return None
 
 def start():
     with app.app_context():
