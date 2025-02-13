@@ -10,7 +10,7 @@ from pathlib import Path #serve per ottenere il riferimento al percorso del file
 def lista_plugin(folder): #crea una lista con tutti i file python all'interno della cartella
     var = []
     for file in os.listdir(folder):
-        if file.endswith('.py'):
+        if file[:-3] and file.endswith('.py'):
             var.append(file)
     return var
 
@@ -18,7 +18,7 @@ def cambiaNome(folder, nomeVecchio, nomeNuovo): #dato il nome del file da rinomi
     try:
         for file in os.listdir(folder):
             if file[:-3]==nomeVecchio:
-                vecchioFile= os.path.join(folder, file)
+                vecchioFile= os.path.join(folder, nomeVecchio+".py")
                 nuovoFile= os.path.join(folder, nomeNuovo+".py")
                 os.rename(vecchioFile,nuovoFile)
     except Exception:
@@ -34,6 +34,10 @@ def avvia_plugin(plugin, vet_param): #funzione del diagramma richiesta per avvia
     return 
 
 def creaPlugin(nome_file, contenuto):
+
+    #aggiungo l'estensione se il nome file non la ha
+    if not nome_file.endswith('.py'):
+        nome_file = nome_file + ".py"
 
     # Percorso della cartella 'plugins'
     folder = Path(__file__).resolve().parent.parent / "plugins"
