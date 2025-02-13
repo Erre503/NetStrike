@@ -1,10 +1,11 @@
 # Punto d'ingresso del servizio
-from utils.security_functions import *
+import utils.security_functions
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine, Column, Integer, String, Sequence
 from .plugin_loader import caricaPlugin, lista_plugin, avvia_plugin, creaPlugin
 import time
+import datetime
 # from flask_classful import FlaskView, route   Prossima implementazione
 
 app = Flask(__name__)
@@ -120,7 +121,7 @@ def new_plugin():
     global last_update
     # Get the JSON data from the request
     data = request.get_json()
-
+    sanitize_dict(data)
     if not data or 'name' not in data:
         return jsonify({"error": "Invalid record"}), 404
 
@@ -152,19 +153,13 @@ def plug_table_details(id=0,parametri=''):
     logUpdate(result)
     return jsonify(result) # Use the renamed method
 
-@app.route("/dummy", endpoint='dummy', methods=["GET"])
-def dummy():
-    new_plugin = PlugTable(name="")
-    db.session.add(new_plugin)
-    db.session.commit()
-    return "the dummy has been placed"
-
 
 # Funzione per modificare i dati di un plugin
 @app.route("/edit_plugin/<int:id>", endpoint='edit_plugin', methods=["PATCH"])
 def modifyPlugin(id=0):
     plugin = PlugTable.query.get(id)
     data = request.get_json()
+    sanitize_dict(data)
     if data.description == NULL and data.name == NULL:
         return "nessun parametro passato"
     if data.name:
@@ -181,7 +176,7 @@ def log():
     if log_entries is None or not log_entries:
         return "error 404"
     return jsonify([log_entries.logList()])
-# 
+# Update del Log
 def logUpdate(result):
     print(type(result['datetime']))
     print(type(datetime.datetime.fromisoformat(result['datetime'])))
@@ -192,7 +187,7 @@ def logUpdate(result):
     )
     db.session.add(newLog)
     db.session.commit()
-    return void
+    return None
 
 def start():
     with app.app_context():
