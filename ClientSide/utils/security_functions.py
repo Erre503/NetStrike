@@ -1,5 +1,5 @@
 import html
-
+import keyring
 """
 Sanifica il parametro inserito rimuovendo caratteri HTML potenzialmente dannosi.
 
@@ -48,7 +48,7 @@ Args:
     token (str): Il token JWT da salvare nel keyring.
 """
 def save_token(token):
-    keyring.set_password("plugink_token", "jwt_token", token)
+    keyring.set_password("plugink_token", "jwt_token", token.encode('utf-8'))
 
 """
 Recupera il token JWT precedentemente salvato nel keyring.

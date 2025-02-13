@@ -6,11 +6,18 @@ from sqlalchemy import create_engine, Column, Integer, String, Sequence
 from .plugin_loader import caricaPlugin, lista_plugin, avvia_plugin, creaPlugin
 import time
 import datetime
+from utils.key_manager import KeyManager
+from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity
+
 # from flask_classful import FlaskView, route   Prossima implementazione
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///sqlite.db'
 db = SQLAlchemy(app)
+
+app.config['JWT_SECRET_KEY'] =  KeyManager.generate_key()
+jwt = JWTManager(app)
+
 last_update = round(time.time())
 # classi per le tabelle nel database:
 
@@ -77,11 +84,26 @@ class Log(db.Model):
 # nella raccolta dei dati di chi accede a questo servizio
 
 @app.route("/")
+@jwt_required()
 def index():
     return "This server is hosting a service and every access is saved, neither the host or the team of development takes accountability for the information collected."
 
+@app.route("/login", endpoint='login', methods=["POST"])
+def login():
+    username = request.json.get('username', None)
+    password = request.json.get('password', None)
+    print("username: "+username+"\tpassword: "+password) #DEBUG
+    if(username != "test" or password != "password"):
+        print("Login failed") #DEBUG
+        return jsonify({'msg':'Error, login failed'}), 401
+
+    access_token = create_access_token(identity=username)
+    print('AccessToken: '+access_token) #DEBUG
+    return jsonify(access_token=access_token), 200
+
 # Funzione per la lista dei plugin
 @app.route("/plugin_list", endpoint='plugin_list', methods=["GET"])
+@jwt_required()
 def plug_table():
     pluginT = PlugTable.query.all()
     if pluginT is None or not pluginT:
@@ -90,6 +112,7 @@ def plug_table():
 
 # Funzione per i dettagli del plugin
 @app.route("/plugin_details/<int:id>", endpoint='plugin_details', methods=["GET"])
+@jwt_required()
 def plug_table_details(id=0):
     plugin = PlugTable.query.get(id)  # gestione dell'id tramite il metodo http GET
     if plugin is None:
@@ -97,6 +120,7 @@ def plug_table_details(id=0):
     return jsonify(plugin.get_description())  # Use the renamed method
 
 @app.route("/test_list", endpoint='test_list', methods=["GET"])
+@jwt_required()
 def test_table():
     testT = Log.query.all()
     if testT is None or not testT:
@@ -104,6 +128,7 @@ def test_table():
     return jsonify([test.list() for test in testT])
 
 @app.route("/test_details/<int:id>", endpoint='test_details', methods=["GET"])
+@jwt_required()
 def test_table_details(id=0):
     test = Log.query.get(id)  # gestione dell'id tramite il metodo http GET
     if test is None:
@@ -111,12 +136,14 @@ def test_table_details(id=0):
     return jsonify(test.to_dict())  # Use the renamed method
 
 @app.route("/notification/<int:timestamp>", endpoint='notification', methods=["GET"])
+@jwt_required()
 def get_notification(timestamp):
     return jsonify(last_update-timestamp)
 
 
 # Funzione per caricare il plugin
 @app.route("/upload_plugin", endpoint='upload_plugin', methods=["POST"])
+@jwt_required()
 def new_plugin():
     global last_update
     # Get the JSON data from the request
@@ -145,6 +172,7 @@ def new_plugin():
 
 # Esecuzione del plugin
 @app.route("/test_execute/<int:id>", endpoint='test_execute', methods=["POST"])
+@jwt_required()
 def plug_table_details(id=0,parametri=''):
     plugin = PlugTable.query.get(id)  # gestione dell'id tramite il metodo http GET
     if plugin is None:
@@ -152,6 +180,7 @@ def plug_table_details(id=0,parametri=''):
     result = avvia_plugin(plugin.name[:-3],parametri)
     logUpdate(result)
     return jsonify(result) # Use the renamed method
+
 
 
 # Funzione per modificare i dati di un plugin
@@ -171,6 +200,7 @@ def modifyPlugin(id=0):
 
 # Funzione per ottenere la lista dei messaggi di log
 @app.route("/log_list", endpoint='log_list', methods=["GET"])
+@jwt_required()
 def log():
     log_entries = Log.query.all()
     if log_entries is None or not log_entries:
@@ -192,6 +222,6 @@ def logUpdate(result):
 def start():
     with app.app_context():
         db.create_all()  # This will create the tables again
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(ssl_context=("./certificates/server.crt", "./certificates/server.key"), host="0.0.0.0", port=5000, debug=True)
 
 # creaPlugin

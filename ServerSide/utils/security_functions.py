@@ -1,3 +1,4 @@
+
 import pyotp
 import keyring
 import html
@@ -43,7 +44,6 @@ Returns:
 """
 def sanitize_list(input_list: list) -> list:
     return [sanitize_input(item) for item in input_list]
-
 
 if __name__ == '__main__':
     #Testing
