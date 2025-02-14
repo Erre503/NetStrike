@@ -37,8 +37,7 @@ def lista_plugin():
 def avvia_plugin(nome_plugin):  # funzione del diagramma richiesta per avviare il plugin
     try:
         modulo = importlib.import_module('plugins.'+nome_plugin)
-        res = {}
-        res['log'] = (modulo.execute())
+        res = (modulo.execute())
         res['status'] = 'finished'
         res['datetime'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         return res
