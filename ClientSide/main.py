@@ -2,13 +2,13 @@
 from core.core import ClientCore
 from core.core import UIUpdater
 from ui.main_window import MainInterfaccia
-import tkinter as tk
+import customtkinter as ctk
 from ui.login_window import get_login_info
 
 def main():
     ip_address, username, password = get_login_info()
 
-    finestra = tk.Tk()
+    finestra = ctk.CTk()
     uihandler = UIUpdater()
 
     c = ClientCore('https://'+ip_address+':5000', uihandler, username, password)

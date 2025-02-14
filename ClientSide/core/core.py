@@ -444,7 +444,7 @@ class UIUpdater:
         self.ui.svuota_lista_plugin()
 
         for plugin in plugins:
-            self.ui.aggiungi_plugin(plugin["name"], plugin["id"])
+            self.ui.aggiungi_plugin(plugin["name"], str(plugin["id"]))
 
     """
     Mostra i dettagli di un plugin selezionato nell'interfaccia grafica.
