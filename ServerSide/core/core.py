@@ -3,7 +3,7 @@ import utils.security_functions
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine, Column, Integer, String, Sequence
-from .plugin_loader import caricaPlugin, lista_plugin, avvia_plugin, creaPlugin
+from .plugin_loader import lista_plugin, avvia_plugin, creaPlugin
 import time
 import datetime
 from utils.key_manager import KeyManager
@@ -208,8 +208,6 @@ def log():
     return jsonify([log_entries.logList()])
 # Update del Log
 def logUpdate(result):
-    print(type(result['datetime']))
-    print(type(datetime.datetime.fromisoformat(result['datetime'])))
     newLog = Log(
         dateLog = datetime.datetime.fromisoformat(result['datetime']),
         success=(result['status']=='finished'),  # DEBUG
