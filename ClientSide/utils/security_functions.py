@@ -11,12 +11,12 @@ Returns:
 """
 def sanitize_input(param : str) -> str:
     if(isinstance(param, str)):
+        
         return html.escape(param)
-
-    else if(isinstance(param, dict)):
+    elif(isinstance(param, dict)):
         return sanitize_dict(param)
 
-    else if(isinstance(param, list)):
+    elif(isinstance(param, list)):
         return sanitize_list(param)
 
     return param
