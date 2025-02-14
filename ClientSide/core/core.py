@@ -209,7 +209,6 @@ class ClientCore:
         sf.clear_token()
         logging.info("Logout effettuato con successo.")
 
-
     """
     Ottiene la lista dei plugin disponibili dal server.
 
@@ -310,8 +309,8 @@ class ClientCore:
 
     Args:
         id_plugin (str): L'ID del plugin da modificare.
-        name (str, opzionale): Il nuovo valore per il campo specificato nome, impostato a default None.
-        description (str, opzionale): Il nuovo valore per il campo specificato nome, impostato a default None.
+        name (str, opzionale): Il nuovo valore per il campo nome, impostato a default None.
+        description (str, opzionale): Il nuovo valore per il campo descrizione, impostato a default None.
 
     Effetti:
         - Invia una richiesta PATCH all'endpoint '/edit_plugin/<id_plugin>' con
@@ -319,6 +318,20 @@ class ClientCore:
     """
     def modifica_plugin(self, id_plugin, name=None, description=None):
         self.invia_richiesta('/edit_plugin/'+id_plugin, 'PATCH', { 'name':name, 'description': description })
+
+    """
+    Modifica un test presente nel server.
+
+    Args:
+        id_test (str): L'ID del test da modificare.
+        name (str): Il nuovo valore per il campo nome.
+
+    Effetti:
+        - Invia una richiesta PATCH all'endpoint '/edit_test/<id_test>' con
+          i dati modificati.
+    """
+    def modifica_test(self, id_test, name):
+        self.invia_richiesta('/edit_test/'+id_test, 'PATCH', {'name':name})
 
     """
     Avvia un thread separato per il polling delle notifiche dal server.
