@@ -11059,3 +11059,69 @@ KeyError: 'datetime'
   "update": -3676
 }
 
+2025-02-14 12:49:43,546 - INFO - Application started.
+2025-02-14 12:49:43,546 - INFO - ClientCore initialized with server URL: https://127.0.0.1:5000
+2025-02-14 12:49:43,547 - INFO - Attempting to log in user: test
+2025-02-14 12:49:43,561 - DEBUG - Loading KWallet
+2025-02-14 12:49:43,562 - DEBUG - Loading SecretService
+2025-02-14 12:49:43,592 - DEBUG - Loading Windows
+2025-02-14 12:49:43,593 - DEBUG - Loading chainer
+2025-02-14 12:49:43,594 - DEBUG - Loading libsecret
+2025-02-14 12:49:43,595 - DEBUG - Loading macOS
+2025-02-14 12:49:43,730 - DEBUG - Sending POST request to https://127.0.0.1:5000/login
+2025-02-14 12:49:43,733 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-02-14 12:49:43,745 - DEBUG - https://127.0.0.1:5000 "POST /login HTTP/1.1" 200 354
+2025-02-14 12:49:43,756 - DEBUG - Received response
+2025-02-14 12:49:43,810 - INFO - User test logged in successfully.
+2025-02-14 12:49:43,810 - INFO - Starting polling for notifications.
+2025-02-14 12:49:43,811 - DEBUG - Polling for notifications...
+2025-02-14 12:49:43,848 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1739533784 with data: None
+2025-02-14 12:49:43,850 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-02-14 12:49:43,872 - DEBUG - https://127.0.0.1:5000 "GET /notification/1739533784 HTTP/1.1" 200 20
+2025-02-14 12:49:43,873 - DEBUG - Received response: {
+  "update": -15
+}
+
+2025-02-14 12:49:44,376 - DEBUG - Sending GET request to https://127.0.0.1:5000/plugin_list with data: None
+2025-02-14 12:49:44,378 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-02-14 12:49:44,405 - DEBUG - https://127.0.0.1:5000 "GET /plugin_list HTTP/1.1" 200 146
+2025-02-14 12:49:44,406 - DEBUG - Received response: [
+  {
+    "id": 1,
+    "name": "pluginEs.py"
+  },
+  {
+    "id": 2,
+    "name": "newPlugin.py"
+  },
+  {
+    "id": 3,
+    "name": "saluti.py"
+  }
+]
+
+2025-02-14 12:49:46,066 - DEBUG - Sending GET request to https://127.0.0.1:5000/plugin_details/1 with data: None
+2025-02-14 12:49:46,068 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-02-14 12:49:46,092 - DEBUG - https://127.0.0.1:5000 "GET /plugin_details/1 HTTP/1.1" 200 40
+2025-02-14 12:49:46,092 - DEBUG - Received response: {
+  "description": "",
+  "params": ""
+}
+
+2025-02-14 12:49:47,510 - DEBUG - Sending POST request to https://127.0.0.1:5000/test_execute/1 with data: {}
+2025-02-14 12:49:47,511 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-02-14 12:49:47,541 - DEBUG - https://127.0.0.1:5000 "POST /test_execute/1 HTTP/1.1" 200 124
+2025-02-14 12:49:47,581 - DEBUG - Received response: {
+  "datetime": "2025-02-14 12:49:47",
+  "log": "Error during the execution of the plugin: pluginEs",
+  "status": "Error"
+}
+
+2025-02-14 12:49:48,879 - DEBUG - Polling for notifications...
+2025-02-14 12:49:48,917 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1739533784 with data: None
+2025-02-14 12:49:48,919 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-02-14 12:49:48,938 - DEBUG - https://127.0.0.1:5000 "GET /notification/1739533784 HTTP/1.1" 200 20
+2025-02-14 12:49:48,939 - DEBUG - Received response: {
+  "update": -15
+}
+

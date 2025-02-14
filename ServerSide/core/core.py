@@ -1,12 +1,12 @@
 # Punto d'ingresso del servizio
-import utils.security_functions
+import utilities.security_functions
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine, Column, Integer, String, Sequence
-from .plugin_loader import lista_plugin, avvia_plugin, creaPlugin
+from core.plugin_loader import lista_plugin, avvia_plugin, creaPlugin
 import time
 import datetime
-from utils.key_manager import KeyManager
+from utilities.key_manager import KeyManager
 from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity
 
 # from flask_classful import FlaskView, route   Prossima implementazione
@@ -189,7 +189,7 @@ def modifyPlugin(id=0):
     plugin = PlugTable.query.get(id)
     data = request.get_json()
     sanitize_dict(data)
-    if data.description == NULL and data.name == NULL:
+    if data.description == None and data.name == None:
         return "nessun parametro passato"
     if data.name:
         plugin.name = data.name

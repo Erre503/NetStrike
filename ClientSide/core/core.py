@@ -7,7 +7,7 @@ import requests
 from flask import jsonify
 import time
 import threading
-import utils.security_functions as sf
+import utilities.security_functions as sf
 import os
 import logging
 
