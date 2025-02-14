@@ -167,7 +167,7 @@ class ClientCore:
     """
     def login(self, username, password):
         logging.info("Attempting to log in user: %s", username)
-        token = self.invia_richiesta('/login', 'POST', {'username': username, 'password': password})['access_token']
+        token = self.invia_richiesta('/login', 'POST', {'username': username, 'password': password}, False)['access_token']
         if token:
             sf.save_token(token)
             logging.info("User %s logged in successfully.", username)
@@ -191,7 +191,7 @@ class ClientCore:
     """
     def register(self, username, password):
         logging.info("Attempting to register user: %s", username)
-        success = self.invia_richiesta('/register', 'POST', {'username': username, 'password': password})
+        success = self.invia_richiesta('/register', 'POST', {'username': username, 'password': password}, False)
         if success:
             logging.info("Registration successful for user: %s", username)
             self.login(username, password)
@@ -299,7 +299,11 @@ class ClientCore:
     def aggiungi_plugin(self, file_path):
         try:
             with open(file_path, 'r') as file:
-                self.invia_richiesta('/upload_plugin', 'POST', {'content': file.read(), 'name': os.path.basename(file_path)}, False)
+                if(sf.is_valid_input(os.path.basename(file_path))):
+                    self.invia_richiesta('/upload_plugin', 'POST', {'content': file.read(), 'name': os.path.basename(file_path)}, False)
+                else:
+                    logging.error("Nome file contiene valori non consentiti.")
+
             self.ottieni_lista_plugin()
         except Exception as e:
             logging.error(f"Errore durante il caricamento del plugin: {e}")
@@ -317,7 +321,10 @@ class ClientCore:
           i dati modificati.
     """
     def modifica_plugin(self, id_plugin, name=None, description=None):
-        self.invia_richiesta('/edit_plugin/'+id_plugin, 'PATCH', { 'name':name, 'description': description })
+        if(sf.is_valid_input(name) and sf.is_valid_input(description)):
+            self.invia_richiesta('/edit_plugin/'+id_plugin, 'PATCH', { 'name':name, 'description': description })
+        else:
+            logging.error("Valori inseriti non consentiti.")
 
     """
     Modifica un test presente nel server.
@@ -331,7 +338,10 @@ class ClientCore:
           i dati modificati.
     """
     def modifica_test(self, id_test, name):
-        self.invia_richiesta('/edit_test/'+id_test, 'PATCH', {'name':name})
+        if(sf.is_valid_input(name)):
+            self.invia_richiesta('/edit_test/'+id_test, 'PATCH', {'name':name})
+        else:
+            logging.error("Valori inseriti non consentiti.")
 
     """
     Avvia un thread separato per il polling delle notifiche dal server.
@@ -449,12 +459,10 @@ class UIUpdater:
             - datetime (str): Timestamp del test formattato (es. "YYYY-MM-DD HH:MM:SS").
     """
     def aggiorna_risultato_test(self, results):
-        # Estrarre le informazioni (presenza di valori di default se mancanti)
         status = results.get("status", "unknown")
         log = results.get("log", "")
         datetime = results.get("datetime", "N/A")
 
-        # Visualizzare i dati nella UI
         self.ui.mostra_risultato_test(
             status=status,
             log=log,

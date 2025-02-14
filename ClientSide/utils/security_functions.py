@@ -1,5 +1,4 @@
-import html
-import keyring
+import html, keyring, re
 """
 Sanifica il parametro inserito rimuovendo caratteri HTML potenzialmente dannosi.
 
@@ -68,3 +67,18 @@ e al nome di chiave "jwt_token", rendendolo non più accessibile.
 """
 def clear_token():
     keyring.delete_password("plugink_token", "jwt_token")
+
+"""
+Verifica se l'input fornito utilizza solo caratteri consentiti.
+
+Args:
+    user_input(str): Input da verificare.
+
+Returns:
+    bool:
+        True se utilizza solo i caratteri consintiti,
+        altrimenti false
+"""
+def is_valid_input(user_input):
+    pattern = r"^[a-zA-Z0-9 _-]+$"
+    return bool(re.match(pattern, user_input))
