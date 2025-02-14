@@ -93,13 +93,12 @@ def index():
 def login():
     username = request.json.get('username', None)
     password = request.json.get('password', None)
-    print("username: "+username+"\tpassword: "+password) #DEBUG
+    Logging.debug("Login attempt on user :", username,"...")
     if(username != "test" or password != "password"):
-        print("Login failed") #DEBUG
+        Logging.error("Login failed due to incorrect credentials")
         return jsonify({'msg':'Error, login failed'}), 401
-
     access_token = create_access_token(identity=username)
-    print('AccessToken: '+access_token) #DEBUG
+    Logging.debug("Login was successful")
     return jsonify(access_token=access_token), 200
 
 # Funzione per la lista dei plugin
@@ -108,7 +107,9 @@ def login():
 def plug_table():
     pluginT = PlugTable.query.all()
     if pluginT is None or not pluginT:
+        Logging.error("Plugin list was requested by ", get_jwt_identity(),"but was not found")
         return "error 404, no such plugin has been found"
+    Logging.debug("Plugin list was requested by ", get_jwt_identity())
     return jsonify([plugin.list() for plugin in pluginT])
 
 # Funzione per i dettagli del plugin
@@ -117,7 +118,9 @@ def plug_table():
 def plug_table_details(id=0):
     plugin = PlugTable.query.get(id)  # gestione dell'id tramite il metodo http GET
     if plugin is None:
+        Logging.error("Plugin requested by ", get_jwt_identity()," was not found")
         return "error 404, no such plugin has been found"
+    Logging.debug("A plugin's details were requested by ", get_jwt_identity())
     return jsonify(plugin.get_description())  # Use the renamed method
 
 @app.route("/test_list", endpoint='test_list', methods=["GET"])
@@ -201,15 +204,17 @@ def modifyPlugin(id=0):
     data = request.get_json()
     sanitize_dict(data)
     if data.description == NULL and data.name == NULL:
-        logging.error("edit_plugin was called without parameters")
+        logging.error("Plugin edit was tried without parameters by:",get_jwt_identity())
         return "nessun parametro passato"
     if data.name:
-        logging.debug("plugin (",plugin.name,") name has been edited by:",get_jwt_identity())
+        logging.debug("Plugin (",plugin.name,") name has been edited by:",get_jwt_identity())
         plugin.name = data.name
+        db.session.commit()
         return "nome aggiornato"
     else:
+        logging.debug("Plugin (",plugin.name,") description has been edited by:",get_jwt_identity())
         plugin.description = data.description
-        logging.debug("plugin (",plugin.name,") description has been edited by:",get_jwt_identity())
+        db.session.commit()
         return "descrizione aggiornata"
 
 # Funzione per ottenere la lista dei messaggi di log
@@ -220,7 +225,7 @@ def log():
     if log_entries is None or not log_entries:
         logging.error("No test log has been found")
         return "error 404"
-    logging.debug("log_list has been requested by:",)
+    logging.debug("log_list has been requested by:",get_jwt_identity())
     return jsonify([log_entries.logList()])
 
 # Update del Log
