@@ -209,7 +209,7 @@ def log():
 
 @app.route("/set_routine", endpoint='set_routine', methods=["POST"])
 @jwt_required()
-def set_routine(id_plugin, parametri, frequenza):
+def set_routine():
     pass
 
 

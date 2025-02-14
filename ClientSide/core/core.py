@@ -349,11 +349,12 @@ class ClientCore:
         id_plugin(str): L'ID del plugin da eseguire.
         parametri(dict): Paramertri necessari per il test.
         frequenza(int): Numero di giorni ogni quanto eseguire il plugin specificato.
+        primo_dt(datetime): Giorno e orario della prima esecuzione (le successiva avverrano sempre allo stesso orario)
     """
-    def crea_routine(self, id_plugin, parametri, frequenza):
-        risultati = self.invia_richiesta('/set_routine', 'POST', {'id_plugin':id_plugin, 'parametri':parametri, 'frequenza':frequenza})
+    def crea_routine(self, id_plugin, parametri, frequenza, primo_dt):
+        risultati = self.invia_richiesta('/set_routine', 'POST', {'id_plugin':id_plugin, 'parametri':parametri, 'frequenza':frequenza, 'primo_dt':primo_dt})
         if risultati:
-            self.aggiorna_ui(risultati, UpdateType.RISULTATI_TEST)    
+            self.aggiorna_ui(risultati, UpdateType.RISULTATI_TEST)
 
     """
     Avvia un thread separato per il polling delle notifiche dal server.
