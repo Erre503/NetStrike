@@ -206,15 +206,16 @@ def modifyPlugin(id=0):
     if data.description == NULL and data.name == NULL:
         logging.error("Plugin edit was tried without parameters by:",get_jwt_identity())
         return "nessun parametro passato"
-    if data.name:
-        logging.debug("Plugin (",plugin.name,") name has been edited by:",get_jwt_identity())
+    if data.name:   
+        cambiaNome(plugin.name, data.name)
         plugin.name = data.name
         db.session.commit()
+        logging.debug("Plugin (",plugin.name,") name has been edited by:",get_jwt_identity())
         return "nome aggiornato"
     else:
-        logging.debug("Plugin (",plugin.name,") description has been edited by:",get_jwt_identity())
         plugin.description = data.description
         db.session.commit()
+        logging.debug("Plugin (",plugin.name,") description has been edited by:",get_jwt_identity())
         return "descrizione aggiornata"
 
 # Funzione per ottenere la lista dei messaggi di log
@@ -225,7 +226,7 @@ def log():
     if log_entries is None or not log_entries:
         logging.error("No test log has been found")
         return "error 404"
-    logging.debug("log_list has been requested by:",get_jwt_identity())
+    logging.debug("Test list has been requested by:",get_jwt_identity())
     return jsonify([log_entries.logList()])
 
 # Update del Log
@@ -237,6 +238,7 @@ def logUpdate(result):
         success=(result['status']=='finished'),  # DEBUG
         result = result['log']  # DEBUG
     )
+    logging.debug("Test list was updated")
     db.session.add(newLog)
     db.session.commit()
     return None
