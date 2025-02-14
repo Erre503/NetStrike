@@ -1,44 +1,36 @@
-import os  # Libreria per operare con file e cartelle
-import importlib  # Per importare dinamicamente moduli senza conoscere i loro nomi
-import sys  # Per modificare il percorso da cui importare i file Python
+import os #libreria per poter lavorare con le cartelle e file dell'applicazione
+import importlib #va a sostituire la funzione manuale di import dato che non siamo a conoscenza dei nomi dei file
+                 #e per rendere l'importazione dinamica
+import sys  #serve per modificare a riga 38 i percorsi da cui prendere i file python
+import abc
+import inspect #serve per vedere i parametri
 from datetime import datetime
-from pathlib import Path  # Per ottenere il percorso assoluto della cartella corrente
+from pathlib import Path #serve per ottenere il riferimento al percorso del file corrente
+
+def lista_plugin(folder): #crea una lista con tutti i file python all'interno della cartella
+    var = []
+    for file in os.listdir(folder):
+        if file[:-3] and file.endswith('.py'):
+            var.append(file)
+    return var
+
+def cambiaNome(folder, nomeVecchio, nomeNuovo): #dato il nome del file da rinominare e quello nuovo, rinomina il file
+    try:
+        for file in os.listdir(folder):
+            if file[:-3]==nomeVecchio:
+                vecchioFile= os.path.join(folder, nomeVecchio+".py")
+                nuovoFile= os.path.join(folder, nomeNuovo+".py")
+                os.rename(vecchioFile,nuovoFile)
+    except Exception:
+        print("Errore: impossibile rinominare il nome del file")
 
 
-# Funzione che carica un plugin dal folder "plugins" e lo esegue se esistente
-def caricaPlugin(nome_plugin):
-
-    if (nome_plugin.endswith('.py')):  # Se il nome del file finisce con .py, rimuove l'estensione
-        nome_plugin = nome_plugin[:-3]
-
-    guardia = False
-    for file in os.listdir('.plugins'):  # Esamina tutti i file nella cartella "plugins"
-        if nome_plugin == file[:-3]:  # Se il nome del file corrisponde
-            modulo = importlib.import_module(nome_plugin)  # Importa dinamicamente il modulo
-            guardia = True
-
-    if (guardia):  # Se il file è stato trovato e importato
-        return modulo  # Ritorna il modulo importato
-    else:
-        print("File NON trovato")  # Se il file non è trovato, stampa un messaggio di errore
-        return None
-
-
-# Funzione che restituisce una lista di tutti i file Python nella cartella "plugins"
-def lista_plugin():
-    vet = []  # Lista che conterrà i nomi dei file Python
-    for file in os.listdir(folder):  # Esamina tutti i file nella cartella "plugins"
-        if file[:-3] and file.endswith('.py'):  # Se il file è un file Python
-            vet.append(file)  # Aggiunge il nome del file alla lista
-    return vet  # Restituisce la lista di file Python
-
-
-# Funzione che esegue la funzione "execute" di un plugin caricato
-def avvia_plugin(nome_plugin):  # funzione del diagramma richiesta per avviare il plugin
+def avvia_plugin(nome_plugin, vet_param): #funzione del diagramma richiesta per avviare il plugin
     try:
         modulo = importlib.import_module('plugins.'+nome_plugin)
+        modulo.set_param(vet_param)
         res = {}
-        res['log'] = (modulo.execute())
+        res['log'] = modulo.execute()
         res['status'] = 'finished'
         res['datetime'] = datetime.now()
         return res
@@ -46,48 +38,49 @@ def avvia_plugin(nome_plugin):  # funzione del diagramma richiesta per avviare i
         return {'status':'Error', 'log': 'Error during the execution of the plugin: '+nome_plugin, 'datetime': datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 
 
-# Funzione che crea un nuovo plugin con il contenuto specificato
 def creaPlugin(nome_file, contenuto):
-    if not nome_file.endswith('.py'):  # Se il nome del file non termina con ".py", lo aggiunge
+
+    #aggiungo l'estensione se il nome file non la ha
+    if not nome_file.endswith('.py'):
         nome_file = nome_file + ".py"
 
-    req = "def execute():"  # La funzione che il file deve contenere
+    # Percorso della cartella 'plugins'
     folder = Path(__file__).resolve().parent.parent / "plugins"
+
     # Percorso completo del file
     percorso_file = os.path.join(folder, nome_file)
 
-    # Verifica se un file con lo stesso nome esiste già nella cartella "plugins"
-    guardia = True
-    for file in os.listdir(folder):
-        if nome_file == file and file.endswith('.py'):  # Se il file esiste già
-            guardia = False
+    # Controlla se il plugin esiste già
+    if nome_file in os.listdir(folder):
+        print("Nome del File già presente")
 
-    if (guardia):  # Se il file non esiste già
-        if req in contenuto:  # Se il contenuto del file include la funzione "execute"
-            with open(percorso_file, "w", encoding="utf-8") as file:  # Crea e scrive nel file
-                file.write(contenuto)
-            return "File " + nome_file + " creato con successo nella cartella plugins"
-        else:
-            return "Errore: il file non rispetta i requisiti: " + req  # Se il file non rispetta i requisiti, ritorna un errore
-    else:
-        return "Nome del File già presente"  # Se il file esiste già, ritorna un messaggio di errore
+    #crea il file con il contenuto passato
+    with open(percorso_file, "w", encoding="utf-8") as file:
+        file.write(contenuto)
+        print("File " + nome_file + " creato con successo nella cartella " + str(folder)) #stringa di debug
+        print(" ") #crea uno spazio per rendere l'output più carino
 
+    try:
+        nome_plugin = nome_file[:-3]  # Rimuove l'estensione .py (verificata in precedenza)
+        modulo = importlib.import_module(nome_plugin)
 
-# Codice principale che esegue l'intero processo
-if (__name__ == "__main__"):
-    folder = Path(__file__).resolve().parent.parent / "plugins"  # Imposta il percorso della cartella "plugins"
-    sys.path.append(str(folder))  # Aggiunge la cartella "plugins" alla lista dei percorsi di ricerca dei moduli Python
+        # Verifica che esista un elemento 'Plugin' sia presente nel modulo
+        if not hasattr(modulo, "Plugin"):
+            print("Errore: Il file non contiene nessun elemento 'Plugin'.")
 
-    print("Nome del Plug In da creare: ")
-    nome_plugin = input()  # Chiede il nome del plugin da creare
-    print(creaPlugin(nome_plugin, "def execute(): print(1)"))  # Crea il plugin con una funzione di esempio
+        # Ottieni la presunta classe Plugin
+        classe_plugin = getattr(modulo, "Plugin")
 
-    # Carica e stampa i nomi di tutti i plugin presenti
-    for i in lista_plugin():
-        print(i)
+        # Verifica che 'Plugin' sia una classe
+        if not inspect.isclass(classe_plugin):
+            print("Errore: 'Plugin' non è una classe.")
 
-    # Carica il plugin richiesto dall'utente
-    plugin = caricaPlugin()  # Viene caricato il modulo del file richiesto
+        #verifica che tutti i metodi astratti siano implementati
+        if isinstance(classe_plugin, abc.ABCMeta):
+            if hasattr(classe_plugin, '__abstractmethods__') and len(classe_plugin.__abstractmethods__) > 0:
+                print("Errore: La classe 'Plugin' è astratta e non implementa tutti i metodi richiesti.")
 
-    if (plugin != None):  # Se il plugin è stato trovato
-        avvia_plugin(plugin)  # Esegui il plugin
+        return classe_plugin
+
+    except Exception:
+        print("Errore: il Plugin non appartiene alla classe 'Plugin' ")

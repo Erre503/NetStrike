@@ -1,0 +1,12 @@
+2025-02-14 10:38:23,738 - INFO - Application started.
+2025-02-14 10:38:26,026 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on https://127.0.0.1:5000
+ * Running on https://172.20.120.137:5000
+2025-02-14 10:38:26,027 - INFO - [33mPress CTRL+C to quit[0m
+2025-02-14 10:38:26,041 - INFO -  * Restarting with stat
+2025-02-14 10:38:26,972 - INFO - Application started.
+2025-02-14 10:38:27,011 - WARNING -  * Debugger is active!
+2025-02-14 10:38:27,037 - INFO -  * Debugger PIN: 379-686-817
+2025-02-14 10:45:45,953 - INFO -  * Detected change in 'C:\\Users\\Erre\\Desktop\\PlugInk\\ServerSide\\core\\plugin_loader.py', reloading
+2025-02-14 10:45:46,159 - INFO -  * Restarting with stat

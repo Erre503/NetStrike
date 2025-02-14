@@ -8,6 +8,7 @@ import time
 import datetime
 from utils.key_manager import KeyManager
 from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity
+import logging
 
 # from flask_classful import FlaskView, route   Prossima implementazione
 
@@ -124,7 +125,9 @@ def plug_table_details(id=0):
 def test_table():
     testT = Log.query.all()
     if testT is None or not testT:
+        logging.error("Test list has been requested by ", get_jwt_identity()," but was not found")
         return "error 404, no such test has been found"
+    Logging.debug("Test list has been requested by ", get_jwt_identity())
     return jsonify([test.list() for test in testT])
 
 @app.route("/test_details/<int:id>", endpoint='test_details', methods=["GET"])
@@ -132,7 +135,9 @@ def test_table():
 def test_table_details(id=0):
     test = Log.query.get(id)  # gestione dell'id tramite il metodo http GET
     if test is None:
+        logging.error("Test requested by ", get_jwt_identity()," has not being found")
         return "error 404, no such plugin has been found"
+    logging.debug("Test has been requested by ", get_jwt_identity())
     return jsonify(test.to_dict())  # Use the renamed method
 
 @app.route("/notification/<int:timestamp>", endpoint='notification', methods=["GET"])
@@ -150,6 +155,7 @@ def new_plugin():
     data = request.get_json()
     sanitize_dict(data)
     if not data or 'name' not in data:
+        logging.error("Plugin sent by ", get_jwt_identity()," has failed standards")
         return jsonify({"error": "Invalid record"}), 404
 
     created = creaPlugin(data['name'], data['content'])
@@ -166,8 +172,10 @@ def new_plugin():
         last_update = round(time.time())
         print("Updated time: "+str(last_update))
         # Return a success response
+        logging.debug("Plugin has been added by:", get_jwt_identity())
         return jsonify({"message": "Plugin uploaded successfully"}), 201
     else:
+        logging.error("Creation of a plugin by",get_jwt_identity(),"has failed:")
         return jsonify({"error": "Error during creation"}), 404
 
 # Esecuzione del plugin
@@ -176,26 +184,32 @@ def new_plugin():
 def plug_table_details(id=0,parametri=''):
     plugin = PlugTable.query.get(id)  # gestione dell'id tramite il metodo http GET
     if plugin is None:
+        logging.error("Tried to execute not existing plugin : ",get_jwt_identity())
         return "error 404, no such plugin has been found"
     result = avvia_plugin(plugin.name[:-3],parametri)
     logUpdate(result)
-    return jsonify(result) # Use the renamed method
+    logging.debug("Plugin  ",plugin.name," was executed by:", get_jwt_identity())
+    return jsonify(result) 
 
 
 
 # Funzione per modificare i dati di un plugin
 @app.route("/edit_plugin/<int:id>", endpoint='edit_plugin', methods=["PATCH"])
+@jwt_required()
 def modifyPlugin(id=0):
     plugin = PlugTable.query.get(id)
     data = request.get_json()
     sanitize_dict(data)
     if data.description == NULL and data.name == NULL:
+        logging.error("edit_plugin was called without parameters")
         return "nessun parametro passato"
     if data.name:
+        logging.debug("plugin (",plugin.name,") name has been edited by:",get_jwt_identity())
         plugin.name = data.name
         return "nome aggiornato"
     else:
         plugin.description = data.description
+        logging.debug("plugin (",plugin.name,") description has been edited by:",get_jwt_identity())
         return "descrizione aggiornata"
 
 # Funzione per ottenere la lista dei messaggi di log
@@ -204,8 +218,11 @@ def modifyPlugin(id=0):
 def log():
     log_entries = Log.query.all()
     if log_entries is None or not log_entries:
+        logging.error("No test log has been found")
         return "error 404"
+    logging.debug("log_list has been requested by:",)
     return jsonify([log_entries.logList()])
+
 # Update del Log
 def logUpdate(result):
     print(type(result['datetime']))
@@ -222,6 +239,16 @@ def logUpdate(result):
 def start():
     with app.app_context():
         db.create_all()  # This will create the tables again
+    
+    logging.basicConfig(
+        level=logging.DEBUG,
+        format='%(asctime)s - %(levelname)s - %(message)s',
+        handlers=[
+            logging.FileHandler("app.log"),
+            logging.StreamHandler()
+         ]
+     )
+    logging.info("Application started.")
     app.run(ssl_context=("./certificates/server.crt", "./certificates/server.key"), host="0.0.0.0", port=5000, debug=True)
 
 # creaPlugin
