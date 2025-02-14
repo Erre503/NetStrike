@@ -282,7 +282,6 @@ class ClientCore:
 
     def avvia_test(self, id_plugin, parametri):
         risultati = self.invia_richiesta('/test_execute/'+id_plugin, 'POST', parametri)
-        print(risultati) #DEBUG
         if risultati:
             self.aggiorna_ui(risultati, UpdateType.RISULTATI_TEST)
 
@@ -342,6 +341,19 @@ class ClientCore:
             self.invia_richiesta('/edit_test/'+id_test, 'PATCH', {'name':name})
         else:
             logging.error("Valori inseriti non consentiti.")
+
+    """
+    Crea una routine che esegue il plugin 'id_plugin' ogni 'frequenza' giorni con i parametri specificati.
+
+    Args:
+        id_plugin(str): L'ID del plugin da eseguire.
+        parametri(dict): Paramertri necessari per il test.
+        frequenza(int): Numero di giorni ogni quanto eseguire il plugin specificato.
+    """
+    def crea_routine(self, id_plugin, parametri, frequenza):
+        risultati = self.invia_richiesta('/set_routine', 'POST', {'id_plugin':id_plugin, 'parametri':parametri, 'frequenza':frequenza})
+        if risultati:
+            self.aggiorna_ui(risultati, UpdateType.RISULTATI_TEST)    
 
     """
     Avvia un thread separato per il polling delle notifiche dal server.

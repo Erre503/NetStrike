@@ -3,7 +3,7 @@ import html, keyring, re
 Sanifica il parametro inserito rimuovendo caratteri HTML potenzialmente dannosi.
 
 Args:
-    param (str): Stringa da sanificare. Il valore viene sanificato solo se stringa.
+    param (str): Stringa da sanificare. Il valore viene sanificato solo se stringa, dizionario o lista.
 
 Returns:
     ret (str):
@@ -11,7 +11,14 @@ Returns:
 """
 def sanitize_input(param : str) -> str:
     if(isinstance(param, str)):
-        return html.escape(param);
+        return html.escape(param)
+
+    else if(isinstance(param, dict)):
+        return sanitize_dict(param)
+
+    else if(isinstance(param, list)):
+        return sanitize_list(param)
+
     return param
 
 """

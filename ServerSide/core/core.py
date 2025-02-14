@@ -206,6 +206,13 @@ def log():
     if log_entries is None or not log_entries:
         return "error 404"
     return jsonify([log_entries.logList()])
+
+@app.route("/set_routine", endpoint='set_routine', methods=["POST"])
+@jwt_required()
+def set_routine(id_plugin, parametri, frequenza):
+    pass
+
+
 # Update del Log
 def logUpdate(result):
     newLog = Log(
