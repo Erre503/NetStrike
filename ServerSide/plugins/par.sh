@@ -52,11 +52,8 @@ function execute {
 
 # Esecuzione dello script
 echo "Inizializzo il plugin Bash..."
-set_param "127.0.0.1" "tcp" 1 1024 1  # Intervallo da 1 a 1024 con timeout 1
+set_param "$ip" "$metodo" "$startPort" "$endPort" "$timeout"  # Passa i parametri da Python
 execute
-
-
-
 
 
     

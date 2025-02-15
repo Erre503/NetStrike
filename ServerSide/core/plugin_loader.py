@@ -42,14 +42,26 @@ def cambiaNome(folder, nomeVecchio, nomeNuovo): #dato il nome del file da rinomi
         print("Errore: impossibile rinominare il nome del file")
 
 
-def avvia_plugin(plugin, vet_param, type): #funzione del diagramma richiesta per avviare il plugin
-    if type=='py':
-        plugin.set_param(vet_param) #setta i parametri della funzione execute(passati in futuro dall'interfaccia)
-        plugin.execute() #eseguo il 'main' del plugin
-    if type=='sh':
-        if interfacciaBash(plugin):
-            avvia_plugin_bash(plugin, vet_param)  
-    return 
+def avvia_plugin(nome_plugin, vet_param, type):
+    # Se il plugin è Python
+    if type == 'py':
+        try:
+            # Importa dinamicamente il modulo Python
+            modulo = importlib.import_module(nome_plugin[:-3])  # Rimuove ".py"
+            plugin_instance = modulo.Plugin()  # Crea l'istanza del plugin
+            plugin_instance.set_param(vet_param)  # Imposta i parametri
+            plugin_instance.execute()  # Esegui il plugin
+        except Exception as e:
+            print(f"Errore nell'importazione ed esecuzione del modulo Python {nome_plugin}: {e}")
+    
+    # Se il plugin è Bash
+    elif type == 'sh':
+        # Verifica che il file esista
+        percorso_file = folder / nome_plugin
+        avvia_plugin_bash(percorso_file, vet_param)  # Esegui il plugin Bash
+    
+    else:
+        print("Tipo di plugin non supportato.")
 
 def interfacciaBash(percorso_file):
     try:
@@ -82,10 +94,15 @@ def estraiParametriBash(plugin):
 
 def avvia_plugin_bash(plugin, vet_param):
     try:
-        comando = ["bash", plugin]  # Esegue il comando Bash
+        # Imposta i parametri come variabili d'ambiente
+        env_vars = {}
         for parametro, valore in vet_param.items():
-            comando.append(str(parametro)+"="+str(valore))  # Passa i parametri come variabili ambientali
-        subprocess.run(comando, check=True)  # Avvia il plugin Bash
+            env_vars[parametro] = str(valore)  # Converte i parametri in stringa e li aggiunge al dizionario
+
+        comando = ["bash", plugin]  # Esegue il comando Bash
+
+        # Esegui il comando Bash, passando le variabili d'ambiente
+        subprocess.run(comando, check=True, env={**env_vars, **os.environ})  # Passa le variabili d'ambiente al comando
     except Exception:
         print("Errore nell'esecuzione del plugin Bash")
 
@@ -154,7 +171,13 @@ def creaPluginSh(nome_file, contenuto):
         file.write(contenuto)
         print("File " + nome_file + " creato con successo nella cartella " + str(folder)) #stringa di debug
         print(" ") #crea uno spazio per rendere l'output più carino
-    return percorso_file
+    if interfacciaBash(percorso_file):
+        return percorso_file
+    else:
+        print("il plugin non rispetta l'interfaccia")
+        return None
+
+    
 
 def creaPlugin(nome_file, contenuto):
     if nome_file.endswith('.sh'):
@@ -232,25 +255,29 @@ function execute {
 
 # Esecuzione dello script
 echo "Inizializzo il plugin Bash..."
-set_param "127.0.0.1" "tcp" 1 1024 1  # Intervallo da 1 a 1024 con timeout 1
+set_param "$ip" "$metodo" "$startPort" "$endPort" "$timeout"  # Passa i parametri da Python
 execute
+
 
     """
     
-    plugin = creaPlugin(nome_plugin, contenuto)#salva il modulo(il file)
-    if plugin is not None:#se è None non provo ad eseguire il plugin
+    #plugin = creaPlugin(nome_plugin, contenuto)#salva il modulo(il file)
+    if nome_plugin is not None:#se è None non provo ad eseguire il plugin
         if type == 'sh':
+            plugin= folder / nome_plugin
             parametri = estraiParametriBash(plugin)  # Estrai i parametri dal file Bash
             print("Parametri del plugin Bash:" + str(parametri))
             vet_param = {
-                "ip": "127.0.0.1", 
+                "ip": "172.20.0.40", 
                 "metodo": "tcp",   
                 "startPort": "1",  
-                "endPort": "1024",  
+                "endPort": "208",  
                 "timeout": 1         
             }
-            avvia_plugin(plugin, vet_param, type) 
+            avvia_plugin(nome_plugin, vet_param, type) 
         if type == 'py':
+            modulo = importlib.import_module(nome_plugin[:-3])  # Rimuove ".py"
+            plugin = modulo.Plugin()
             parametri = plugin.get_param()
             key_values = []
             for parametro in parametri:
@@ -261,4 +288,4 @@ execute
                         key_values[2]: [1,10],         # rangePorte
                         key_values[3]: 1                   # timeout
             }
-            avvia_plugin(plugin, vet_param, type)
+            avvia_plugin(nome_plugin, vet_param, type)

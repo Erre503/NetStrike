@@ -19,37 +19,40 @@ function execute {
     echo "Esecuzione della scansione per l'IP $ip, Metodo: $metodo"
     echo "Intervallo delle porte: $startPort a $endPort"
     echo "Timeout: $timeout"
+    
+    # Variabile per memorizzare le porte aperte
+    open_ports=""
 
     # Simula la scansione delle porte
     for (( port=$startPort; port<=$endPort; port++ )); do
         if [[ $metodo == "tcp" ]]; then
             nc -zv -w $timeout $ip $port &>/dev/null
             if [ $? -eq 0 ]; then
-                echo "Porta $port (TCP) è aperta."
-            else
-                echo "Porta $port (TCP) è chiusa."
+                open_ports+="$port (TCP), "
             fi
         elif [[ $metodo == "udp" ]]; then
             nc -zvu -w $timeout $ip $port &>/dev/null
             if [ $? -eq 0 ]; then
-                echo "Porta $port (UDP) è aperta."
-            else
-                echo "Porta $port (UDP) è chiusa."
+                open_ports+="$port (UDP), "
             fi
         else
             echo "Metodo non valido. Usa 'tcp' o 'udp'."
             exit 1
         fi
     done
+
+    # Rimuove l'ultima virgola e spazio (se ci sono porte aperte)
+    if [ -n "$open_ports" ]; then
+        open_ports=${open_ports%, }
+        echo "Le porte aperte sono: $open_ports"
+    else
+        echo "Nessuna porta aperta trovata."
+    fi
 }
 
 # Esecuzione dello script
 echo "Inizializzo il plugin Bash..."
-set_param "127.0.0.1" "tcp" 1 1024 1  # Intervallo da 1 a 1024 con timeout 1
+set_param "" "udp" 1 10 1  # Intervallo da 1 a 1024 con timeout 1
 execute
-
-
-
-
 
     
