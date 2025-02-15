@@ -1,5 +1,5 @@
 # Punto d'ingresso del servizio
-import utilities.security_functions
+from utilities.security_functions import *
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine, Column, Integer, String, Sequence
@@ -148,7 +148,7 @@ def new_plugin():
     global last_update
     # Get the JSON data from the request
     data = request.get_json()
-    sanitize_dict(data)
+    data = sanitize_dict(data)
     if not data or 'name' not in data:
         return jsonify({"error": "Invalid record"}), 404
 
@@ -177,7 +177,9 @@ def plug_table_details(id=0,parametri=''):
     plugin = PlugTable.query.get(id)  # gestione dell'id tramite il metodo http GET
     if plugin is None:
         return "error 404, no such plugin has been found"
-    result = avvia_plugin(plugin.name[:-3],parametri)
+
+    extension = plugin.name.split('.')[1]
+    result = avvia_plugin(plugin.name ,parametri, extension)
     logUpdate(result)
     return jsonify(result) # Use the renamed method
 
@@ -188,7 +190,7 @@ def plug_table_details(id=0,parametri=''):
 def modifyPlugin(id=0):
     plugin = PlugTable.query.get(id)
     data = request.get_json()
-    sanitize_dict(data)
+    data = sanitize_dict(data)
     if data.description == None and data.name == None:
         return "nessun parametro passato"
     if data.name:
@@ -216,7 +218,7 @@ def set_routine():
 # Update del Log
 def logUpdate(result):
     newLog = Log(
-        dateLog = datetime.datetime.fromisoformat(result['datetime']),
+        dateLog = datetime.datetime.fromisoformat(str(result['datetime'])),
         success=(result['status']=='finished'),  # DEBUG
         result = result['log']  # DEBUG
     )
