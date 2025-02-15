@@ -53,7 +53,7 @@ def scan_tcp(ip, porta, timeout):
 def scan_udp(ip, porta, timeout):
     try:
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # dgram serve per avere un oggetto udp
-        sock.bind(('127.0.0.1', 12345))
+        #sock.bind(('127.0.0.1', 12345))
         sock.settimeout(timeout) 
         sock.sendto(b'Hello', (ip, porta))  # invio 1 byte vuoto per verificare se la porta e' aperta
         sock.recvfrom(1024)  # funzione per ricevere il pacchetto ( parametro indica il massimo di byte ricevibili in 1 chiamata)

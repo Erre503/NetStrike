@@ -4,36 +4,93 @@ import importlib #va a sostituire la funzione manuale di import dato che non sia
 import sys  #serve per modificare a riga 38 i percorsi da cui prendere i file python
 import abc
 import inspect #serve per vedere i parametri
-
+import subprocess #serve per i file bash
 from pathlib import Path #serve per ottenere il riferimento al percorso del file corrente
+
+def get_plugin_type(nome_file):
+    if nome_file.endswith('.sh'):
+        return 'sh'
+    if nome_file.endswith('.py'):
+        return 'py'
+    return None
 
 def lista_plugin(folder): #crea una lista con tutti i file python all'interno della cartella
     var = []
     for file in os.listdir(folder):
-        if file[:-3] and file.endswith('.py'):
-            var.append(file)
+        if get_plugin_type(file)=='sh':
+            if file[:-3] and file.endswith('.sh'):
+                var.append(file)
+        else:
+            if file[:-3] and file.endswith('.py'):
+                var.append(file)
     return var
 
 def cambiaNome(folder, nomeVecchio, nomeNuovo): #dato il nome del file da rinominare e quello nuovo, rinomina il file
     try:
         for file in os.listdir(folder):
-            if file[:-3]==nomeVecchio:
-                vecchioFile= os.path.join(folder, nomeVecchio+".py")
-                nuovoFile= os.path.join(folder, nomeNuovo+".py")
-                os.rename(vecchioFile,nuovoFile)
+            if get_plugin_type(file)=='sh':
+                if file[:-3]==nomeVecchio:
+                    vecchioFile= os.path.join(folder, nomeVecchio+".sh")
+                    nuovoFile= os.path.join(folder, nomeNuovo+".sh")
+                    os.rename(vecchioFile,nuovoFile)
+            else:
+                if file[:-3]==nomeVecchio:
+                    vecchioFile= os.path.join(folder, nomeVecchio+".py")
+                    nuovoFile= os.path.join(folder, nomeNuovo+".py")
+                    os.rename(vecchioFile,nuovoFile)
     except Exception:
         print("Errore: impossibile rinominare il nome del file")
 
 
-def avvia_plugin(plugin, vet_param): #funzione del diagramma richiesta per avviare il plugin
-
-    plugin.set_param(vet_param) #setta i parametri della funzione execute(passati in futuro dall'interfaccia)
-
-    plugin.execute() #eseguo il 'main' del plugin
-
+def avvia_plugin(plugin, vet_param, type): #funzione del diagramma richiesta per avviare il plugin
+    if type=='py':
+        plugin.set_param(vet_param) #setta i parametri della funzione execute(passati in futuro dall'interfaccia)
+        plugin.execute() #eseguo il 'main' del plugin
+    if type=='sh':
+        if interfacciaBash(plugin):
+            avvia_plugin_bash(plugin, vet_param)  
     return 
 
-def creaPlugin(nome_file, contenuto):
+def interfacciaBash(percorso_file):
+    try:
+        with open(percorso_file, 'r') as file: #apro il file e vedo se all'interno ci sono le funzioni richieste
+            content = file.read()
+            if "function set_param" not in content:
+                print("Errore: La funzione 'set_param' non è presente nel plugin Bash.")
+                return False
+            if "function get_param" not in content:
+                print("Errore: La funzione 'get_param' non è presente nel plugin Bash.")
+                return False
+            if "function execute" not in content:
+                print("Errore: La funzione 'execute' non è presente nel plugin Bash.")
+                return False
+            return True
+    except Exception as e:
+        print("Errore nella lettura del file")
+        return False
+
+def estraiParametriBash(plugin):
+    try:
+        comando = ["bash", plugin, "get_param"]  
+        parametri = subprocess.run(comando, capture_output=True, text=True, check=True)
+        listaParametri = parametri.stdout.strip().split(", ")  
+        return listaParametri
+    except Exception:
+        print(f"Errore nell'estrazione dei parametri Bash")
+        return None
+
+
+def avvia_plugin_bash(plugin, vet_param):
+    try:
+        comando = ["bash", plugin]  # Esegue il comando Bash
+        for parametro, valore in vet_param.items():
+            comando.append(str(parametro)+"="+str(valore))  # Passa i parametri come variabili ambientali
+        subprocess.run(comando, check=True)  # Avvia il plugin Bash
+    except Exception:
+        print("Errore nell'esecuzione del plugin Bash")
+
+
+def creaPluginPy(nome_file, contenuto):
 
     #aggiungo l'estensione se il nome file non la ha
     if not nome_file.endswith('.py'):
@@ -62,6 +119,7 @@ def creaPlugin(nome_file, contenuto):
         # Verifica che esista un elemento 'Plugin' sia presente nel modulo
         if not hasattr(modulo, "Plugin"):
             print("Errore: Il file non contiene nessun elemento 'Plugin'.")
+            return None
         
         # Ottieni la presunta classe Plugin
         classe_plugin = getattr(modulo, "Plugin")
@@ -69,16 +127,43 @@ def creaPlugin(nome_file, contenuto):
         # Verifica che 'Plugin' sia una classe
         if not inspect.isclass(classe_plugin):
             print("Errore: 'Plugin' non è una classe.")
+            return None
         
         #verifica che tutti i metodi astratti siano implementati
         if isinstance(classe_plugin, abc.ABCMeta):
             if hasattr(classe_plugin, '__abstractmethods__') and len(classe_plugin.__abstractmethods__) > 0:
                 print("Errore: La classe 'Plugin' è astratta e non implementa tutti i metodi richiesti.")
+                return None
 
         return classe_plugin
 
     except Exception:
         print("Errore: il Plugin non appartiene alla classe 'Plugin' ")
+        return None
+
+def creaPluginSh(nome_file, contenuto):
+    if not nome_file.endswith('.sh'):
+        nome_file = nome_file + ".sh"
+    
+    folder = Path(__file__).resolve().parent.parent / "plugins"
+    percorso_file = os.path.join(folder, nome_file)
+    if nome_file in os.listdir(folder):
+        print("Nome del File già presente")
+        return None
+    with open(percorso_file, "w", encoding="utf-8") as file:
+        file.write(contenuto)
+        print("File " + nome_file + " creato con successo nella cartella " + str(folder)) #stringa di debug
+        print(" ") #crea uno spazio per rendere l'output più carino
+    return percorso_file
+
+def creaPlugin(nome_file, contenuto):
+    if nome_file.endswith('.sh'):
+        return creaPluginSh(nome_file, contenuto)
+    if nome_file.endswith('.py'):
+        return creaPluginPy(nome_file, contenuto)
+    print("Il tipo di file non e' supportato")
+    return None
+
 
 
 if(__name__ == "__main__"):
@@ -90,103 +175,90 @@ if(__name__ == "__main__"):
     for i in lista_plugin(folder): 
         print(i)
     nome_plugin = input() #il nome per fare i test è dato in input
+    type = "sh"
     
     #esempio plugin
-    contenuto = """import socket  # serve per poter creare delle connessione con ad esempio udp e tcp
-from interfaccia_plugin import Interfaccia_Plugin
+    contenuto = """#!/bin/bash
 
+# Funzione per impostare i parametri
+function set_param {
+    ip=$1
+    metodo=$2
+    startPort=$3
+    endPort=$4
+    timeout=$5
+}
 
-class Plugin(Interfaccia_Plugin):
-    #valori standard 
-    ip = "127.0.0.1"  
-    rangePorte = [1, 65535] 
-    tipoScansione = 'TCP' 
-    timeout = 1
+# Funzione per ottenere i parametri
+function get_param {
+    echo "ip, metodo, startPort, endPort, timeout"
+}
 
-    @classmethod
-    def execute(cls):
-        print("Esecuzione della scansione per l'IP " + cls.ip + ", Tipo:" + cls.metodo)
-        porteAperte = scan_ports(cls.ip, cls.rangePorte, cls.metodo, cls.timeout)
-        print("Porte aperte: " + str(porteAperte))
-
-
-    @classmethod
-    def get_param(cls):
-        vet_param = [
-            {'key': 'ip', 'description': 'Indirizzo IP da scansionare'},
-            {'key': 'metodo', 'description': 'Metodo di scansione: TCP o UDP'},
-            {'key': 'rangePorte', 'description': 'Range delle porte da scansionare'},
-            {'key': 'timeout', 'description': 'Tempo massimo per tentare la connessione'}
-        ]
-        return vet_param
+# Funzione principale di esecuzione del programma
+function execute {
+    echo "Esecuzione della scansione per l'IP $ip, Metodo: $metodo"
+    echo "Intervallo delle porte: $startPort a $endPort"
+    echo "Timeout: $timeout"
     
-    @classmethod
-    def set_param(cls, vet_param):
-        cls.ip = vet_param['ip']
-        cls.metodo = vet_param['metodo']
-        cls.rangePorte = vet_param['rangePorte']
-        cls.timeout = vet_param['timeout'] 
-        return True
-    
+    # Variabile per memorizzare le porte aperte
+    open_ports=""
 
-def scan_tcp(ip, porta, timeout):
-    try:
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # Crea un oggetto TCP(i parametri indicano che e' ipv4 e tcp)
-        sock.settimeout(timeout)  #funzione che imposta un tempo massimo per provare a connettersi alla porta
-        result = sock.connect_ex((ip, porta))  # salva il tentativo di connessione nella porta in una variabile
-        if result == 0:
-            return "Porta " + str(porta) + " aperta"  # se e' 0 la connessione con la porta e' riuscita
-        else:
-            return "Porta " + str(porta) + " chiusa"
-    except socket.error:
-        return "Errore di connessione alla porta " + str(porta)
-    finally:
-        sock.close()  # Interrompe la connessione perche' non piu' necessaria
+    # Simula la scansione delle porte
+    for (( port=$startPort; port<=$endPort; port++ )); do
+        if [[ $metodo == "tcp" ]]; then
+            nc -zv -w $timeout $ip $port &>/dev/null
+            if [ $? -eq 0 ]; then
+                open_ports+="$port (TCP), "
+            fi
+        elif [[ $metodo == "udp" ]]; then
+            nc -zvu -w $timeout $ip $port &>/dev/null
+            if [ $? -eq 0 ]; then
+                open_ports+="$port (UDP), "
+            fi
+        else
+            echo "Metodo non valido. Usa 'tcp' o 'udp'."
+            exit 1
+        fi
+    done
 
+    # Rimuove l'ultima virgola e spazio (se ci sono porte aperte)
+    if [ -n "$open_ports" ]; then
+        open_ports=${open_ports%, }
+        echo "Le porte aperte sono: $open_ports"
+    else
+        echo "Nessuna porta aperta trovata."
+    fi
+}
 
-def scan_udp(ip, porta, timeout):
-    try:
-        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # dgram serve per avere un oggetto udp
-        #sock.bind(('127.0.0.1', 12345))
-        sock.settimeout(timeout) 
-        sock.sendto(b'Hello', (ip, porta))  # invio 1 byte vuoto per verificare se la porta e' aperta
-        sock.recvfrom(1024)  # funzione per ricevere il pacchetto ( parametro indica il massimo di byte ricevibili in 1 chiamata)
-        return "Porta " + str(porta) + " aperta"
-    except socket.error:
-        return "Errore di connessione alla porta " + str(porta) + " (probabilmente chiusa)" #in caso scada il time out si da per chiusa la porta
-    finally:
-        sock.close()  
-
-
-def scan_ports(ip, rangePorte, tipoScansione, timeout):
-    porteAperte = [] 
-    for porta in range(rangePorte[0], rangePorte[1] + 1): #il range esclude l'ultima porta, per questo +1
-        if tipoScansione.lower() == 'tcp':  
-            resScansione = scan_tcp(ip, porta, timeout)  
-        elif tipoScansione.lower() == 'udp':  
-            resScansione = scan_udp(ip, porta, timeout) 
-        else:
-            return "Erroe: il tipo di scansione non e' ne tcp ne udp"  # Se il tipo di scansione non è valido, restituisce un errore
-        
-        print(resScansione)  # Stampa il risultato della scansione per debug
-        if "aperta" in resScansione:  
-            porteAperte.append(porta)  
-    
-    return porteAperte 
-
+# Esecuzione dello script
+echo "Inizializzo il plugin Bash..."
+set_param "127.0.0.1" "tcp" 1 1024 1  # Intervallo da 1 a 1024 con timeout 1
+execute
 
     """
     
     plugin = creaPlugin(nome_plugin, contenuto)#salva il modulo(il file)
-    if(plugin!=None):#se è None non provo ad eseguire il plugin
-        parametri = plugin.get_param()
-        key_values = []
-        for parametro in parametri:
-            key_values.append(parametro['key'])
-        vet_param = vet_param = {
+    if plugin is not None:#se è None non provo ad eseguire il plugin
+        if type == 'sh':
+            parametri = estraiParametriBash(plugin)  # Estrai i parametri dal file Bash
+            print("Parametri del plugin Bash:" + str(parametri))
+            vet_param = {
+                "ip": "127.0.0.1", 
+                "metodo": "tcp",   
+                "startPort": "1",  
+                "endPort": "1024",  
+                "timeout": 1         
+            }
+            avvia_plugin(plugin, vet_param, type) 
+        if type == 'py':
+            parametri = plugin.get_param()
+            key_values = []
+            for parametro in parametri:
+                key_values.append(parametro['key'])
+            vet_param = {
                         key_values[0]: '127.0.0.1',        # ip
                         key_values[1]: 'tcp',              # metodo di scansione
-                        key_values[2]: [1,1024],         # rangePorte
+                        key_values[2]: [1,10],         # rangePorte
                         key_values[3]: 1                   # timeout
-                    }
-        avvia_plugin(plugin, vet_param)
+            }
+            avvia_plugin(plugin, vet_param, type)
