@@ -1,12 +1,7 @@
-# PyCharm
 .idea/
-
-# Visual Studio Code
 .vscode/
-
-# Visual Studio
 .vs/
 .pyc/
+.log/
 __pycache__/
-
 venv/
