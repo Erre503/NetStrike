@@ -1,5 +1,5 @@
 # Punto d'ingresso del servizio
-from utilities.security_functions import *
+import utilities.security_functions
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine, Column, Integer, String, Sequence
@@ -185,7 +185,6 @@ def plug_table_details(id=0,parametri=''):
 
 # Funzione per modificare i dati di un plugin
 @app.route("/edit_plugin/<int:id>", endpoint='edit_plugin', methods=["PATCH"])
-@jwt_required()
 def modifyPlugin(id=0):
     plugin = PlugTable.query.get(id)
     data = request.get_json()
