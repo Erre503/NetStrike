@@ -114,7 +114,7 @@ class ClientCore:
             url = f"{self.server_url}{endpoint}"
             headers = {"Authorization": f"Bearer {sf.get_token()}"}
             show_data= not(endpoint in PRIVATE_DATA_ENDPOINTS)
-            
+
             if show_data:
                 logging.debug("Sending %s request to %s with data: %s",metodo, url,dati)
             else:
