@@ -10,3 +10,88 @@
 2025-02-14 10:38:27,037 - INFO -  * Debugger PIN: 379-686-817
 2025-02-14 10:45:45,953 - INFO -  * Detected change in 'C:\\Users\\Erre\\Desktop\\PlugInk\\ServerSide\\core\\plugin_loader.py', reloading
 2025-02-14 10:45:46,159 - INFO -  * Restarting with stat
+2025-02-14 12:22:05,847 - INFO - Application started.
+2025-02-14 12:22:06,896 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on https://127.0.0.1:5000
+ * Running on https://172.20.120.137:5000
+2025-02-14 12:22:06,897 - INFO - [33mPress CTRL+C to quit[0m
+2025-02-14 12:22:06,900 - INFO -  * Restarting with stat
+2025-02-14 12:22:07,643 - INFO - Application started.
+2025-02-14 12:22:07,663 - WARNING -  * Debugger is active!
+2025-02-14 12:22:07,673 - INFO -  * Debugger PIN: 379-686-817
+2025-02-14 12:39:42,979 - INFO -  * Detected change in 'C:\\Users\\Erre\\Desktop\\PlugInk\\ServerSide\\core\\core.py', reloading
+2025-02-14 12:39:43,095 - INFO -  * Restarting with stat
+2025-02-14 12:39:44,084 - INFO - Application started.
+2025-02-14 12:39:44,113 - WARNING -  * Debugger is active!
+2025-02-14 12:39:44,121 - INFO -  * Debugger PIN: 379-686-817
+2025-02-14 12:46:54,317 - INFO - Application started.
+2025-02-14 12:46:55,288 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on https://127.0.0.1:5000
+ * Running on https://172.20.120.137:5000
+2025-02-14 12:46:55,288 - INFO - [33mPress CTRL+C to quit[0m
+2025-02-14 12:46:55,291 - INFO -  * Restarting with stat
+2025-02-14 12:46:56,029 - INFO - Application started.
+2025-02-14 12:46:56,051 - WARNING -  * Debugger is active!
+2025-02-14 12:46:56,059 - INFO -  * Debugger PIN: 379-686-817
+2025-02-14 12:47:08,772 - INFO - 127.0.0.1 - - [14/Feb/2025 12:47:08] "[35m[1mPOST /login HTTP/1.1[0m" 500 -
+2025-02-14 12:48:38,509 - INFO -  * Detected change in 'C:\\Users\\Erre\\Desktop\\PlugInk\\ServerSide\\core\\core.py', reloading
+2025-02-14 12:48:38,625 - INFO -  * Restarting with stat
+2025-02-14 12:48:39,421 - INFO - Application started.
+2025-02-14 12:48:39,442 - WARNING -  * Debugger is active!
+2025-02-14 12:48:39,451 - INFO -  * Debugger PIN: 379-686-817
+2025-02-14 12:48:48,124 - INFO - Application started.
+2025-02-14 12:48:49,011 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on https://127.0.0.1:5000
+ * Running on https://172.20.120.137:5000
+2025-02-14 12:48:49,011 - INFO - [33mPress CTRL+C to quit[0m
+2025-02-14 12:48:49,017 - INFO -  * Restarting with stat
+2025-02-14 12:48:49,775 - INFO - Application started.
+2025-02-14 12:48:49,795 - WARNING -  * Debugger is active!
+2025-02-14 12:48:49,804 - INFO -  * Debugger PIN: 379-686-817
+2025-02-14 12:49:06,691 - INFO - 127.0.0.1 - - [14/Feb/2025 12:49:06] "[35m[1mPOST /login HTTP/1.1[0m" 500 -
+2025-02-14 12:49:44,973 - INFO - Application started.
+2025-02-14 12:49:45,877 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on https://127.0.0.1:5000
+ * Running on https://172.20.120.137:5000
+2025-02-14 12:49:45,877 - INFO - [33mPress CTRL+C to quit[0m
+2025-02-14 12:49:45,879 - INFO -  * Restarting with stat
+2025-02-14 12:49:46,618 - INFO - Application started.
+2025-02-14 12:49:46,636 - WARNING -  * Debugger is active!
+2025-02-14 12:49:46,644 - INFO -  * Debugger PIN: 379-686-817
+2025-02-14 12:49:58,140 - DEBUG - Login was successful
+2025-02-14 12:49:58,141 - INFO - 127.0.0.1 - - [14/Feb/2025 12:49:58] "POST /login HTTP/1.1" 200 -
+2025-02-14 12:49:58,160 - INFO - 127.0.0.1 - - [14/Feb/2025 12:49:58] "[31m[1mGET /plugin_list HTTP/1.1[0m" 422 -
+2025-02-14 12:49:58,181 - INFO - 127.0.0.1 - - [14/Feb/2025 12:49:58] "[31m[1mGET /notification/1739533798 HTTP/1.1[0m" 422 -
+2025-02-14 12:52:11,592 - INFO - 127.0.0.1 - - [14/Feb/2025 12:52:11] "[31m[1mGET /plugin_list HTTP/1.1[0m" 422 -
+2025-02-14 12:57:08,534 - INFO - Application started.
+2025-02-14 12:57:09,459 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on https://127.0.0.1:5000
+ * Running on https://172.20.120.137:5000
+2025-02-14 12:57:09,459 - INFO - [33mPress CTRL+C to quit[0m
+2025-02-14 12:57:09,461 - INFO -  * Restarting with stat
+2025-02-14 12:57:10,540 - INFO - Application started.
+2025-02-14 12:57:10,571 - WARNING -  * Debugger is active!
+2025-02-14 12:57:10,581 - INFO -  * Debugger PIN: 379-686-817
+2025-02-14 12:59:32,692 - DEBUG - Login was successful
+2025-02-14 12:59:32,693 - INFO - 127.0.0.1 - - [14/Feb/2025 12:59:32] "POST /login HTTP/1.1" 200 -
+2025-02-14 12:59:32,731 - INFO - 127.0.0.1 - - [14/Feb/2025 12:59:32] "[31m[1mGET /notification/1739534373 HTTP/1.1[0m" 422 -
+2025-02-14 12:59:32,738 - INFO - 127.0.0.1 - - [14/Feb/2025 12:59:32] "[31m[1mGET /plugin_list HTTP/1.1[0m" 422 -
+2025-02-15 08:15:35,381 - INFO - Application started.
+2025-02-15 08:15:37,111 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on https://127.0.0.1:5000
+ * Running on https://172.20.120.137:5000
+2025-02-15 08:15:37,112 - INFO - [33mPress CTRL+C to quit[0m
+2025-02-15 08:15:37,137 - INFO -  * Restarting with stat
+2025-02-15 08:15:38,342 - INFO - Application started.
+2025-02-15 08:15:38,373 - WARNING -  * Debugger is active!
+2025-02-15 08:15:38,393 - INFO -  * Debugger PIN: 379-686-817
+2025-02-15 08:16:49,224 - DEBUG - Login was successful
+2025-02-15 08:16:49,226 - INFO - 127.0.0.1 - - [15/Feb/2025 08:16:49] "POST /login HTTP/1.1" 200 -
+2025-02-15 08:16:49,275 - INFO - 127.0.0.1 - - [15/Feb/2025 08:16:49] "[31m[1mGET /plugin_list HTTP/1.1[0m" 422 -
+2025-02-15 08:16:49,278 - INFO - 127.0.0.1 - - [15/Feb/2025 08:16:49] "[31m[1mGET /notification/1739603809 HTTP/1.1[0m" 422 -

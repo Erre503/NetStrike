@@ -7,7 +7,7 @@ import requests
 from flask import jsonify
 import time
 import threading
-import utils.security_functions as sf
+import utilities.security_functions as sf
 import os
 import logging
 
@@ -444,7 +444,7 @@ class UIUpdater:
         self.ui.svuota_lista_plugin()
 
         for plugin in plugins:
-            self.ui.aggiungi_plugin(plugin["name"], plugin["id"])
+            self.ui.aggiungi_plugin(plugin["name"], str(plugin["id"]))
 
     """
     Mostra i dettagli di un plugin selezionato nell'interfaccia grafica.
