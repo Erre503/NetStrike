@@ -11,7 +11,7 @@ Returns:
 """
 def sanitize_input(param : str) -> str:
     if(isinstance(param, str)):
-        
+
         return html.escape(param)
     elif(isinstance(param, dict)):
         return sanitize_dict(param)
@@ -64,7 +64,11 @@ Returns:
         Il token JWT se esiste, altrimenti None.
 """
 def get_token():
-    return keyring.get_password("plugink_token", "jwt_token")
+    token = keyring.get_password("plugink_token", "jwt_token")
+    if(isinstance(token, bytes)):
+        token = token.decode('utf-8')
+
+    return token
 
 """
 Elimina il token JWT dal keyring.
