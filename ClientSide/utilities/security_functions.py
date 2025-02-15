@@ -1,10 +1,9 @@
-import html
-import keyring
+import html, keyring, re
 """
 Sanifica il parametro inserito rimuovendo caratteri HTML potenzialmente dannosi.
 
 Args:
-    param (str): Stringa da sanificare. Il valore viene sanificato solo se stringa.
+    param (str): Stringa da sanificare. Il valore viene sanificato solo se stringa, dizionario o lista.
 
 Returns:
     ret (str):
@@ -12,7 +11,14 @@ Returns:
 """
 def sanitize_input(param : str) -> str:
     if(isinstance(param, str)):
-        return html.escape(param);
+
+        return html.escape(param)
+    elif(isinstance(param, dict)):
+        return sanitize_dict(param)
+
+    elif(isinstance(param, list)):
+        return sanitize_list(param)
+
     return param
 
 """
@@ -48,7 +54,9 @@ Args:
     token (str): Il token JWT da salvare nel keyring.
 """
 def save_token(token):
-    keyring.set_password("plugink_token", "jwt_token", token.encode('utf-8'))
+    if isinstance(token, bytes):
+        token = token.decode('utf-8')  # Converti da bytes a stringa
+    keyring.set_password("plugink_token", "jwt_token", token)
 
 """
 Recupera il token JWT precedentemente salvato nel keyring.
@@ -58,7 +66,11 @@ Returns:
         Il token JWT se esiste, altrimenti None.
 """
 def get_token():
-    return keyring.get_password("plugink_token", "jwt_token")
+    token = keyring.get_password("plugink_token", "jwt_token")
+    if(isinstance(token, bytes)):
+        token = token.decode('utf-8')
+
+    return token
 
 """
 Elimina il token JWT dal keyring.
@@ -68,3 +80,18 @@ e al nome di chiave "jwt_token", rendendolo non più accessibile.
 """
 def clear_token():
     keyring.delete_password("plugink_token", "jwt_token")
+
+"""
+Verifica se l'input fornito utilizza solo caratteri consentiti.
+
+Args:
+    user_input(str): Input da verificare.
+
+Returns:
+    bool:
+        True se utilizza solo i caratteri consintiti,
+        altrimenti false
+"""
+def is_valid_input(user_input):
+    pattern = r"^[a-zA-Z0-9 _-]+$"
+    return bool(re.match(pattern, user_input))
