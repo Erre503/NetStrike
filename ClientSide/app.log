@@ -11125,3 +11125,237 @@ KeyError: 'datetime'
   "update": -15
 }
 
+2025-02-15 08:29:41,649 - INFO - Application started.
+2025-02-15 08:29:41,650 - INFO - ClientCore initialized with server URL: https://127.0.0.1:5000
+2025-02-15 08:29:41,650 - INFO - Attempting to log in user: test
+2025-02-15 08:29:41,785 - DEBUG - Loading KWallet
+2025-02-15 08:29:41,801 - DEBUG - Loading SecretService
+2025-02-15 08:29:41,817 - DEBUG - Loading Windows
+2025-02-15 08:29:41,899 - DEBUG - Loaded ctypes backend
+2025-02-15 08:29:41,983 - DEBUG - Loading chainer
+2025-02-15 08:29:41,994 - DEBUG - Loading libsecret
+2025-02-15 08:29:42,007 - DEBUG - Loading macOS
+2025-02-15 08:29:42,037 - DEBUG - Sending POST request to https://127.0.0.1:5000/login
+2025-02-15 08:29:42,045 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-02-15 08:29:42,091 - DEBUG - https://127.0.0.1:5000 "POST /login HTTP/1.1" 200 354
+2025-02-15 08:29:42,093 - DEBUG - Received response
+2025-02-15 08:29:42,106 - INFO - User test logged in successfully.
+2025-02-15 08:29:42,106 - INFO - Starting polling for notifications.
+2025-02-15 08:29:42,107 - DEBUG - Polling for notifications...
+2025-02-15 08:29:42,112 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1739604582 with data: None
+2025-02-15 08:29:42,116 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-02-15 08:29:42,126 - DEBUG - https://127.0.0.1:5000 "GET /notification/1739604582 HTTP/1.1" 422 38
+2025-02-15 08:29:42,127 - DEBUG - Received response: {
+  "msg": "Invalid header padding"
+}
+
+2025-02-15 08:29:42,127 - ERROR - Error 422: {
+  "msg": "Invalid header padding"
+}
+
+2025-02-15 08:29:42,193 - DEBUG - Sending GET request to https://127.0.0.1:5000/plugin_list with data: None
+2025-02-15 08:29:42,196 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-02-15 08:29:42,207 - DEBUG - https://127.0.0.1:5000 "GET /plugin_list HTTP/1.1" 422 38
+2025-02-15 08:29:42,209 - DEBUG - Received response: {
+  "msg": "Invalid header padding"
+}
+
+2025-02-15 08:29:42,209 - ERROR - Error 422: {
+  "msg": "Invalid header padding"
+}
+
+2025-02-15 08:32:12,316 - INFO - Application started.
+2025-02-15 08:32:12,318 - INFO - ClientCore initialized with server URL: https://127.0.0.1:5000
+2025-02-15 08:32:12,318 - INFO - Attempting to log in user: test
+2025-02-15 08:32:12,366 - DEBUG - Loading KWallet
+2025-02-15 08:32:12,369 - DEBUG - Loading SecretService
+2025-02-15 08:32:12,371 - DEBUG - Loading Windows
+2025-02-15 08:32:12,378 - DEBUG - Loaded ctypes backend
+2025-02-15 08:32:12,387 - DEBUG - Loading chainer
+2025-02-15 08:32:12,389 - DEBUG - Loading libsecret
+2025-02-15 08:32:12,391 - DEBUG - Loading macOS
+2025-02-15 08:32:12,402 - DEBUG - Sending POST request to https://127.0.0.1:5000/login
+2025-02-15 08:32:12,408 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-02-15 08:32:12,452 - DEBUG - https://127.0.0.1:5000 "POST /login HTTP/1.1" 200 354
+2025-02-15 08:32:12,454 - DEBUG - Received response
+2025-02-15 08:32:12,470 - INFO - User test logged in successfully.
+2025-02-15 08:32:12,471 - INFO - Starting polling for notifications.
+2025-02-15 08:32:12,472 - DEBUG - Polling for notifications...
+2025-02-15 08:32:12,477 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1739604732 with data: None
+2025-02-15 08:32:12,479 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-02-15 08:32:12,492 - DEBUG - https://127.0.0.1:5000 "GET /notification/1739604732 HTTP/1.1" 422 38
+2025-02-15 08:32:12,492 - DEBUG - Received response: {
+  "msg": "Invalid header padding"
+}
+
+2025-02-15 08:32:12,494 - ERROR - Error 422: {
+  "msg": "Invalid header padding"
+}
+
+2025-02-15 08:32:12,547 - DEBUG - Sending GET request to https://127.0.0.1:5000/plugin_list with data: None
+2025-02-15 08:32:12,550 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-02-15 08:32:12,561 - DEBUG - https://127.0.0.1:5000 "GET /plugin_list HTTP/1.1" 422 38
+2025-02-15 08:32:12,562 - DEBUG - Received response: {
+  "msg": "Invalid header padding"
+}
+
+2025-02-15 08:32:12,563 - ERROR - Error 422: {
+  "msg": "Invalid header padding"
+}
+
+2025-02-15 08:35:39,717 - INFO - Application started.
+2025-02-15 08:35:39,718 - INFO - ClientCore initialized with server URL: https://127.0.0.1:5000
+2025-02-15 08:35:39,719 - INFO - Attempting to log in user: test
+2025-02-15 08:35:39,770 - DEBUG - Loading KWallet
+2025-02-15 08:35:39,772 - DEBUG - Loading SecretService
+2025-02-15 08:35:39,774 - DEBUG - Loading Windows
+2025-02-15 08:35:39,783 - DEBUG - Loaded ctypes backend
+2025-02-15 08:35:39,791 - DEBUG - Loading chainer
+2025-02-15 08:35:39,792 - DEBUG - Loading libsecret
+2025-02-15 08:35:39,794 - DEBUG - Loading macOS
+2025-02-15 08:35:39,806 - DEBUG - Sending POST request to https://127.0.0.1:5000/login
+2025-02-15 08:35:39,810 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-02-15 08:35:39,826 - DEBUG - https://127.0.0.1:5000 "POST /login HTTP/1.1" 200 354
+2025-02-15 08:35:39,827 - DEBUG - Received response
+2025-02-15 08:35:39,843 - INFO - User test logged in successfully.
+2025-02-15 08:35:39,844 - INFO - Starting polling for notifications.
+2025-02-15 08:35:39,844 - DEBUG - Polling for notifications...
+2025-02-15 08:35:39,852 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1739604940 with data: None
+2025-02-15 08:35:39,856 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-02-15 08:35:39,868 - DEBUG - https://127.0.0.1:5000 "GET /notification/1739604940 HTTP/1.1" 422 38
+2025-02-15 08:35:39,870 - DEBUG - Received response: {
+  "msg": "Invalid header padding"
+}
+
+2025-02-15 08:35:39,870 - ERROR - Error 422: {
+  "msg": "Invalid header padding"
+}
+
+2025-02-15 08:35:39,917 - DEBUG - Sending GET request to https://127.0.0.1:5000/plugin_list with data: None
+2025-02-15 08:35:39,919 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-02-15 08:35:39,929 - DEBUG - https://127.0.0.1:5000 "GET /plugin_list HTTP/1.1" 422 38
+2025-02-15 08:35:39,930 - DEBUG - Received response: {
+  "msg": "Invalid header padding"
+}
+
+2025-02-15 08:35:39,932 - ERROR - Error 422: {
+  "msg": "Invalid header padding"
+}
+
+2025-02-15 08:37:36,061 - INFO - Application started.
+2025-02-15 08:37:36,062 - INFO - ClientCore initialized with server URL: https://127.0.0.1:5000
+2025-02-15 08:37:36,062 - INFO - Attempting to log in user: test
+2025-02-15 08:37:36,118 - DEBUG - Loading KWallet
+2025-02-15 08:37:36,120 - DEBUG - Loading SecretService
+2025-02-15 08:37:36,122 - DEBUG - Loading Windows
+2025-02-15 08:37:36,130 - DEBUG - Loaded ctypes backend
+2025-02-15 08:37:36,137 - DEBUG - Loading chainer
+2025-02-15 08:37:36,138 - DEBUG - Loading libsecret
+2025-02-15 08:37:36,140 - DEBUG - Loading macOS
+2025-02-15 08:37:36,152 - DEBUG - Sending POST request to https://127.0.0.1:5000/login
+2025-02-15 08:37:36,157 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-02-15 08:37:36,172 - DEBUG - https://127.0.0.1:5000 "POST /login HTTP/1.1" 200 354
+2025-02-15 08:37:36,174 - DEBUG - Received response
+2025-02-15 08:37:36,189 - INFO - User test logged in successfully.
+2025-02-15 08:37:36,189 - INFO - Starting polling for notifications.
+2025-02-15 08:37:36,190 - DEBUG - Polling for notifications...
+2025-02-15 08:37:36,197 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1739605056 with data: None
+2025-02-15 08:37:36,200 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-02-15 08:37:36,213 - DEBUG - https://127.0.0.1:5000 "GET /notification/1739605056 HTTP/1.1" 422 38
+2025-02-15 08:37:36,214 - DEBUG - Received response: {
+  "msg": "Invalid header padding"
+}
+
+2025-02-15 08:37:36,215 - ERROR - Error 422: {
+  "msg": "Invalid header padding"
+}
+
+2025-02-15 08:37:36,280 - DEBUG - Sending GET request to https://127.0.0.1:5000/plugin_list with data: None
+2025-02-15 08:37:36,282 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-02-15 08:37:36,294 - DEBUG - https://127.0.0.1:5000 "GET /plugin_list HTTP/1.1" 422 38
+2025-02-15 08:37:36,294 - DEBUG - Received response: {
+  "msg": "Invalid header padding"
+}
+
+2025-02-15 08:37:36,296 - ERROR - Error 422: {
+  "msg": "Invalid header padding"
+}
+
+2025-02-15 08:39:14,306 - INFO - Application started.
+2025-02-15 08:39:14,307 - INFO - ClientCore initialized with server URL: https://127.0.0.1:5000
+2025-02-15 08:39:14,307 - INFO - Attempting to log in user: test
+2025-02-15 08:39:14,359 - DEBUG - Loading KWallet
+2025-02-15 08:39:14,362 - DEBUG - Loading SecretService
+2025-02-15 08:39:14,365 - DEBUG - Loading Windows
+2025-02-15 08:39:14,372 - DEBUG - Loaded ctypes backend
+2025-02-15 08:39:14,381 - DEBUG - Loading chainer
+2025-02-15 08:39:14,382 - DEBUG - Loading libsecret
+2025-02-15 08:39:14,384 - DEBUG - Loading macOS
+2025-02-15 08:39:14,396 - DEBUG - Sending POST request to https://127.0.0.1:5000/login
+2025-02-15 08:39:14,401 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-02-15 08:39:14,416 - DEBUG - https://127.0.0.1:5000 "POST /login HTTP/1.1" 200 354
+2025-02-15 08:39:14,417 - DEBUG - Received response
+2025-02-15 08:39:14,433 - INFO - User test logged in successfully.
+2025-02-15 08:39:14,434 - INFO - Starting polling for notifications.
+2025-02-15 08:39:14,435 - DEBUG - Polling for notifications...
+2025-02-15 08:39:14,440 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1739605154 with data: None
+2025-02-15 08:39:14,447 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-02-15 08:39:14,458 - DEBUG - https://127.0.0.1:5000 "GET /notification/1739605154 HTTP/1.1" 422 38
+2025-02-15 08:39:14,460 - DEBUG - Received response: {
+  "msg": "Invalid header padding"
+}
+
+2025-02-15 08:39:14,462 - ERROR - Error 422: {
+  "msg": "Invalid header padding"
+}
+
+2025-02-15 08:39:14,531 - DEBUG - Sending GET request to https://127.0.0.1:5000/plugin_list with data: None
+2025-02-15 08:39:14,534 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-02-15 08:39:14,544 - DEBUG - https://127.0.0.1:5000 "GET /plugin_list HTTP/1.1" 422 38
+2025-02-15 08:39:14,546 - DEBUG - Received response: {
+  "msg": "Invalid header padding"
+}
+
+2025-02-15 08:39:14,546 - ERROR - Error 422: {
+  "msg": "Invalid header padding"
+}
+
+2025-02-15 08:43:23,841 - INFO - Application started.
+2025-02-15 08:43:23,842 - INFO - ClientCore initialized with server URL: https://127.0.0.1:5000
+2025-02-15 08:43:23,843 - INFO - Attempting to log in user: test
+2025-02-15 08:43:23,893 - DEBUG - Loading KWallet
+2025-02-15 08:43:23,896 - DEBUG - Loading SecretService
+2025-02-15 08:43:23,898 - DEBUG - Loading Windows
+2025-02-15 08:43:23,907 - DEBUG - Loaded ctypes backend
+2025-02-15 08:43:23,913 - DEBUG - Loading chainer
+2025-02-15 08:43:23,914 - DEBUG - Loading libsecret
+2025-02-15 08:43:23,916 - DEBUG - Loading macOS
+2025-02-15 08:43:23,927 - DEBUG - Sending POST request to https://127.0.0.1:5000/login
+2025-02-15 08:43:23,931 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-02-15 08:43:23,948 - DEBUG - https://127.0.0.1:5000 "POST /login HTTP/1.1" 200 354
+2025-02-15 08:43:23,949 - DEBUG - Received response
+2025-02-15 08:43:23,965 - INFO - User test logged in successfully.
+2025-02-15 08:43:23,966 - INFO - Starting polling for notifications.
+2025-02-15 08:43:23,967 - DEBUG - Polling for notifications...
+2025-02-15 08:43:23,972 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1739605404 with data: None
+2025-02-15 08:43:23,976 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-02-15 08:43:23,984 - DEBUG - https://127.0.0.1:5000 "GET /notification/1739605404 HTTP/1.1" 422 38
+2025-02-15 08:43:23,985 - DEBUG - Received response: {
+  "msg": "Invalid header padding"
+}
+
+2025-02-15 08:43:23,985 - ERROR - Error 422: {
+  "msg": "Invalid header padding"
+}
+
+2025-02-15 08:43:24,041 - DEBUG - Sending GET request to https://127.0.0.1:5000/plugin_list with data: None
+2025-02-15 08:43:24,043 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-02-15 08:43:24,059 - DEBUG - https://127.0.0.1:5000 "GET /plugin_list HTTP/1.1" 422 38
+2025-02-15 08:43:24,060 - DEBUG - Received response: {
+  "msg": "Invalid header padding"
+}
+
+2025-02-15 08:43:24,060 - ERROR - Error 422: {
+  "msg": "Invalid header padding"
+}
+

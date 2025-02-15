@@ -95,3 +95,101 @@
 2025-02-15 08:16:49,226 - INFO - 127.0.0.1 - - [15/Feb/2025 08:16:49] "POST /login HTTP/1.1" 200 -
 2025-02-15 08:16:49,275 - INFO - 127.0.0.1 - - [15/Feb/2025 08:16:49] "[31m[1mGET /plugin_list HTTP/1.1[0m" 422 -
 2025-02-15 08:16:49,278 - INFO - 127.0.0.1 - - [15/Feb/2025 08:16:49] "[31m[1mGET /notification/1739603809 HTTP/1.1[0m" 422 -
+2025-02-15 08:28:33,389 - INFO - Application started.
+2025-02-15 08:28:34,348 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on https://127.0.0.1:5000
+ * Running on https://172.20.120.137:5000
+2025-02-15 08:28:34,348 - INFO - [33mPress CTRL+C to quit[0m
+2025-02-15 08:28:34,351 - INFO -  * Restarting with stat
+2025-02-15 08:28:35,487 - INFO - Application started.
+2025-02-15 08:28:35,514 - WARNING -  * Debugger is active!
+2025-02-15 08:28:35,531 - INFO -  * Debugger PIN: 379-686-817
+2025-02-15 08:29:42,087 - DEBUG - Login was successful
+2025-02-15 08:29:42,089 - INFO - 127.0.0.1 - - [15/Feb/2025 08:29:42] "POST /login HTTP/1.1" 200 -
+2025-02-15 08:29:42,123 - INFO - 127.0.0.1 - - [15/Feb/2025 08:29:42] "[31m[1mGET /notification/1739604582 HTTP/1.1[0m" 422 -
+2025-02-15 08:29:42,206 - INFO - 127.0.0.1 - - [15/Feb/2025 08:29:42] "[31m[1mGET /plugin_list HTTP/1.1[0m" 422 -
+2025-02-15 08:31:46,137 - INFO - Application started.
+2025-02-15 08:31:47,119 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on https://127.0.0.1:5000
+ * Running on https://172.20.120.137:5000
+2025-02-15 08:31:47,120 - INFO - [33mPress CTRL+C to quit[0m
+2025-02-15 08:31:47,123 - INFO -  * Restarting with stat
+2025-02-15 08:31:48,102 - INFO - Application started.
+2025-02-15 08:31:48,129 - WARNING -  * Debugger is active!
+2025-02-15 08:31:48,142 - INFO -  * Debugger PIN: 379-686-817
+2025-02-15 08:32:12,450 - DEBUG - Login was successful
+2025-02-15 08:32:12,451 - INFO - 127.0.0.1 - - [15/Feb/2025 08:32:12] "POST /login HTTP/1.1" 200 -
+2025-02-15 08:32:12,490 - INFO - 127.0.0.1 - - [15/Feb/2025 08:32:12] "[31m[1mGET /notification/1739604732 HTTP/1.1[0m" 422 -
+2025-02-15 08:32:12,560 - INFO - 127.0.0.1 - - [15/Feb/2025 08:32:12] "[31m[1mGET /plugin_list HTTP/1.1[0m" 422 -
+2025-02-15 08:35:03,931 - INFO -  * Detected change in 'C:\\Users\\Erre\\Desktop\\PlugInk\\ServerSide\\core\\core.py', reloading
+2025-02-15 08:35:04,110 - INFO -  * Restarting with stat
+2025-02-15 08:35:05,192 - INFO - Application started.
+2025-02-15 08:35:05,223 - WARNING -  * Debugger is active!
+2025-02-15 08:35:05,236 - INFO -  * Debugger PIN: 379-686-817
+2025-02-15 08:35:19,715 - INFO - Application started.
+2025-02-15 08:35:20,655 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on https://127.0.0.1:5000
+ * Running on https://172.20.120.137:5000
+2025-02-15 08:35:20,655 - INFO - [33mPress CTRL+C to quit[0m
+2025-02-15 08:35:20,659 - INFO -  * Restarting with stat
+2025-02-15 08:35:21,634 - INFO - Application started.
+2025-02-15 08:35:21,657 - WARNING -  * Debugger is active!
+2025-02-15 08:35:21,667 - INFO -  * Debugger PIN: 379-686-817
+2025-02-15 08:35:39,823 - DEBUG - Login was successful
+2025-02-15 08:35:39,825 - INFO - 127.0.0.1 - - [15/Feb/2025 08:35:39] "POST /login HTTP/1.1" 200 -
+2025-02-15 08:35:39,867 - INFO - 127.0.0.1 - - [15/Feb/2025 08:35:39] "[31m[1mGET /notification/1739604940 HTTP/1.1[0m" 422 -
+2025-02-15 08:35:39,928 - INFO - 127.0.0.1 - - [15/Feb/2025 08:35:39] "[31m[1mGET /plugin_list HTTP/1.1[0m" 422 -
+2025-02-15 08:36:47,298 - INFO - Application started.
+2025-02-15 08:36:48,217 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on https://127.0.0.1:5000
+ * Running on https://172.20.120.137:5000
+2025-02-15 08:36:48,218 - INFO - [33mPress CTRL+C to quit[0m
+2025-02-15 08:36:48,220 - INFO -  * Restarting with stat
+2025-02-15 08:36:49,257 - INFO - Application started.
+2025-02-15 08:36:49,293 - WARNING -  * Debugger is active!
+2025-02-15 08:36:49,308 - INFO -  * Debugger PIN: 379-686-817
+2025-02-15 08:37:36,169 - DEBUG - Login was successful
+2025-02-15 08:37:36,171 - INFO - 127.0.0.1 - - [15/Feb/2025 08:37:36] "POST /login HTTP/1.1" 200 -
+2025-02-15 08:37:36,212 - INFO - 127.0.0.1 - - [15/Feb/2025 08:37:36] "[31m[1mGET /notification/1739605056 HTTP/1.1[0m" 422 -
+2025-02-15 08:37:36,293 - INFO - 127.0.0.1 - - [15/Feb/2025 08:37:36] "[31m[1mGET /plugin_list HTTP/1.1[0m" 422 -
+2025-02-15 08:38:36,092 - INFO -  * Detected change in 'C:\\Users\\Erre\\Desktop\\PlugInk\\ServerSide\\core\\core.py', reloading
+2025-02-15 08:38:36,322 - INFO -  * Restarting with stat
+2025-02-15 08:38:37,816 - INFO - Application started.
+2025-02-15 08:38:37,879 - WARNING -  * Debugger is active!
+2025-02-15 08:38:37,902 - INFO -  * Debugger PIN: 379-686-817
+2025-02-15 08:39:14,412 - DEBUG - Login attempt on user :test...
+2025-02-15 08:39:14,413 - DEBUG - Login was successful
+2025-02-15 08:39:14,415 - INFO - 127.0.0.1 - - [15/Feb/2025 08:39:14] "POST /login HTTP/1.1" 200 -
+2025-02-15 08:39:14,457 - INFO - 127.0.0.1 - - [15/Feb/2025 08:39:14] "[31m[1mGET /notification/1739605154 HTTP/1.1[0m" 422 -
+2025-02-15 08:39:14,543 - INFO - 127.0.0.1 - - [15/Feb/2025 08:39:14] "[31m[1mGET /plugin_list HTTP/1.1[0m" 422 -
+2025-02-15 08:42:46,640 - INFO -  * Detected change in 'C:\\Users\\Erre\\Desktop\\PlugInk\\ServerSide\\core\\core.py', reloading
+2025-02-15 08:42:46,846 - INFO -  * Restarting with stat
+2025-02-15 08:42:56,343 - INFO - Application started.
+2025-02-15 08:42:57,304 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on https://127.0.0.1:5000
+ * Running on https://172.20.120.137:5000
+2025-02-15 08:42:57,305 - INFO - [33mPress CTRL+C to quit[0m
+2025-02-15 08:42:57,308 - INFO -  * Restarting with stat
+2025-02-15 08:42:58,262 - INFO - Application started.
+2025-02-15 08:42:58,292 - WARNING -  * Debugger is active!
+2025-02-15 08:42:58,306 - INFO -  * Debugger PIN: 379-686-817
+2025-02-15 08:43:23,944 - DEBUG - Login attempt on user :test...
+2025-02-15 08:43:23,945 - DEBUG - Login was successful
+2025-02-15 08:43:23,946 - INFO - 127.0.0.1 - - [15/Feb/2025 08:43:23] "POST /login HTTP/1.1" 200 -
+2025-02-15 08:43:23,983 - INFO - 127.0.0.1 - - [15/Feb/2025 08:43:23] "[31m[1mGET /notification/1739605404 HTTP/1.1[0m" 422 -
+2025-02-15 08:43:24,057 - INFO - 127.0.0.1 - - [15/Feb/2025 08:43:24] "[31m[1mGET /plugin_list HTTP/1.1[0m" 422 -
+2025-02-15 09:18:11,932 - INFO - Application started.
+2025-02-15 09:18:12,934 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on https://127.0.0.1:5000
+ * Running on https://172.20.120.137:5000
+2025-02-15 09:18:12,935 - INFO - [33mPress CTRL+C to quit[0m
+2025-02-15 09:18:12,937 - INFO -  * Restarting with stat
+2025-02-15 09:18:14,002 - INFO - Application started.
+2025-02-15 09:18:14,031 - WARNING -  * Debugger is active!
+2025-02-15 09:18:14,042 - INFO -  * Debugger PIN: 379-686-817

@@ -1,5 +1,5 @@
 # Punto d'ingresso del servizio
-import utils.security_functions
+from utils.security_functions import *
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine, Column, Integer, String, Sequence
@@ -31,9 +31,9 @@ last_update = round(time.time())
 class PlugTable(db.Model):
     __tablename__ = 'plugTable'
     id = db.Column(db.Integer, Sequence('plugin_id_seq'), primary_key=True)
-    name = db.Column(db.String(50), nullable=False)
-    params = db.Column(db.String(300), default="")
-    description = db.Column(db.String(300), default="Il plugin non esiste")
+    name = db.Column(db.String(64), nullable=False)
+    params = db.Column(db.String(256), default="")
+    description = db.Column(db.String(512), default="Il plugin non esiste")
 
     def __repr__(self):
         return '<Name %r>' % self.id
@@ -59,9 +59,10 @@ class PlugTable(db.Model):
 class Log(db.Model):
     __tablename__ = 'Log'
     idLog = db.Column(db.Integer, Sequence('logId'), primary_key=True)
+    name = db.Column(db.String(32))
     dateLog = db.Column(db.DateTime, nullable=False)
     success = db.Column(db.Boolean, default=False)
-    result = db.Column(db.String(300), default="Il test non ha fornito risultati")
+    result = db.Column(db.String(512), default="Il test non ha fornito risultati")
 
     def __repr__(self):
         return '<Name %r>' % self.idLog
@@ -78,6 +79,34 @@ class Log(db.Model):
             'result': self.result
         }
 
+# log:
+#   idLog : Integer
+#   dateLog : String       //data dell'esecuzione
+#   success : Boolean      //esito dell'attacco (riuscito? true:false)
+#   result : String        //Informazioni ottenute dall'attacco sul suo esito
+
+class ProgrammedTest(db.Model):
+    __tablename__ = 'ProgrammedTest'
+    idLog = db.Column(db.Integer, Sequence('logId'), primary_key=True)
+    name = db.Column(db.String(32))
+    dateLog = db.Column(db.DateTime, nullable=False)
+    success = db.Column(db.Boolean, default=False)
+    result = db.Column(db.String(512), default="Il test non ha fornito risultati")
+
+    def __repr__(self):
+        return '<Name %r>' % self.idLog
+
+    def logList(self):
+        return {
+            'idLog': self.idLog,
+            'dateLog': self.dateLog.strftime('%Y-%m-%d %H:%M:%S')            
+        }
+
+    def logData(self):
+        return {
+            'success': self.success,
+            'result': self.result
+        }
 # Output di default
 
 # output di default all'accesso alla route del server con disclaimer
@@ -93,12 +122,12 @@ def index():
 def login():
     username = request.json.get('username', None)
     password = request.json.get('password', None)
-    logging.debug("Login attempt on user :", username,"...")
+    logging.debug("Login attempt on user :"+username+"...")
     if(username != "test" or password != "password"):
         logging.error("Login failed due to incorrect credentials")
         return jsonify({'msg':'Error, login failed'}), 401
     access_token = create_access_token(identity=username)
-    logging.debug("Login was successful")
+    logging.debug(username+": Has logged successfully")
     return jsonify(access_token=access_token), 200
 
 # Funzione per la lista dei plugin
@@ -107,9 +136,9 @@ def login():
 def plug_table():
     pluginT = PlugTable.query.all()
     if pluginT is None or not pluginT:
-        logging.error("Plugin list was requested by ", get_jwt_identity(),"but was not found")
+        logging.error(get_jwt_identity()+": Requested the plugin list but was not found")
         return "error 404, no such plugin has been found"
-    logging.debug("Plugin list was requested by ", get_jwt_identity())
+    logging.debug(get_jwt_identity()+": Requested the plugin list" )
     return jsonify([plugin.list() for plugin in pluginT])
 
 # Funzione per i dettagli del plugin
@@ -118,7 +147,7 @@ def plug_table():
 def plug_table_details(id=0):
     plugin = PlugTable.query.get(id)  # gestione dell'id tramite il metodo http GET
     if plugin is None:
-        logging.error("Plugin requested by ", get_jwt_identity()," was not found")
+        logging.error(get_jwt_identity()+": Requested a plugin but was not found")
         return "error 404, no such plugin has been found"
     logging.debug("A plugin's details were requested by ", get_jwt_identity())
     return jsonify(plugin.get_description())  # Use the renamed method
@@ -128,9 +157,9 @@ def plug_table_details(id=0):
 def test_table():
     testT = Log.query.all()
     if testT is None or not testT:
-        logging.error("Test list has been requested by ", get_jwt_identity()," but was not found")
+        logging.error(get_jwt_identity()+": Requested the test list but was not found")
         return "error 404, no such test has been found"
-    logging.debug("Test list has been requested by ", get_jwt_identity())
+    logging.debug(get_jwt_identity()+": Requested test list" )
     return jsonify([test.list() for test in testT])
 
 @app.route("/test_details/<int:id>", endpoint='test_details', methods=["GET"])
@@ -138,10 +167,26 @@ def test_table():
 def test_table_details(id=0):
     test = Log.query.get(id)  # gestione dell'id tramite il metodo http GET
     if test is None:
-        logging.error("Test requested by ", get_jwt_identity()," has not being found")
+        logging.error(get_jwt_identity()+": Requested a plugin but was not found")
         return "error 404, no such plugin has been found"
-    logging.debug("Test has been requested by ", get_jwt_identity())
+    logging.debug("Test has been requested by "+ get_jwt_identity())
     return jsonify(test.to_dict())  # Use the renamed method
+
+@app.route("/edit_test/<int:id>",endpoint="edit_test",methods=["PATCH"])
+@jwt_required
+def edit_test(id=0):
+    data = request.get_json()
+    if data is None:
+        logging.error(get_jwt_identity()+": Tried to edit a test without parameters")
+        return "nessun parametro passato"
+    test = Log.query.get(id)
+    if test is None:
+        logging.error(get_jwt_identity()+": Requested a plugin but was not found")
+        return "error 404, no such plugin has been found"
+    test.name = data.name
+    db.session.commit()
+    logging.debug(get_jwt_identity()+": Changed a test name ")
+    return "nome del test cambiato"
 
 @app.route("/notification/<int:timestamp>", endpoint='notification', methods=["GET"])
 @jwt_required()
@@ -158,7 +203,7 @@ def new_plugin():
     data = request.get_json()
     sanitize_dict(data)
     if not data or 'name' not in data:
-        logging.error("Plugin sent by ", get_jwt_identity()," has failed standards")
+        logging.error(get_jwt_identity()+": Tried to add a plugin but has failed standards")
         return jsonify({"error": "Invalid record"}), 404
 
     created = creaPlugin(data['name'], data['content'])
@@ -175,10 +220,10 @@ def new_plugin():
         last_update = round(time.time())
         print("Updated time: "+str(last_update))
         # Return a success response
-        logging.debug("Plugin has been added by:", get_jwt_identity())
+        logging.debug(get_jwt_identity()+": Added a plugin ("+data['name']+")" )
         return jsonify({"message": "Plugin uploaded successfully"}), 201
     else:
-        logging.error("Creation of a plugin by",get_jwt_identity(),"has failed:")
+        logging.error(get_jwt_identity()+": Creation of a plugin has failed")
         return jsonify({"error": "Error during creation"}), 404
 
 # Esecuzione del plugin
@@ -187,11 +232,11 @@ def new_plugin():
 def plug_table_details(id=0,parametri=''):
     plugin = PlugTable.query.get(id)  # gestione dell'id tramite il metodo http GET
     if plugin is None:
-        logging.error("Tried to execute not existing plugin : ",get_jwt_identity())
+        logging.error("Tried to execute not existing plugin : "+get_jwt_identity())
         return "error 404, no such plugin has been found"
     result = avvia_plugin(plugin.name[:-3],parametri)
     logUpdate(result)
-    logging.debug("Plugin  ",plugin.name," was executed by:", get_jwt_identity())
+    logging.debug( get_jwt_identity()+": Has executed plugin "+plugin.name)
     return jsonify(result) 
 
 
@@ -204,18 +249,18 @@ def modifyPlugin(id=0):
     data = request.get_json()
     sanitize_dict(data)
     if data.description == None and data.name == None:
-        logging.error("Plugin edit was tried without parameters by:",get_jwt_identity())
+        logging.error(get_jwt_identity()+": Tried editing a plugin without sending parameters")
         return "nessun parametro passato"
     if data.name:   
         cambiaNome(plugin.name, data.name)
         plugin.name = data.name
         db.session.commit()
-        logging.debug("Plugin (",plugin.name,") name has been edited by:",get_jwt_identity())
+        logging.debug(get_jwt_identity()+": Edited plugin ("+plugin.name+") name")
         return "nome aggiornato"
     else:
         plugin.description = data.description
         db.session.commit()
-        logging.debug("Plugin (",plugin.name,") description has been edited by:",get_jwt_identity())
+        logging.debug(get_jwt_identity()+": Edited plugin ("+plugin.name+") description")
         return "descrizione aggiornata"
 
 # Funzione per ottenere la lista dei messaggi di log
@@ -224,9 +269,9 @@ def modifyPlugin(id=0):
 def log():
     log_entries = Log.query.all()
     if log_entries is None or not log_entries:
-        logging.error("No test log has been found")
+        logging.error(get_jwt_identity()+": No test log has been found")
         return "error 404"
-    logging.debug("Test list has been requested by:",get_jwt_identity())
+    logging.debug(get_jwt_identity()+": Requested the test list")
     return jsonify([log_entries.logList()])
 
 # Update del Log
