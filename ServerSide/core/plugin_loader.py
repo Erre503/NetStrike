@@ -42,9 +42,9 @@ def cambiaNome(folder, nomeVecchio, nomeNuovo): #dato il nome del file da rinomi
         print("Errore: impossibile rinominare il nome del file")
 
 
-def avvia_plugin(nome_plugin, vet_param, type):
+def avvia_plugin(nome_plugin, vet_param):
     # Se il plugin è Python
-    if type == 'py':
+    if get_plugin_type(nome_plugin) == 'py':
         try:
             # Importa dinamicamente il modulo Python
             modulo = importlib.import_module(nome_plugin[:-3])  # Rimuove ".py"
@@ -55,7 +55,7 @@ def avvia_plugin(nome_plugin, vet_param, type):
             print("Errore nell'importazione ed esecuzione del modulo Python")
     
     # Se il plugin è Bash
-    elif type == 'sh':
+    elif get_plugin_type(nome_plugin) == 'sh':
         # Verifica che il file esista
         percorso_file = folder / nome_plugin
         avvia_plugin_bash(percorso_file, vet_param)  # Esegui il plugin Bash
@@ -147,7 +147,8 @@ def creaPluginPy(nome_file, contenuto):
         # Verifica che esista un elemento 'Plugin' sia presente nel modulo
         if not hasattr(modulo, "Plugin"):
             print("Errore: Il file non contiene nessun elemento 'Plugin'.")
-            return None
+            os.remove(percorso_file)
+            return False
         
         # Ottieni la presunta classe Plugin
         classe_plugin = getattr(modulo, "Plugin")
@@ -155,22 +156,25 @@ def creaPluginPy(nome_file, contenuto):
         # Verifica che 'Plugin' sia una classe
         if not inspect.isclass(classe_plugin):
             print("Errore: 'Plugin' non è una classe.")
-            return None
+            os.remove(percorso_file)
+            return False
         
         #verifica che tutti i metodi astratti siano implementati
         if isinstance(classe_plugin, abc.ABCMeta):
             if hasattr(classe_plugin, '__abstractmethods__') and len(classe_plugin.__abstractmethods__) > 0:
                 print("Errore: La classe 'Plugin' è astratta e non implementa tutti i metodi richiesti.")
-                return None
+                os.remove(percorso_file)
+                return False
         if verifica_sintassi_python(percorso_file):
-            return classe_plugin
+            return True
         else:
             print("errore sintassi errata")
-            return None
+            os.remove(percorso_file)
+            return False
 
     except Exception:
         print("Errore: il Plugin non appartiene alla classe 'Plugin' ")
-        return None
+        return False
 
 def verifica_sintassi_bash(percorso_file):
     try:
@@ -190,20 +194,22 @@ def creaPluginSh(nome_file, contenuto):
     percorso_file = os.path.join(folder, nome_file)
     if nome_file in os.listdir(folder):
         print("Nome del File già presente")
-        return None
+        return False
     with open(percorso_file, "w", encoding="utf-8") as file:
         file.write(contenuto)
         print("File " + nome_file + " creato con successo nella cartella " + str(folder)) #stringa di debug
         print(" ") #crea uno spazio per rendere l'output più carino
     if interfacciaBash(percorso_file):
         if verifica_sintassi_bash(percorso_file):
-            return percorso_file
+            return True
         else:
             print("errore sintassi errata")
-            return None
+            os.remove(percorso_file)
+            return False
     else:
         print("il plugin non rispetta l'interfaccia")
-        return None
+        os.remove(percorso_file)
+        return False
 
     
 
@@ -226,7 +232,6 @@ if(__name__ == "__main__"):
     for i in lista_plugin(folder): 
         print(i)
     nome_plugin = input() #il nome per fare i test è dato in input
-    type = "py"
     
     #esempio plugin
     contenuto = """import socket  # serve per poter creare delle connessione con ad esempio udp e tcp
@@ -316,9 +321,9 @@ def scan_ports(ip, rangePorte, tipoScansione, timeout):
 
     """
     
-    plugin = creaPlugin(nome_plugin, contenuto)#salva il modulo(il file)
-    if nome_plugin is not None:#se è None non provo ad eseguire il plugin
-        if type == 'sh':
+    creazione = creaPlugin(nome_plugin, contenuto)#salva il modulo(il file)
+    if creazione:#se è None non provo ad eseguire il plugin
+        if get_plugin_type(nome_plugin) == 'sh':
             plugin= folder / nome_plugin
             parametri = estraiParametriBash(plugin)  # Estrai i parametri dal file Bash
             print("Parametri del plugin Bash:" + str(parametri))
@@ -329,8 +334,8 @@ def scan_ports(ip, rangePorte, tipoScansione, timeout):
                 "endPort": "208",  
                 "timeout": 1         
             }
-            avvia_plugin(nome_plugin, vet_param, type) 
-        if type == 'py':
+            avvia_plugin(nome_plugin, vet_param) 
+        if get_plugin_type(nome_plugin) == 'py':
             modulo = importlib.import_module(nome_plugin[:-3])  # Rimuove ".py"
             plugin = modulo.Plugin()
             parametri = plugin.get_param()
@@ -343,4 +348,4 @@ def scan_ports(ip, rangePorte, tipoScansione, timeout):
                         key_values[2]: [1,10],         # rangePorte
                         key_values[3]: 1                   # timeout
             }
-            avvia_plugin(nome_plugin, vet_param, type)
+            avvia_plugin(nome_plugin, vet_param)
