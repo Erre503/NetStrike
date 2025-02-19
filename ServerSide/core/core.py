@@ -188,7 +188,7 @@ def plug_table_details(id=0,parametri=''):
     plugin = PlugTable.query.get(id)  # gestione dell'id tramite il metodo http GET
     if plugin is None:
         logging.error("Tried to execute not existing plugin : ",get_jwt_identity())
-        return "error 404, no such plugin has been found"
+        return jsonify({"error": "Plugin was not found"}), 404
     result = avvia_plugin(plugin.name[:-3],parametri)
     logUpdate(result)
     logging.debug("Plugin  ",plugin.name," was executed by:", get_jwt_identity())
@@ -205,18 +205,17 @@ def modifyPlugin(id=0):
     sanitize_dict(data)
     if data.description == NULL and data.name == NULL:
         logging.error("Plugin edit was tried without parameters by:",get_jwt_identity())
-        return "nessun parametro passato"
+        return jsonify({"error": "Edit was tried without parameters"}), 404
     if data.name:   
         cambiaNome(plugin.name, data.name)
         plugin.name = data.name
         db.session.commit()
         logging.debug("Plugin (",plugin.name,") name has been edited by:",get_jwt_identity())
-        return "nome aggiornato"
-    else:
+    if data.decription:
         plugin.description = data.description
         db.session.commit()
         logging.debug("Plugin (",plugin.name,") description has been edited by:",get_jwt_identity())
-        return "descrizione aggiornata"
+    return jsonify({"message": "Plugin edited successfully"}), 201
 
 # Funzione per ottenere la lista dei messaggi di log
 @app.route("/log_list", endpoint='log_list', methods=["GET"])
@@ -225,7 +224,7 @@ def log():
     log_entries = Log.query.all()
     if log_entries is None or not log_entries:
         logging.error("No test log has been found")
-        return "error 404"
+        return jsonify({"error": "Plugin was not found"}), 404
     logging.debug("Test list has been requested by:",get_jwt_identity())
     return jsonify([log_entries.logList()])
 
