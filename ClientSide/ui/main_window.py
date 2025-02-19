@@ -8,7 +8,9 @@ class MainInterfaccia(ctk.CTkFrame):
         self.finestraPrincipale = finestraPrincipale
         self.coreApplicazione = coreApplicazione
         self.plugin_files = {}
+
         self.plugin_selezionato = None
+        self.log_selezionato = None
 
     def initUI(self):
         ctk.set_appearance_mode("Dark")
@@ -45,7 +47,7 @@ class MainInterfaccia(ctk.CTkFrame):
         self.bottoneRimuoviP = ctk.CTkButton(self.frameSX, text="REMOVE PLUG-IN", corner_radius=5, command=self.rimuoviPlugin)
         self.bottoneRimuoviP.pack(pady=10)
 
-        self.bottoneRinominaP = ctk.CTkButton(self.frameSX, text="RENAME PLUG-IN", corner_radius=5, command=self.rinominaPlugin)
+        self.bottoneRinominaP = ctk.CTkButton(self.frameSX, text="RENAME PLUG-IN", corner_radius=5, command=self.modificaPlugin)
         self.bottoneRinominaP.pack(pady=10)
 
         self.labelInfoP = ctk.CTkLabel(self.frameDX, text="TEST ANALYSIS", font=("Felix Titling", 40))
@@ -53,6 +55,9 @@ class MainInterfaccia(ctk.CTkFrame):
 
         self.labelInfoPluginSelezionato = ctk.CTkLabel(self.frameDX,width=350, text="SELECTED PLUG-IN: None", font=("Arial",20))
         self.labelInfoPluginSelezionato.pack(pady=20)
+
+        self.listaLog = ctk.CTkFrame(self.frameDX, width=350, height=200, corner_radius=10)
+        self.listaLog.pack_forget()
 
         self.informazioniTest = ctk.CTkTabview(self.frameDX, width=350, height=200, corner_radius=10)
         self.informazioniTest.pack(pady=10)
@@ -63,7 +68,6 @@ class MainInterfaccia(ctk.CTkFrame):
 
         self.testResult = self.informazioniTest.add("TEST RESULT")
         self.mostraRisultatoTest = ctk.CTkLabel(self.testResult, text="Run a plug-in to view the test results.").pack(pady=10)
-        #ctk.CTkButton(self.testResult, text="SAVE RESULT").pack(pady=10)
 
         self.bottoneConfig = ctk.CTkButton(self.frameDX, text="CONFIGURE TEST",corner_radius=8, command=self.configuraTest)
         self.bottoneConfig.pack(pady=10)
@@ -71,8 +75,12 @@ class MainInterfaccia(ctk.CTkFrame):
         self.bottoneStart = ctk.CTkButton(self.frameDX, text="START TEST",corner_radius=8, command=self.iniziaTest)
         self.bottoneStart.pack(pady=10)
 
+        self.labelView = ctk.CTkLabel(self.frameDX, text="CHANGE VIEW", font=("Felix Titling", 40))
+        self.labelView.pack(pady=20)
+
         self.bottoneView = ctk.CTkButton(self.frameDX, text="VIEW TEST LOGS", corner_radius=8, command=self.cambiaView)
         self.bottoneView.pack(pady=10)
+
         self.aggiornaListaPlugin()
 
     def aggiornaListaPlugin(self):
@@ -110,48 +118,42 @@ class MainInterfaccia(ctk.CTkFrame):
                 idPlugin = self.coreApplicazione.aggiungi_plugin(percorsoPlugin)
                 self.aggiungiPlugin(percorsoPlugin, idPlugin)
                 self.aggiornaListaPlugin()
+                #! DEBUG
+                messagebox.showerror("Error", f"Errore nel caricamento del plug-in: {e}") 
             except Exception as e:
                 messagebox.showerror("Error", f"Errore nel caricamento del plug-in: {e}")
 
-    def rinominaPlugin(self):
+    def modificaPlugin(self):
         if self.plugin_selezionato is None:
-            messagebox.showwarning("Nessun plugin selezionato", "Seleziona un plugin prima di rinominarlo.")
+            messagebox.showwarning("Nessun plugin selezionato", "Seleziona un plugin prima di modificarlo.")
             return
 
-        # Creazione della finestra modale per la rinomina
-        finestraRename = ctk.CTkToplevel(self.finestraPrincipale)
-        finestraRename.title(f"RENAME PLUGIN: {self.plugin_selezionato}")
-        finestraRename.geometry("400x200")
-        finestraRename.resizable(False, False)
-        finestraRename.grab_set()  # Blocca l'interazione con la finestra principale
-
-        # Etichetta per il campo di input
-        ctk.CTkLabel(finestraRename, text="INSERT THE NEW NAME:", font=("Felix Titling", 30)).pack(pady=20)
-
-        # Campo di input per il nuovo nome
-        nuovoNomeEntry = ctk.CTkEntry(finestraRename, width=300)
+        finestraEdit = ctk.CTkToplevel(self.finestraPrincipale)
+        finestraEdit.title(f"RENAME PLUGIN: {self.plugin_selezionato}")
+        finestraEdit.geometry("400x200")
+        finestraEdit.resizable(False, False)
+        finestraEdit.grab_set()
+        ctk.CTkLabel(finestraEdit, text="MODIFY TEST NAME:", font=("Felix Titling", 30)).pack(pady=20)
+        nuovoNomeEntry = ctk.CTkEntry(finestraEdit, width=300)
         nuovoNomeEntry.pack(pady=10)
+        ctk.CTkLabel(finestraEdit, text="MODIFY TEST DESCRIPTION:", font=("Felix Titling", 30)).pack(pady=20)
+        nuovaDescrizioneEntry = ctk.CTkEntry(finestraEdit, width=300)
+        nuovaDescrizioneEntry.pack(pady=10)
+        bottoneSubmit = ctk.CTkButton(finestraEdit, text="SUBMIT", corner_radius=5, command=submitModificaPlugin)
+        bottoneSubmit.pack(pady=20)
 
-        # Funzione di submit
-        def submitRinomina():
-            nuovo_nome = nuovoNomeEntry.get().strip()  # Ottieni il nuovo nome e rimuovi spazi bianchi
-            if not nuovo_nome:
-                messagebox.showwarning("Nome vuoto", "Il nome del plugin non può essere vuoto.")
-                return
-
+        def submitModificaPlugin():
+            nomeModificato = nuovoNomeEntry.get()
+            descrizioneModificata = nuovaDescrizioneEntry.get()
             try:
-                # Chiama la funzione del core per rinominare il plugin
-                self.coreApplicazione.rinomina_plugin(self.plugin_selezionato, nuovo_nome)
-                messagebox.showinfo("Successo", f"Plugin rinominato in: {nuovo_nome}")
-                finestraRename.destroy()  # Chiudi la finestra di rinomina
-                self.aggiornaListaPlugin()  # Aggiorna la lista dei plugin
-                self.plugin_selezionato = None  # Resetta il plugin selezionato
+                self.coreApplicazione.modifica_plugin(self.plugin_selezionato, nomeModificato, descrizioneModificata)
+                finestraEdit.destroy()
+                self.aggiornaListaPlugin()
+                self.plugin_selezionato = None
             except Exception as e:
-                messagebox.showerror("Errore", f"Errore nella rinominazione del plug-in: {e}")
+                messagebox.showerror("Errore", f"Errore nella modifica del plug-in: {e}")
 
-        submitButton = ctk.CTkButton(finestraRename, text="SUBMIT", corner_radius=5, command=submitRinomina)
-        submitButton.pack(pady=20)
-
+    
     def rimuoviPlugin(self):
         if self.plugin_selezionato is None:
             messagebox.showwarning("Nessun plugin selezionato", "Seleziona un plugin prima di rimuoverlo.")
@@ -160,7 +162,7 @@ class MainInterfaccia(ctk.CTkFrame):
             self.coreApplicazione.rimuovi_plugin(self.plugin_selezionato)
             self.aggiornaListaPlugin()
             self.plugin_selezionato = None
-            self.labelInfoPluginSelezionato.configure(text="SELECTED PLUG-IN: Nessun plugin selezionato")
+            self.labelInfoPluginSelezionato.configure(text="SELECTED PLUG-IN: None")
         except Exception as e:
             messagebox.showerror("Error", f"Errore nella rimozione del plug-in: {e}")
 
@@ -205,18 +207,65 @@ class MainInterfaccia(ctk.CTkFrame):
 
     def cambiaView(self):
         if self.labelPSelezionabili.cget("text") == "AVAILABLE PLUG-IN":
+
             self.labelCaricaP.pack_forget()
             self.bottoneCaricaP.pack_forget()
-            self.labelPSelezionabili.configure(text="TEST LOGS")
+
+            self.labelInfoP.configure(text="LOGS ANALYSYS")
+            self.labelInfoPluginSelezionato.configure(text="SELECTED LOG: None")
+
+            self.listaLog.pack(pady=10)
+            self.labelView.pack_forget()
+            self.labelView.pack(pady=10)
+            self.bottoneView.pack_forget()
+            self.bottoneView.pack(pady=10)
+
+            self.labelPSelezionabili.configure(text="AVAILABLE LOGS")
+
             self.labelGestisciP.configure(text="MANAGE LOGS")
-            self.bottoneRinominaP.configure(text="RENAME LOG")
+
+            self.bottoneRinominaP.configure(text="EDIT LOG")
+
             self.bottoneRimuoviP.pack_forget()
+            self.informazioniTest.pack_forget()
+            self.bottoneConfig.pack_forget()
+            self.bottoneStart.pack_forget()
             
         else:
+
             self.labelCaricaP.pack(pady=10)
             self.bottoneCaricaP.pack(pady=10)
+
+            self.labelInfoP.pack_forget()
+            self.labelInfoP.configure(text="TEST ANALYSYS")
+            self.labelInfoPluginSelezionato.pack_forget()
+            self.labelInfoPluginSelezionato.configure(text="SELECTED PLUG-IN: None")
+            self.labelInfoP.pack(pady=10)
+            self.labelInfoPluginSelezionato.pack(pady=10)
+
+            self.listaLog.pack_forget()
+
+            self.labelPSelezionabili.pack_forget()
             self.labelPSelezionabili.configure(text="AVAILABLE PLUG-IN")
+            self.labelPSelezionabili.pack(pady=10)
+            self.listaPlugin.pack_forget()
+            self.listaPlugin.pack(pady=10)
+
+            self.labelGestisciP.pack_forget()
             self.labelGestisciP.configure(text="MANAGE PLUG-IN")
-            self.bottoneRinominaP.configure(text="RENAME PLUG-IN")
+            self.labelGestisciP.pack(pady=10)
+
+            self.bottoneRinominaP.pack_forget()
+            self.bottoneRinominaP.configure(text="EDIT PLUG-IN")
+            self.bottoneRinominaP.pack(pady=10)
+
             self.bottoneRimuoviP.pack(pady=10)
+            self.informazioniTest.pack(pady=10)
+            self.bottoneConfig.pack(pady=10)
+            self.bottoneStart.pack(pady=10)
+
+            self.labelView.pack_forget()
+            self.labelView.pack(pady=10)
+            self.bottoneView.pack_forget()
+            self.bottoneView.pack(pady=10)
             
