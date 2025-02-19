@@ -108,7 +108,7 @@ def plug_table():
     pluginT = PlugTable.query.all()
     if pluginT is None or not pluginT:
         Logging.error("Plugin list was requested by ", get_jwt_identity(),"but was not found")
-        return "error 404, no such plugin has been found"
+        return jsonify({"error": "Plugin was not found"}), 404
     Logging.debug("Plugin list was requested by ", get_jwt_identity())
     return jsonify([plugin.list() for plugin in pluginT])
 
@@ -119,7 +119,7 @@ def plug_table_details(id=0):
     plugin = PlugTable.query.get(id)  # gestione dell'id tramite il metodo http GET
     if plugin is None:
         Logging.error("Plugin requested by ", get_jwt_identity()," was not found")
-        return "error 404, no such plugin has been found"
+        return jsonify({"error": "Plugin was not found"}), 404
     Logging.debug("A plugin's details were requested by ", get_jwt_identity())
     return jsonify(plugin.get_description())  # Use the renamed method
 
@@ -129,7 +129,7 @@ def test_table():
     testT = Log.query.all()
     if testT is None or not testT:
         logging.error("Test list has been requested by ", get_jwt_identity()," but was not found")
-        return "error 404, no such test has been found"
+        jsonify({"error": "Test was not found"}), 404
     Logging.debug("Test list has been requested by ", get_jwt_identity())
     return jsonify([test.list() for test in testT])
 
@@ -139,7 +139,7 @@ def test_table_details(id=0):
     test = Log.query.get(id)  # gestione dell'id tramite il metodo http GET
     if test is None:
         logging.error("Test requested by ", get_jwt_identity()," has not being found")
-        return "error 404, no such plugin has been found"
+        jsonify({"error": "Plugin was not found"}), 404
     logging.debug("Test has been requested by ", get_jwt_identity())
     return jsonify(test.to_dict())  # Use the renamed method
 
@@ -159,7 +159,7 @@ def new_plugin():
     sanitize_dict(data)
     if not data or 'name' not in data:
         logging.error("Plugin sent by ", get_jwt_identity()," has failed standards")
-        return jsonify({"error": "Invalid record"}), 404
+        return jsonify({"error": "Invalid record"}), 400
 
     created = creaPlugin(data['name'], data['content'])
     if created:
@@ -179,7 +179,7 @@ def new_plugin():
         return jsonify({"message": "Plugin uploaded successfully"}), 201
     else:
         logging.error("Creation of a plugin by",get_jwt_identity(),"has failed:")
-        return jsonify({"error": "Error during creation"}), 404
+        return jsonify({"error": "Error during creation"}), 400
 
 # Esecuzione del plugin
 @app.route("/test_execute/<int:id>", endpoint='test_execute', methods=["POST"])
@@ -205,7 +205,7 @@ def modifyPlugin(id=0):
     sanitize_dict(data)
     if data.description == NULL and data.name == NULL:
         logging.error("Plugin edit was tried without parameters by:",get_jwt_identity())
-        return jsonify({"error": "Edit was tried without parameters"}), 404
+        return jsonify({"error": "Edit was tried without parameters"}), 400
     if data.name:   
         cambiaNome(plugin.name, data.name)
         plugin.name = data.name
