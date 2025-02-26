@@ -99,7 +99,9 @@ def avvia_plugin_bash(plugin, vet_param):
         for parametro, valore in vet_param.items():
             env_vars[parametro] = str(valore)  # Converte i parametri in stringa e li aggiunge al dizionario
 
-        comando = ["bash", plugin]  # Esegue il comando Bash
+        bash_path = "c:\Program Files\Git\bin\bash.exe"
+
+        comando = [bash_path, plugin]  # Esegue il comando Bash
 
         # Esegui il comando Bash, passando le variabili d'ambiente
         subprocess.run(comando, check=True, env={**env_vars, **os.environ})  # Passa le variabili d'ambiente al comando
@@ -168,6 +170,7 @@ def creaPluginPy(nome_file, contenuto):
         if verifica_sintassi_python(percorso_file):
             return True
         else:
+            print(percorso_file)
             print("errore sintassi errata")
             os.remove(percorso_file)
             return False
@@ -182,7 +185,7 @@ def verifica_sintassi_bash(percorso_file):
         print("Il file ha una sintassi corretta.")
         return True
     except subprocess.CalledProcessError:
-        print("Errore di sintassi nel file.")
+        print("Errore di sintassi nel file. py")
         return False
 
 
@@ -203,7 +206,7 @@ def creaPluginSh(nome_file, contenuto):
         if verifica_sintassi_bash(percorso_file):
             return True
         else:
-            print("errore sintassi errata")
+            print("errore sintassi errata file sh")
             os.remove(percorso_file)
             return False
     else:
@@ -234,7 +237,9 @@ if(__name__ == "__main__"):
     nome_plugin = input() #il nome per fare i test è dato in input
     
     #esempio plugin
-    contenuto = """import socket  # serve per poter creare delle connessione con ad esempio udp e tcp
+    contenuto = """
+
+import socket  # serve per poter creare delle connessione con ad esempio udp e tcp
 from interfaccia_plugin import Interfaccia_Plugin
 
 
@@ -319,7 +324,11 @@ def scan_ports(ip, rangePorte, tipoScansione, timeout):
 
     
 
-    """
+
+
+    
+"""
+
     
     creazione = creaPlugin(nome_plugin, contenuto)#salva il modulo(il file)
     if creazione:#se è None non provo ad eseguire il plugin
@@ -330,8 +339,7 @@ def scan_ports(ip, rangePorte, tipoScansione, timeout):
             vet_param = {
                 "ip": "127.0.0.1", 
                 "metodo": "tcp",   
-                "startPort": "1",  
-                "endPort": "208",  
+                "rangePorte" : [1, 10] , 
                 "timeout": 1         
             }
             avvia_plugin(nome_plugin, vet_param) 
