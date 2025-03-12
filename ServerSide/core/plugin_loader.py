@@ -12,84 +12,65 @@ def get_plugin_type(nome_file):
         return 'sh'
     if nome_file.endswith('.py'):
         return 'py'
+    if nome_file.endswith('.ps1'):
+        return 'ps1'
     return None
 
-def lista_plugin(folder): #crea una lista con tutti i file python all'interno della cartella
+#crea una lista con tutti i file python all'interno della cartella
+def lista_plugin(folder):  
     var = []
     for file in os.listdir(folder):
-        if get_plugin_type(file)=='sh':
-            if file[:-3] and file.endswith('.sh'):
-                var.append(file)
-        else:
-            if file[:-3] and file.endswith('.py'):
-                var.append(file)
+        if get_plugin_type(file) in ['sh', 'py', 'ps1']:
+            var.append(file)
     return var
 
-def cambiaNome(folder, nomeVecchio, nomeNuovo): #dato il nome del file da rinominare e quello nuovo, rinomina il file
+def cambiaNome(folder, nomeVecchio, nomeNuovo):
     try:
+        trovato = False
         for file in os.listdir(folder):
-            if get_plugin_type(file)=='sh':
-                if file[:-3]==nomeVecchio:
-                    vecchioFile= os.path.join(folder, nomeVecchio+".sh")
-                    nuovoFile= os.path.join(folder, nomeNuovo+".sh")
-                    os.rename(vecchioFile,nuovoFile)
-            else:
-                if file[:-3]==nomeVecchio:
-                    vecchioFile= os.path.join(folder, nomeVecchio+".py")
-                    nuovoFile= os.path.join(folder, nomeNuovo+".py")
-                    os.rename(vecchioFile,nuovoFile)
+            tipo = get_plugin_type(file)  # Ottieni il tipo del file
+            if tipo and file[:-len(tipo)-1] == nomeVecchio:  
+                vecchioFile = os.path.join(folder, file)
+                nuovoFile = os.path.join(folder, nomeNuovo + "." + tipo)
+
+                if os.path.exists(nuovoFile):
+                    print("Errore: Il file "+nuovoFile+" esiste già.")
+                    return False
+
+                os.rename(vecchioFile, nuovoFile)
+                print(f"File '{vecchioFile}' rinominato in '{nuovoFile}'")
+                trovato = True
+                break  # Interrompe il ciclo una volta trovato e rinominato il file
+
+        if not trovato:
+            print("Errore: Nessun file "+nomeVecchio+" trovato in "+folder)
+
+        return trovato
+
     except Exception:
-        print("Errore: impossibile rinominare il nome del file")
-
-
-def avvia_plugin(nome_plugin, vet_param):
-    # Se il plugin è Python
-    if get_plugin_type(nome_plugin) == 'py':
-        try:
-            # Importa dinamicamente il modulo Python
-            modulo = importlib.import_module(nome_plugin[:-3])  # Rimuove ".py"
-            plugin_instance = modulo.Plugin()  # Crea l'istanza del plugin
-            plugin_instance.set_param(vet_param)  # Imposta i parametri
-            plugin_instance.execute()  # Esegui il plugin
-        except Exception as e:
-            print("Errore nell'importazione ed esecuzione del modulo Python")
-    
-    # Se il plugin è Bash
-    elif get_plugin_type(nome_plugin) == 'sh':
-        # Verifica che il file esista
-        percorso_file = folder / nome_plugin
-        avvia_plugin_bash(percorso_file, vet_param)  # Esegui il plugin Bash
-    
-    else:
-        print("Tipo di plugin non supportato.")
-
-def interfacciaBash(percorso_file):
-    try:
-        with open(percorso_file, 'r') as file: #apro il file e vedo se all'interno ci sono le funzioni richieste
-            content = file.read()
-            if "function set_param" not in content:
-                print("Errore: La funzione 'set_param' non è presente nel plugin Bash.")
-                return False
-            if "function get_param" not in content:
-                print("Errore: La funzione 'get_param' non è presente nel plugin Bash.")
-                return False
-            if "function execute" not in content:
-                print("Errore: La funzione 'execute' non è presente nel plugin Bash.")
-                return False
-            return True
-    except Exception as e:
-        print("Errore nella lettura del file")
+        print("Errore: impossibile rinominare il file.")
         return False
 
-def estraiParametriBash(plugin):
+
+def avvia_plugin_ps1(nome_plugin, vet_param):
     try:
-        comando = ["bash", plugin, "get_param"]  
-        parametri = subprocess.run(comando, capture_output=True, text=True, check=True)
-        listaParametri = parametri.stdout.strip().split(", ")  
-        return listaParametri
-    except Exception:
-        print("Errore nell'estrazione dei parametri Bash")
-        return None
+        percorso_file = folder / nome_plugin
+
+        # Costruisci il comando con i parametri
+        comando = ["powershell", "-ExecutionPolicy", "Bypass", "-File", str(percorso_file), "execute"]
+
+        # Aggiungi i parametri a riga di comando
+        for chiave, valore in vet_param.items():
+            comando.append(f"-{chiave}")
+            comando.append(str(valore))  # Converti il valore in stringa
+
+        print(f"Eseguo comando PowerShell: {' '.join(comando)}")  # Debug
+
+        # Esegui il comando
+        subprocess.run(comando, check=True, env={**os.environ})
+    except Exception as e:
+        print(f"Errore nell'esecuzione del plugin PowerShell: {e}")
+
 
 
 def avvia_plugin_bash(plugin, vet_param):
@@ -108,15 +89,65 @@ def avvia_plugin_bash(plugin, vet_param):
     except Exception:
         print("Errore nell'esecuzione del plugin Bash")
 
-def verifica_sintassi_python(percorso_file):
-    try:
-        result = subprocess.run(['python3', '-m', 'py_compile', percorso_file], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        print("Il file ha una sintassi corretta.")
-        return True
-    except subprocess.CalledProcessError:
-        print("Errore di sintassi nel file.")
-        return False
 
+def avvia_plugin(nome_plugin, vet_param):
+    tipo = get_plugin_type(nome_plugin)
+    
+    if tipo == 'py':
+        try:
+            modulo = importlib.import_module(nome_plugin[:-3])
+            plugin_instance = modulo.Plugin()
+            plugin_instance.set_param(vet_param)
+            plugin_instance.execute()
+        except Exception :
+            print("Errore nell'importazione ed esecuzione del modulo Python")
+    
+    elif tipo == 'sh':
+        percorso_file = folder / nome_plugin
+        avvia_plugin_bash(percorso_file, vet_param)
+    
+    elif tipo == 'ps1':
+        avvia_plugin_ps1(nome_plugin, vet_param)
+    
+    else:
+        print("Tipo di plugin non supportato.")
+
+
+def interfacciaBash(percorso_file):
+    try:
+        with open(percorso_file, 'r') as file: #apro il file e vedo se all'interno ci sono le funzioni richieste
+            content = file.read()
+            if "function set_param" not in content:
+                print("Errore: La funzione 'set_param' non è presente nel plugin Bash.")
+                return False
+            if "function get_param" not in content:
+                print("Errore: La funzione 'get_param' non è presente nel plugin Bash.")
+                return False
+            if "function execute" not in content:
+                print("Errore: La funzione 'execute' non è presente nel plugin Bash.")
+                return False
+            return True
+    except Exception:
+        print("Errore nella lettura del file")
+        return False
+    
+def interfacciaPs1(percorso_file):
+    try:
+        with open(percorso_file, 'r', encoding='utf-8') as file:
+            content = file.read()
+            if "function get_param" not in content:
+                print("Errore: La funzione 'get_param' non è presente nel plugin PowerShell.")
+                return False
+            if "function set_param" not in content:
+                print("Errore: La funzione 'set_param' non è presente nel plugin PowerShell.")
+                return False
+            if "function execute" not in content:
+                print("Errore: La funzione 'execute' non è presente nel plugin PowerShell.")
+                return False
+            return True
+    except Exception:
+        print("Errore nella lettura del file PowerShell")
+        return False
 
 
 def creaPluginPy(nome_file, contenuto):
@@ -179,16 +210,6 @@ def creaPluginPy(nome_file, contenuto):
         print("Errore: il Plugin non appartiene alla classe 'Plugin' ")
         return False
 
-def verifica_sintassi_bash(percorso_file):
-    try:
-        subprocess.run(['bash', '-n', percorso_file], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        print("Il file ha una sintassi corretta.")
-        return True
-    except subprocess.CalledProcessError:
-        print("Errore di sintassi nel file. py")
-        return False
-
-
 def creaPluginSh(nome_file, contenuto):
     if not nome_file.endswith('.sh'):
         nome_file = nome_file + ".sh"
@@ -214,6 +235,33 @@ def creaPluginSh(nome_file, contenuto):
         os.remove(percorso_file)
         return False
 
+def creaPluginPs1(nome_file, contenuto):
+    if not nome_file.endswith('.ps1'):
+        nome_file = nome_file + ".ps1"
+
+    folder = Path(__file__).resolve().parent.parent / "plugins"
+    percorso_file = folder / nome_file
+
+    if nome_file in os.listdir(folder):
+        print("Nome del File già presente")
+        return False
+
+    with open(percorso_file, "w", encoding="utf-8") as file:
+        file.write(contenuto)
+        print("File "+nome_file+" creato con successo nella cartella "+str(folder))
+
+    if interfacciaPs1(percorso_file):
+        if verifica_sintassi_ps1(percorso_file):
+            return True
+        else:
+            print("errore sintassi errata file ps1")
+            os.remove(percorso_file)
+            return False
+    else:
+        print("il plugin non rispetta l'interfaccia")
+        os.remove(percorso_file)
+        return False
+
     
 
 def creaPlugin(nome_file, contenuto):
@@ -221,8 +269,60 @@ def creaPlugin(nome_file, contenuto):
         return creaPluginSh(nome_file, contenuto)
     if nome_file.endswith('.py'):
         return creaPluginPy(nome_file, contenuto)
+    if nome_file.endswith('.ps1'):
+        return creaPluginPs1(nome_file, contenuto)
     print("Il tipo di file non e' supportato")
     return None
+
+def verifica_sintassi_python(percorso_file):
+    try:
+        subprocess.run(['python3', '-m', 'py_compile', percorso_file], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        print("Il file ha una sintassi corretta.")
+        return True
+    except subprocess.CalledProcessError:
+        print("Errore di sintassi nel file.")
+        return False
+    
+def verifica_sintassi_bash(percorso_file):
+    try:
+        subprocess.run(['bash', '-n', percorso_file], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        print("Il file ha una sintassi corretta.")
+        return True
+    except subprocess.CalledProcessError:
+        print("Errore di sintassi nel file.")
+        return False
+    
+def verifica_sintassi_ps1(percorso_file):
+    try:
+        comando = ["powershell", "-NoProfile", "-NonInteractive", "-Command", f"Get-Content '{str(percorso_file)}' | Out-String | Invoke-Expression"]
+        subprocess.run(comando, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        print("Il file PowerShell ha una sintassi corretta.")
+        return True
+    except subprocess.CalledProcessError:
+        print("Errore di sintassi nel file")
+        return False
+
+    
+def estraiParametriBash(plugin):
+    try:
+        comando = ["bash", plugin, "get_param"]  
+        parametri = subprocess.run(comando, capture_output=True, text=True, check=True)
+        listaParametri = parametri.stdout.strip().split(", ")  
+        return listaParametri
+    except Exception:
+        print("Errore nell'estrazione dei parametri Bash")
+        return None
+
+def estraiParametriPs1(plugin):
+    try:
+        comando = ["powershell", "-ExecutionPolicy", "Bypass", "-File", str(plugin), "get_param"]
+        print(f"Comando eseguito: {' '.join(comando)}")
+        parametri = subprocess.run(comando, capture_output=True, text=True, check=True)
+        listaParametri = parametri.stdout.strip().split(", ")
+        return listaParametri
+    except Exception:
+        print("Errore nell'estrazione dei parametri PowerShell")
+        return None
 
 
 
@@ -239,87 +339,35 @@ if(__name__ == "__main__"):
     #esempio plugin
     contenuto = """
 
-import socket  # serve per poter creare delle connessione con ad esempio udp e tcp
-from interfaccia_plugin import Interfaccia_Plugin
+# File: esempio_plugin.ps1
+
+param (
+    [string]$ip,
+    [string]$metodo,
+    [string]$rangePorte,
+    [int]$timeout
+)
+
+# Funzione per ottenere i parametri
+function get_param {
+    Write-Output "ip, metodo, rangePorte, timeout"
+}
+
+# Funzione principale di esecuzione
+function execute {
+    Write-Output "Esecuzione del plugin PowerShell con IP: $ip, Metodo: $metodo, RangePorte: $rangePorte, Timeout: $timeout"
+}
+
+# Controlla il comando ricevuto
+if ($args[0] -eq "get_param") {
+    get_param
+} elseif ($args[0] -eq "execute") {
+    execute
+} else {
+    Write-Output "Comando non riconosciuto."
+}
 
 
-class Plugin(Interfaccia_Plugin):
-    #valori standard 
-    ip = "127.0.0.1"  
-    rangePorte = [1, 65535] 
-    tipoScansione = 'TCP' 
-    timeout = 1
-
-    @classmethod
-    def execute(cls):
-        print("Esecuzione della scansione per l'IP " + cls.ip + ", Tipo:" + cls.metodo)
-        porteAperte = scan_ports(cls.ip, cls.rangePorte, cls.metodo, cls.timeout)
-        print("Porte aperte: " + str(porteAperte))
-
-
-    @classmethod
-    def get_param(cls):
-        vet_param = [
-            {'key': 'ip', 'description': 'Indirizzo IP da scansionare'},
-            {'key': 'metodo', 'description': 'Metodo di scansione: TCP o UDP'},
-            {'key': 'rangePorte', 'description': 'Range delle porte da scansionare'},
-            {'key': 'timeout', 'description': 'Tempo massimo per tentare la connessione'}
-        ]
-        return vet_param
-    
-    @classmethod
-    def set_param(cls, vet_param):
-        cls.ip = vet_param['ip']
-        cls.metodo = vet_param['metodo']
-        cls.rangePorte = vet_param['rangePorte']
-        cls.timeout = vet_param['timeout'] 
-        return True
-    
-
-def scan_tcp(ip, porta, timeout):
-    try:
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # Crea un oggetto TCP(i parametri indicano che e' ipv4 e tcp)
-        sock.settimeout(timeout)  #funzione che imposta un tempo massimo per provare a connettersi alla porta
-        result = sock.connect_ex((ip, porta))  # salva il tentativo di connessione nella porta in una variabile
-        if result == 0:
-            return "Porta " + str(porta) + " aperta"  # se e' 0 la connessione con la porta e' riuscita
-        else:
-            return "Porta " + str(porta) + " chiusa"
-    except socket.error:
-        return "Errore di connessione alla porta " + str(porta)
-    finally:
-        sock.close()  # Interrompe la connessione perche' non piu' necessaria
-
-
-def scan_udp(ip, porta, timeout):
-    try:
-        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # dgram serve per avere un oggetto udp
-        #sock.bind(('127.0.0.1', 12345))
-        sock.settimeout(timeout) 
-        sock.sendto(b'Hello', (ip, porta))  # invio 1 byte vuoto per verificare se la porta e' aperta
-        sock.recvfrom(1024)  # funzione per ricevere il pacchetto ( parametro indica il massimo di byte ricevibili in 1 chiamata)
-        return "Porta " + str(porta) + " aperta"
-    except socket.error:
-        return "Errore di connessione alla porta " + str(porta) + " (probabilmente chiusa)" #in caso scada il time out si da per chiusa la porta
-    finally:
-        sock.close()  
-
-
-def scan_ports(ip, rangePorte, tipoScansione, timeout):
-    porteAperte = [] 
-    for porta in range(rangePorte[0], rangePorte[1] + 1): #il range esclude l'ultima porta, per questo +1
-        if tipoScansione.lower() == 'tcp':  
-            resScansione = scan_tcp(ip, porta, timeout)  
-        elif tipoScansione.lower() == 'udp':  
-            resScansione = scan_udp(ip, porta, timeout) 
-        else:
-            return "Erroe: il tipo di scansione non e' ne tcp ne udp"  # Se il tipo di scansione non è valido, restituisce un errore
-        
-        print(resScansione)  # Stampa il risultato della scansione per debug
-        if "aperta" in resScansione:  
-            porteAperte.append(porta)  
-    
-    return porteAperte 
 
 
     
@@ -355,5 +403,16 @@ def scan_ports(ip, rangePorte, tipoScansione, timeout):
                         key_values[1]: 'tcp',              # metodo di scansione
                         key_values[2]: [1,10],         # rangePorte
                         key_values[3]: 1                   # timeout
+            }
+            avvia_plugin(nome_plugin, vet_param)
+        if get_plugin_type(nome_plugin) == 'ps1':
+            plugin = folder / nome_plugin
+            parametri = estraiParametriPs1(plugin)
+            print("Parametri del plugin PowerShell: " ,parametri)
+            vet_param = {
+                "ip": "127.0.0.1", 
+                "metodo": "tcp",   
+                "rangePorte" : [1, 10] , 
+                "timeout": 1         
             }
             avvia_plugin(nome_plugin, vet_param)
