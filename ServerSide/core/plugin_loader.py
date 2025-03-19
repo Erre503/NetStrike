@@ -56,21 +56,32 @@ def avvia_plugin_ps1(nome_plugin, vet_param):
     try:
         percorso_file = folder / nome_plugin
 
-        # Costruisci il comando con i parametri
-        comando = ["powershell", "-ExecutionPolicy", "Bypass", "-File", str(percorso_file), "execute"]
+        # Costruisci il comando per impostare i parametri
+        set_comando = [
+            "powershell",
+            "-ExecutionPolicy", "Bypass",
+            "-NoProfile",
+            "-Command", f"& {{ . '{str(percorso_file)}'; set_param -newIp '{vet_param['ip']}' -newMetodo '{vet_param['metodo']}' -newRangePorte '{','.join(map(str, vet_param['rangePorte']))}' -newTimeout {vet_param['timeout']} }}"
+        ]
 
-        # Aggiungi i parametri a riga di comando
-        for chiave, valore in vet_param.items():
-            comando.append(f"-{chiave}")
-            comando.append(str(valore))  # Converti il valore in stringa
+        subprocess.run(set_comando, check=True, text=True, env=os.environ)
 
-        print(f"Eseguo comando PowerShell: {' '.join(comando)}")  # Debug
+        # Ora esegui il plugin
+        execute_comando = [
+            "powershell",
+            "-ExecutionPolicy", "Bypass",
+            "-NoProfile",
+            "-Command", f"& {{ . '{str(percorso_file)}'; execute }}"
+        ]
 
-        # Esegui il comando
-        subprocess.run(comando, check=True, env={**os.environ})
+        result = subprocess.run(execute_comando, capture_output=True, text=True, env=os.environ)
+
+        print(f"Output PowerShell:\n{result.stdout}")
+        if result.stderr:
+            print(f"ERROR PowerShell:\n{result.stderr}")
+
     except Exception as e:
         print(f"Errore nell'esecuzione del plugin PowerShell: {e}")
-
 
 
 def avvia_plugin_bash(plugin, vet_param):
@@ -299,7 +310,7 @@ def verifica_sintassi_ps1(percorso_file):
         print("Il file PowerShell ha una sintassi corretta.")
         return True
     except subprocess.CalledProcessError:
-        print("Errore di sintassi nel file")
+        print("Errore di sintassi nel file PowerShell")
         return False
 
     
@@ -315,14 +326,43 @@ def estraiParametriBash(plugin):
 
 def estraiParametriPs1(plugin):
     try:
-        comando = ["powershell", "-ExecutionPolicy", "Bypass", "-File", str(plugin), "get_param"]
-        print(f"Comando eseguito: {' '.join(comando)}")
-        parametri = subprocess.run(comando, capture_output=True, text=True, check=True)
-        listaParametri = parametri.stdout.strip().split(", ")
+        comando = [
+            "powershell",
+            "-ExecutionPolicy", "Bypass",
+            "-NoProfile",  
+            "-Command", f"& {{ . '{str(plugin)}'; get_param }}"
+        ]
+        parametri = subprocess.run(comando, capture_output=True, text=True)
+
+
+        if parametri.returncode != 0:
+            print(f"Errore durante l'esecuzione del plugin: codice {parametri.returncode}")
+            return None
+        
+        listaParametri = parametri.stdout.strip().split("\n")[-1].strip().split(", ")
         return listaParametri
-    except Exception:
-        print("Errore nell'estrazione dei parametri PowerShell")
+    except Exception as e:
+        print(f"Errore nell'estrazione dei parametri PowerShell: {e}")
         return None
+    
+def elimina_file(folder,nome_file):
+    try:
+        trovato = False
+        percorso_file = folder / nome_file
+        for file in os.listdir(folder):
+            if file == nome_file:  
+                trovato = True
+                os.remove(percorso_file)
+                break  
+
+        if not trovato:
+            print("Errore: Nessun file "+nome_file+" trovato in "+folder)
+
+        return trovato
+
+    except Exception:
+        print("Errore: impossibile cancellare il file.")
+        return False
 
 
 
@@ -337,44 +377,45 @@ if(__name__ == "__main__"):
     nome_plugin = input() #il nome per fare i test è dato in input
     
     #esempio plugin
-    contenuto = """
-
-# File: esempio_plugin.ps1
-
-param (
-    [string]$ip,
-    [string]$metodo,
-    [string]$rangePorte,
-    [int]$timeout
+    contenuto = """param (
+    [string]$Command = "",
+    [string]$ip = "",
+    [string]$metodo = "",
+    [string]$rangePorte = "",
+    [int]$timeout = 0
 )
+$paramFile = "$PSScriptRoot\\params.json"
 
-# Funzione per ottenere i parametri
 function get_param {
     Write-Output "ip, metodo, rangePorte, timeout"
 }
 
-# Funzione principale di esecuzione
+function set_param {
+    param (
+        [string]$newIp,
+        [string]$newMetodo,
+        [string]$newRangePorte,
+        [int]$newTimeout
+    )
+    $params = @{
+        ip         = $newIp
+        metodo     = $newMetodo
+        rangePorte = $newRangePorte
+        timeout    = $newTimeout
+    }
+    $params | ConvertTo-Json | Set-Content $paramFile
+}
+
 function execute {
-    Write-Output "Esecuzione del plugin PowerShell con IP: $ip, Metodo: $metodo, RangePorte: $rangePorte, Timeout: $timeout"
+    if (Test-Path $paramFile) {
+        $params = Get-Content $paramFile | ConvertFrom-Json
+        $ip = $params.ip
+        $metodo = $params.metodo
+        $rangePorte = $params.rangePorte
+        $timeout = $params.timeout
+        Write-Output "Eseguo scansione su $ip con metodo $metodo e range $rangePorte"
+    }
 }
-
-# Controlla il comando ricevuto
-if ($args[0] -eq "get_param") {
-    get_param
-} elseif ($args[0] -eq "execute") {
-    execute
-} else {
-    Write-Output "Comando non riconosciuto."
-}
-
-
-
-
-    
-
-
-
-    
 """
 
     
