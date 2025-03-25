@@ -120,58 +120,59 @@ def avvia_plugin_bash(plugin, vet_param):
 
 
 def creaPluginPy(nome_file, contenuto):
-
-    #aggiungo l'estensione se il nome file non la ha
+    # Add .py extension if missing
     if not nome_file.endswith('.py'):
-        nome_file = nome_file + ".py"
+        nome_file += '.py'
 
-    # Percorso della cartella 'plugins'
+    # Path to plugins directory
     folder = Path(__file__).resolve().parent.parent / "plugins"
+    percorso_file = folder / nome_file
 
-    # Percorso completo del file
-    percorso_file = os.path.join(folder, nome_file)
-
-    # Controlla se il plugin esiste già
-    if nome_file in os.listdir(folder):
-        print("Nome del File già presente")
-
-    import_statement = "from core.interfaccia_plugin import Interfaccia_Plugin\n\n"
-    contenuto = import_statement + contenuto
-    
-    #crea il file con il contenuto passato
-    with open(percorso_file, "w", encoding="utf-8") as file:
-        file.write(contenuto)
-        print("File " + nome_file + " creato con successo nella cartella " + str(folder)) #stringa di debug
-        print(" ") #crea uno spazio per rendere l'output più carino
-
-    try:
-        nome_plugin = nome_file[:-3]  # Rimuove l'estensione .py (verificata in precedenza)
-        modulo = importlib.import_module(nome_plugin)
-
-        # Verifica che esista un elemento 'Plugin' sia presente nel modulo
-        if not hasattr(modulo, "Plugin"):
-            print("Errore: Il file non contiene nessun elemento 'Plugin'.")
-            return None
-
-        # Ottieni la presunta classe Plugin
-        classe_plugin = getattr(modulo, "Plugin")
-
-        # Verifica che 'Plugin' sia una classe
-        if not inspect.isclass(classe_plugin):
-            print("Errore: 'Plugin' non è una classe.")
-            return None
-
-        #verifica che tutti i metodi astratti siano implementati
-        if isinstance(classe_plugin, abc.ABCMeta):
-            if hasattr(classe_plugin, '__abstractmethods__') and len(classe_plugin.__abstractmethods__) > 0:
-                print("Errore: La classe 'Plugin' è astratta e non implementa tutti i metodi richiesti.")
-                return None
-
-        return classe_plugin
-
-    except Exception:
-        print("Errore: il Plugin non appartiene alla classe 'Plugin' ")
+    # Check for existing file first
+    if percorso_file.exists():
+        print(f"Error: File {nome_file} already exists")
         return None
+
+    # Add required import
+    full_content = f"from core.interfaccia_plugin import Interfaccia_Plugin\n\n{contenuto}"
+
+    # Use temporary directory for validation
+    with tempfile.TemporaryDirectory() as temp_dir:
+        temp_file = Path(temp_dir) / nome_file
+        
+        try:
+            # Write to temporary file
+            temp_file.write_text(full_content, encoding="utf-8")
+            
+            # Validate through temporary file
+            spec = importlib.util.spec_from_file_location(nome_file[:-3], temp_file)
+            modulo = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(modulo)
+
+            # Class validation
+            if not hasattr(modulo, "Plugin"):
+                raise AttributeError("Missing 'Plugin' class")
+
+            classe_plugin = modulo.Plugin
+
+            if not inspect.isclass(classe_plugin):
+                raise TypeError("'Plugin' is not a class")
+
+            if not issubclass(classe_plugin, Interfaccia_Plugin):
+                raise TypeError("Must inherit from Interfaccia_Plugin")
+
+            if len(classe_plugin.__abstractmethods__) > 0:
+                raise NotImplementedError(f"Unimplemented abstract methods: {classe_plugin.__abstractmethods__}")
+
+            # Only move to final location if all validations pass
+            shutil.move(str(temp_file), str(folder))
+            print(f"Plugin created successfully: {nome_file}")
+            return classe_plugin
+
+        except Exception as e:
+            print(f"Validation failed: {e}")
+            # Temporary file is automatically deleted with the directory
+            return None
 
 def creaPluginSh(nome_file, contenuto):
     if not nome_file.endswith('.sh'):
