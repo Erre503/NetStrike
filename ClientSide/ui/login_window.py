@@ -1,17 +1,20 @@
 import customtkinter as ctk
 from tkinter import messagebox
+import os
 
 def get_login_info():
-    """Create a Tkinter window to prompt for the IP address, username, and password."""
     ip_address = None
     username = None
     password = None
 
     root = ctk.CTk()
-    root.title("LOGIN WINDOW")
+    ctk.set_appearance_mode("Dark")
+    ctk.set_default_color_theme("green")
+    root.title("NetStrike Login")
     root.geometry("500x500")
     root.resizable(False, False)
-
+    icona = os.path.join(os.path.dirname(__file__), 'er.ico')
+    root.wm_iconbitmap(icona)
     def submit_info():
         nonlocal ip_address, username, password
         ip_address = ipEntry.get()
@@ -26,12 +29,15 @@ def get_login_info():
 
     def inviaSubmit(event):
         submit_info()
-
-    ctk.set_appearance_mode("Dark")
-    ctk.set_default_color_theme("dark-blue")
     
-    pluginInkLabel = ctk.CTkLabel(root, text="PLUG INK", font=("Felix Titling", 50))
-    pluginInkLabel.pack(pady=25)
+    frame_titolo = ctk.CTkFrame(root, fg_color="transparent")
+    frame_titolo.pack(pady=25)
+
+    label_net = ctk.CTkLabel(frame_titolo,text="Net",font=("Felix Titling", 50))
+    label_net.pack(side="left") 
+
+    label_strike = ctk.CTkLabel(frame_titolo,text="Strike",font=("Felix Titling", 50),text_color="#76ca7f")
+    label_strike.pack(side="left")
     
     ipLabel = ctk.CTkLabel(root, text="ENTER IP ADDRESS:", font=("Felix Titling", 25))
     ipLabel.pack(pady=5)

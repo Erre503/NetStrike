@@ -5,7 +5,7 @@ class Plugin(Interfaccia_Plugin):
         self.keys = []
 
     def execute(self):
-        return "Io sono Nessunooo"
+        return "Io saluto"
 
     def get_param(self):
         return self.keys
