@@ -72,7 +72,7 @@ def scan_ports(ip, rangePorte, tipoScansione, timeout):
         elif tipoScansione.lower() == 'udp':  
             resScansione = scan_udp(ip, porta, timeout) 
         else:
-            return "Erroe: il tipo di scansione non e' ne tcp ne udp"  # Se il tipo di scansione non è valido, restituisce un errore
+            return "Errore: il tipo di scansione non e' ne tcp ne udp"  # Se il tipo di scansione non è valido, restituisce un errore
         
         print(resScansione)  # Stampa il risultato della scansione per debug
         if "aperta" in resScansione:  
