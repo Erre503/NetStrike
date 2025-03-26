@@ -82,5 +82,3 @@ def scan_ports(ip, rangePorte, tipoScansione, timeout):
 
 
     
-
-    

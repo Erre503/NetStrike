@@ -86,19 +86,32 @@ def avvia_plugin_ps1(nome_plugin, vet_param):
 
 def avvia_plugin_bash(plugin, vet_param):
     try:
-        # Imposta i parametri come variabili d'ambiente
-        env_vars = {}
-        for parametro, valore in vet_param.items():
-            env_vars[parametro] = str(valore)  # Converte i parametri in stringa e li aggiunge al dizionario
+        # Converti il percorso in stringa compatibile con Bash
+        plugin = str(plugin)
 
-        bash_path = "c:\Program Files\Git\bin\bash.exe"
+        # Imposta i parametri con set_param
+        bash_path = r"C:\Program Files\Git\bin\bash.exe"
+        set_comando = [
+            bash_path, plugin, "set_param",
+            vet_param["ip"],
+            vet_param["metodo"],
+            ",".join(map(str, vet_param["rangePorte"])),
+            str(vet_param["timeout"])
+        ]
+        subprocess.run(set_comando, check=True)
 
-        comando = [bash_path, plugin]  # Esegue il comando Bash
+        # Ora esegui lo script Bash con 'execute'
+        execute_comando = [bash_path, plugin, "execute"]
+        result = subprocess.run(execute_comando, capture_output=True, text=True)
 
-        # Esegui il comando Bash, passando le variabili d'ambiente
-        subprocess.run(comando, check=True, env={**env_vars, **os.environ})  # Passa le variabili d'ambiente al comando
-    except Exception:
-        print("Errore nell'esecuzione del plugin Bash")
+        # Output e gestione errori
+        print(f"Output Bash:\n{result.stdout}")
+        if result.stderr:
+            print(f"ERROR Bash:\n{result.stderr}")
+
+    except Exception as e:
+        print(f"Errore nell'esecuzione del plugin Bash: {e}")
+
 
 
 def avvia_plugin(nome_plugin, vet_param):
@@ -219,6 +232,7 @@ def creaPluginPy(nome_file, contenuto):
 
     except Exception:
         print("Errore: il Plugin non appartiene alla classe 'Plugin' ")
+        os.remove(percorso_file)
         return False
 
 def creaPluginSh(nome_file, contenuto):
@@ -295,8 +309,9 @@ def verifica_sintassi_python(percorso_file):
         return False
     
 def verifica_sintassi_bash(percorso_file):
+    bash_path = r"C:\Program Files\Git\bin\bash.exe"
     try:
-        subprocess.run(['bash', '-n', percorso_file], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        subprocess.run([bash_path, '-n', str(percorso_file)], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         print("Il file ha una sintassi corretta.")
         return True
     except subprocess.CalledProcessError:
@@ -315,13 +330,24 @@ def verifica_sintassi_ps1(percorso_file):
 
     
 def estraiParametriBash(plugin):
+    bash_path = r"C:\Program Files\Git\bin\bash.exe"
     try:
-        comando = ["bash", plugin, "get_param"]  
+        comando = [bash_path, plugin, "get_param"]  
         parametri = subprocess.run(comando, capture_output=True, text=True, check=True)
         listaParametri = parametri.stdout.strip().split(", ")  
-        return listaParametri
-    except Exception:
-        print("Errore nell'estrazione dei parametri Bash")
+        
+        if len(listaParametri) < 4:
+            print("Errore: parametri incompleti ricevuti da Bash")
+            return None
+
+        return {
+            "ip": listaParametri[0],
+            "metodo": listaParametri[1],
+            "rangePorte": list(map(int, listaParametri[2].split())),
+            "timeout": int(listaParametri[3])
+        }
+    except Exception as e:
+        print("Errore nell'estrazione dei parametri Bash:", e)
         return None
 
 def estraiParametriPs1(plugin):
@@ -377,45 +403,54 @@ if(__name__ == "__main__"):
     nome_plugin = input() #il nome per fare i test è dato in input
     
     #esempio plugin
-    contenuto = """param (
-    [string]$Command = "",
-    [string]$ip = "",
-    [string]$metodo = "",
-    [string]$rangePorte = "",
-    [int]$timeout = 0
-)
-$paramFile = "$PSScriptRoot\\params.json"
+    contenuto = """#!/bin/bash
 
-function get_param {
-    Write-Output "ip, metodo, rangePorte, timeout"
-}
+# Variabili globali con valori di default
+ip="127.0.0.1"
+metodo="tcp"
+rangePorte=("1" "10")
+timeout="1"
 
+# Funzione per impostare i parametri
 function set_param {
-    param (
-        [string]$newIp,
-        [string]$newMetodo,
-        [string]$newRangePorte,
-        [int]$newTimeout
-    )
-    $params = @{
-        ip         = $newIp
-        metodo     = $newMetodo
-        rangePorte = $newRangePorte
-        timeout    = $newTimeout
-    }
-    $params | ConvertTo-Json | Set-Content $paramFile
+    ip=$1
+    metodo=$2
+    IFS=',' read -ra rangePorte <<< "$3"
+    timeout=$4
 }
 
-function execute {
-    if (Test-Path $paramFile) {
-        $params = Get-Content $paramFile | ConvertFrom-Json
-        $ip = $params.ip
-        $metodo = $params.metodo
-        $rangePorte = $params.rangePorte
-        $timeout = $params.timeout
-        Write-Output "Eseguo scansione su $ip con metodo $metodo e range $rangePorte"
-    }
+# Funzione per ottenere i parametri
+function get_param {
+    echo "$ip, $metodo, ${rangePorte[*]}, $timeout"
 }
+
+# Funzione principale di esecuzione del programma
+function execute {
+    echo "Esecuzione della scansione per l'IP $ip, Metodo: $metodo"
+    echo "Range delle porte: ${rangePorte[@]}"
+    echo "Timeout: $timeout"
+
+    for port in "${rangePorte[@]}"; do
+        echo "Scansione porta $port..."
+    done
+}
+
+# Controllo dell'argomento passato
+case "$1" in
+    "set_param")
+        set_param "$2" "$3" "$4" "$5"
+        ;;
+    "get_param")
+        get_param
+        ;;
+    "execute")
+        execute
+        ;;
+    *)
+        echo "Comando non riconosciuto"
+        ;;
+esac
+
 """
 
     
