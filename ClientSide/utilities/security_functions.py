@@ -54,7 +54,7 @@ Args:
     token (str): Il token JWT da salvare nel keyring.
 """
 def save_token(token):
-    keyring.set_password("plugink_token", "jwt_token", token.encode('utf-8'))
+    keyring.set_password("plugink_token", "jwt_token", token)
 
 """
 Recupera il token JWT precedentemente salvato nel keyring.
