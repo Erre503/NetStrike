@@ -11,7 +11,6 @@ Returns:
 """
 def sanitize_input(param : str) -> str:
     if(isinstance(param, str)):
-        
         return html.escape(param)
     elif(isinstance(param, dict)):
         return sanitize_dict(param)

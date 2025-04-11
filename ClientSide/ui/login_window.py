@@ -1,17 +1,18 @@
 import customtkinter as ctk
 from tkinter import messagebox
+import os
 
 def get_login_info():
-    """Create a Tkinter window to prompt for the IP address, username, and password."""
     ip_address = None
     username = None
     password = None
 
     root = ctk.CTk()
-    root.title("LOGIN WINDOW")
+    ctk.set_appearance_mode("Dark")
+    ctk.set_default_color_theme("green")
+    root.title("NetStrike Login")
     root.geometry("500x500")
     root.resizable(False, False)
-
     def submit_info():
         nonlocal ip_address, username, password
         ip_address = ipEntry.get()
@@ -26,13 +27,16 @@ def get_login_info():
 
     def inviaSubmit(event):
         submit_info()
+    
+    frame_titolo = ctk.CTkFrame(root, fg_color="transparent")
+    frame_titolo.pack(pady=25)
 
-    ctk.set_appearance_mode("Dark")
-    ctk.set_default_color_theme("dark-blue")
+    label_net = ctk.CTkLabel(frame_titolo,text="Net",font=("Felix Titling", 50))
+    label_net.pack(side="left") 
 
-    pluginInkLabel = ctk.CTkLabel(root, text="PLUG INK", font=("Felix Titling", 50))
-    pluginInkLabel.pack(pady=25)
-
+    label_strike = ctk.CTkLabel(frame_titolo,text="Strike",font=("Felix Titling", 50),text_color="#76ca7f")
+    label_strike.pack(side="left")
+    
     ipLabel = ctk.CTkLabel(root, text="ENTER IP ADDRESS:", font=("Felix Titling", 25))
     ipLabel.pack(pady=5)
 
@@ -48,14 +52,14 @@ def get_login_info():
     passwordLabel = ctk.CTkLabel(root, text="ENTER PASSWORD:", font=("Felix Titling", 25))
     passwordLabel.pack(pady=5)
 
-    passwordEntry = ctk.CTkEntry(root, show='*')
+    passwordEntry = ctk.CTkEntry(root, show='*') 
     passwordEntry.pack(pady=10)
 
     submitButton =  ctk.CTkButton(root, text="SUBMIT", corner_radius=5, command=submit_info)
     submitButton.pack(pady=50)
-
+    
     root.bind('<Return>', inviaSubmit)
-
+    
     root.mainloop()
 
     return ip_address, username, password

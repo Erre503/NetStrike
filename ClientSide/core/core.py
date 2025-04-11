@@ -321,10 +321,8 @@ class ClientCore:
           i dati modificati.
     """
     def modifica_plugin(self, id_plugin, name=None, description=None):
-        if(sf.is_valid_input(name) and sf.is_valid_input(description)):
-            self.invia_richiesta('/edit_plugin/'+id_plugin, 'PATCH', { 'name':name, 'description': description })
-        else:
-            logging.error("Valori inseriti non consentiti.")
+        #CHANGE VALUES ARE NOT BEIGN VERIFIED
+        self.invia_richiesta('/edit_plugin/'+id_plugin, 'PATCH', { 'name':name, 'description': description })
 
     """
     Modifica un test presente nel server.

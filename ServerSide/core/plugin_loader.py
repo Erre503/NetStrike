@@ -8,16 +8,18 @@ import subprocess #serve per i file bash
 from pathlib import Path #serve per ottenere il riferimento al percorso del file corrente
 from datetime import datetime
 
-def get_plugin_type(nome_file):
+FOLDER = Path(__file__).resolve().parent.parent / "plugins"
+
+def get_plugin_extension(nome_file):
     if nome_file.endswith('.sh'):
-        return 'sh'
+        return '.sh'
     if nome_file.endswith('.py'):
-        return 'py'
+        return '.py'
     return None
 
-def lista_plugin(folder): #crea una lista con tutti i file python all'interno della cartella
+def lista_plugin(): #crea una lista con tutti i file python all'interno della cartella
     var = []
-    for file in os.listdir(folder):
+    for file in os.listdir(FOLDER):
         if get_plugin_type(file)=='sh':
             if file[:-3] and file.endswith('.sh'):
                 var.append(file)
@@ -26,21 +28,15 @@ def lista_plugin(folder): #crea una lista con tutti i file python all'interno de
                 var.append(file)
     return var
 
-def cambiaNome(folder, nomeVecchio, nomeNuovo): #dato il nome del file da rinominare e quello nuovo, rinomina il file
+def rinomina_plugin(nomeVecchio, nomeNuovo): #dato il nome del file da rinominare e quello nuovo, rinomina il file
     try:
-        for file in os.listdir(folder):
-            if get_plugin_type(file)=='sh':
-                if file[:-3]==nomeVecchio:
-                    vecchioFile= os.path.join(folder, nomeVecchio+".sh")
-                    nuovoFile= os.path.join(folder, nomeNuovo+".sh")
-                    os.rename(vecchioFile,nuovoFile)
-            else:
-                if file[:-3]==nomeVecchio:
-                    vecchioFile= os.path.join(folder, nomeVecchio+".py")
-                    nuovoFile= os.path.join(folder, nomeNuovo+".py")
-                    os.rename(vecchioFile,nuovoFile)
+        vecchio_path = FOLDER / nomeVecchio
+        nuovo_path = FOLDER / nomeNuovo
+        vecchio_path.rename(nuovo_path)
+        return True
     except Exception:
         print("Errore: impossibile rinominare il nome del file")
+        return False
 
 
 def avvia_plugin(nome_plugin, vet_param, type):
@@ -207,11 +203,9 @@ def creaPlugin(nome_file, contenuto):
 
 if(__name__ == "__main__"):
     print("Quale file PY vuoi eseguire?")
-    folder = Path(__file__).resolve().parent.parent / "plugins"  # assegna il percorso della cartella basandosi su quello del plugin loader
-                                                                 #(Path(__file__).resolve()) per avere il percorso assoluto
-    sys.path.append(str(folder))  #aggiunge la cartella folder ai percorsi da cui vengono importati i file python
+    sys.path.append(str(FOLDER))  #aggiunge la cartella folder ai percorsi da cui vengono importati i file python
     # Carica i nomi dei plugin presenti
-    for i in lista_plugin(folder):
+    for i in lista_plugin():
         print(i)
     nome_plugin = input() #il nome per fare i test è dato in input
     type = "sh"

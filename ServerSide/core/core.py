@@ -3,7 +3,7 @@ from utilities.security_functions import *
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine, Column, Integer, String, Sequence
-from core.plugin_loader import lista_plugin, avvia_plugin, creaPlugin
+from core.plugin_loader import lista_plugin, avvia_plugin, creaPlugin, rinomina_plugin
 import time
 import datetime
 from utilities.key_manager import KeyManager
@@ -191,14 +191,16 @@ def modifyPlugin(id=0):
     plugin = PlugTable.query.get(id)
     data = request.get_json()
     data = sanitize_dict(data)
-    if data.description == None and data.name == None:
+    if data['description'] == None and data['name'] == None:
         return "nessun parametro passato"
-    if data.name:
-        plugin.name = data.name
-        return "nome aggiornato"
-    else:
-        plugin.description = data.description
-        return "descrizione aggiornata"
+    if data['name'] and rinomina_plugin(plugin.name, data['name']):
+        plugin.name = data['name']
+        db.session.commit()
+    if data['description']:
+       plugin.description = data['description']
+       db.session.commit()
+
+
 
 # Funzione per ottenere la lista dei messaggi di log
 @app.route("/log_list", endpoint='log_list', methods=["GET"])
