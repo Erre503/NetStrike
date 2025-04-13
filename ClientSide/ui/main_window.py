@@ -142,14 +142,12 @@ class MainInterfaccia(ctk.CTkFrame):
         if self.coreApplicazione is None:
             messagebox.showerror("Error", "Core dell'applicazione non inizializzato!")
             return
-        percorsoPlugin = filedialog.askopenfilename(filetypes=[("Python Files", "*.py")])
+        percorsoPlugin = filedialog.askopenfilename(filetypes=[("Python Files", "*.*")])
         if percorsoPlugin:
             try:
                 idPlugin = self.coreApplicazione.aggiungi_plugin(percorsoPlugin)
                 self.aggiungiPlugin(percorsoPlugin, idPlugin)
                 self.aggiornaListaPlugin()
-                #! DEBUG
-                messagebox.showerror("Error", f"Errore nel caricamento del plug-in: {e}")
             except Exception as e:
                 messagebox.showerror("Error", f"Errore nel caricamento del plug-in: {e}")
 

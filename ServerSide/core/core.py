@@ -3,7 +3,7 @@ from utilities.security_functions import *
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine, Column, Integer, String, Sequence
-from core.plugin_loader import lista_plugin, avvia_plugin, creaPlugin, rinomina_plugin
+from core.plugin_loader import *
 import time
 import datetime
 from utilities.key_manager import KeyManager
@@ -148,7 +148,6 @@ def new_plugin():
     global last_update
     # Get the JSON data from the request
     data = request.get_json()
-    data = sanitize_dict(data)
     if not data or 'name' not in data:
         return jsonify({"error": "Invalid record"}), 404
 
@@ -173,7 +172,7 @@ def new_plugin():
 # Esecuzione del plugin
 @app.route("/test_execute/<int:id>", endpoint='test_execute', methods=["POST"])
 @jwt_required()
-def plug_table_details(id=0,parametri=''):
+def plug_table_details(id=0,parametri={}):
     plugin = PlugTable.query.get(id)  # gestione dell'id tramite il metodo http GET
     if plugin is None:
         return "error 404, no such plugin has been found"

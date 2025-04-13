@@ -321,7 +321,7 @@ class ClientCore:
           i dati modificati.
     """
     def modifica_plugin(self, id_plugin, name=None, description=None):
-        #CHANGE VALUES ARE NOT BEIGN VERIFIED
+        #INPUT VALUES ARE NOT BEIGN VERIFIED
         self.invia_richiesta('/edit_plugin/'+id_plugin, 'PATCH', { 'name':name, 'description': description })
 
     """
