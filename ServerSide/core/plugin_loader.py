@@ -39,6 +39,14 @@ def rinomina_plugin(nomeVecchio, nomeNuovo): #dato il nome del file da rinominar
         print("Errore: impossibile rinominare il nome del file")
         return False
 
+def elimina_plugin(nome):
+    try:
+        os.remove(FOLDER / nome)
+        return True
+    except Exception:
+        print("Errore: impossibile eliminare il nome del file")
+        return False
+
 
 
 
@@ -85,50 +93,47 @@ def creaPluginPy(nome_file, contenuto):
     if not nome_file.endswith('.py'):
         nome_file += '.py'
 
-    percorso_file = FOLDER / nome_file
+    file = FOLDER / nome_file
 
-    # Check for existing file first
-    if percorso_file.exists():
+    if os.path.isfile(file):
         return f"Error: File {nome_file} already exists"
 
     # Add required import
     full_content = f"from core.interfaccia_plugin import Interfaccia_Plugin\n\n{contenuto}"
-
-    # Use temporary directory for validation
-    with tempfile.TemporaryDirectory() as temp_dir:
-        temp_file = Path(temp_dir) / nome_file
         
-        try:
-            # Write to temporary file
-            temp_file.write_text(full_content, encoding="utf-8")
-            
-            # Validate through temporary file
-            spec = importlib.util.spec_from_file_location(nome_file[:-3], temp_file)
-            modulo = importlib.util.module_from_spec(spec)
-            spec.loader.exec_module(modulo)
+    try:
+        # Write to temporary file
+        file.write_text(full_content, encoding="utf-8")
+        
+        # Validate through temporary file
+        spec = importlib.util.spec_from_file_location(nome_file[:-3], file)
+        modulo = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(modulo)
 
-            # Class validation
-            if not hasattr(modulo, "Plugin"):
-                raise AttributeError("Missing 'Plugin' class")
+        # Class validation
+        if not hasattr(modulo, "Plugin"):
+            os.remove(file)
+            raise AttributeError("Missing 'Plugin' class")
 
-            classe_plugin = modulo.Plugin
+        classe_plugin = modulo.Plugin
 
-            if not inspect.isclass(classe_plugin):
-                raise TypeError("'Plugin' is not a class")
+        if not inspect.isclass(classe_plugin):
+            os.remove(file)
+            raise TypeError("'Plugin' is not a class")
 
-            if not issubclass(classe_plugin, Interfaccia_Plugin):
-                raise TypeError("Must inherit from Interfaccia_Plugin")
+        if not issubclass(classe_plugin, Interfaccia_Plugin):
+            os.remove(file)
+            raise TypeError("Must inherit from Interfaccia_Plugin")
 
-            if len(classe_plugin.__abstractmethods__) > 0:
-                raise NotImplementedError(f"Unimplemented abstract methods: {classe_plugin.__abstractmethods__}")
+        if len(classe_plugin.__abstractmethods__) > 0:
+            os.remove(file)
+            raise NotImplementedError(f"Unimplemented abstract methods: {classe_plugin.__abstractmethods__}")
 
-            # Only move to final location if all validations pass
-            shutil.move(str(temp_file), str(FOLDER))
-            return f"Plugin created successfully: {nome_file}"
+        return f"Plugin created successfully: {nome_file}"
 
-        except Exception as e:            
-            # Temporary file is automatically deleted with the directory
-            return f"Validation failed: {e}"
+    except Exception as e:            
+        # Temporary file is automatically deleted with the directory
+        return f"Validation failed: {e}"
 
 def creaPluginSh(nome_file, contenuto):
     if not nome_file.endswith('.sh'):

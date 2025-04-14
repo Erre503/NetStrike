@@ -173,9 +173,6 @@ class ClientCore:
             return token
         logging.warning("Authentication failed for user: %s", username)
 
-
-
-
     """
     Registra un nuovo utente con le credenziali fornite.
 
@@ -322,7 +319,13 @@ class ClientCore:
     """
     def modifica_plugin(self, id_plugin, name=None, description=None):
         #INPUT VALUES ARE NOT BEIGN VERIFIED
-        self.invia_richiesta('/edit_plugin/'+id_plugin, 'PATCH', { 'name':name, 'description': description })
+        dati = self.invia_richiesta('/edit_plugin/'+id_plugin, 'PATCH', { 'name':name, 'description': description })
+        if dati:
+            self.aggiorna_ui(dati, UpdateType.LISTA_PLUGIN)
+
+    def rimuovi_plugin(self, id_plugin):
+        self.invia_richiesta('/remove_plugin/'+id_plugin, 'GET')
+        self.ottieni_lista_plugin()
 
     """
     Modifica un test presente nel server.

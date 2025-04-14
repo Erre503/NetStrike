@@ -2,7 +2,7 @@
 from utilities.security_functions import *
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import create_engine, Column, Integer, String, Sequence
+from sqlalchemy import Column, Integer, String, Sequence
 from core.plugin_loader import *
 import time
 import datetime
@@ -199,6 +199,15 @@ def modifyPlugin(id=0):
        plugin.description = data['description']
        db.session.commit()
 
+#Eliminare dal sistema un plugin
+@app.route("/remove_plugin/<int:id>", endpoint='remove_plugin', methods=["GET"])
+def modifyPlugin(id=0):
+    plugin = PlugTable.query.get(id)
+    if plugin and elimina_plugin(plugin.name):
+        PlugTable.query.filter_by(id=id).delete()
+        db.session.commit()
+        return "200"
+    return "500"
 
 
 # Funzione per ottenere la lista dei messaggi di log
@@ -230,6 +239,6 @@ def logUpdate(result):
 def start():
     with app.app_context():
         db.create_all()  # This will create the tables again
-    app.run(ssl_context=("./certificates/server.crt", "./certificates/server.key"), host="0.0.0.0", port=5000, debug=True)
+    app.run(ssl_context=("./certificates/server.crt", "./certificates/server.key"), host="0.0.0.0", port=5000, debug=False)
 
 # creaPlugin

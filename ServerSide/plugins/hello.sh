@@ -15,7 +15,6 @@ get_param() {
 
 # Function to execute the main action
 execute() {
-    local msg=$(get_param)
     echo "Hello, World! $msg"
 }
 

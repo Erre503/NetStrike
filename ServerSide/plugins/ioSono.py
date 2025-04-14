@@ -1,11 +1,12 @@
 from core.interfaccia_plugin import Interfaccia_Plugin
+
 class Plugin(Interfaccia_Plugin):
     def __init__(self):
         self.params = []
         self.keys = []
 
     def execute(self):
-        return "Io sono Nessunooo"
+        return "Io sono stato caricato"
 
     def get_param(self):
         return self.keys

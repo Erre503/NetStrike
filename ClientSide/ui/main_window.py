@@ -205,8 +205,7 @@ class MainInterfaccia(ctk.CTkFrame):
             messagebox.showwarning("Nessun plugin selezionato", "Seleziona un plugin prima di rimuoverlo.")
             return
         try:
-            self.coreApplicazione.rimuovi_plugin(self.plugin_selezionato)
-            self.aggiornaListaPlugin()
+            self.coreApplicazione.rimuovi_plugin(str(self.plugin_selezionato))
             self.plugin_selezionato = None
             self.labelInfoPluginSelezionato.configure(text="SELECTED PLUG-IN: None")
         except Exception as e:
