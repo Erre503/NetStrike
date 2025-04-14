@@ -49,19 +49,16 @@ class UIUpdater:
             self.ui.aggiungi_elemento(item["name"], str(item["id"]))
 
     """
-    Mostra i dettagli di un plugin selezionato nell'interfaccia grafica.
+    Mostra i dettagli dell'elemento selezionato nell'interfaccia grafica.
 
     Args:
-        plugin_details (dict): Un dizionario contenente i dettagli del plugin.
+        details (dict): Un dizionario contenente i dettagli.
             Struttura attesa:
-            - description (str): Descrizione del plugin.
-            - parameters (dict, opzionale): Parametri del plugin come chiave-valore.
+            - description (str): Descrizione.
+            - parameters (dict, opzionale): Parametri come chiave-valore.
     """
-    def aggiorna_dettagli_plugin(self, plugin_details):
-        self.ui.mostra_dettagli_plugin(
-            description=plugin_details["description"],
-            parameters=plugin_details.get("params", {})  # Parametri opzionali
-        )
+    def aggiorna_dettagli(self, details):
+        self.ui.mostra_dettagli(details)
 
     """
     Mostra i risultati di un test eseguito nell'interfaccia grafica.

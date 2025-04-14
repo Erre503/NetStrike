@@ -65,16 +65,19 @@ class Log(db.Model):
     def __repr__(self):
         return '<Name %r>' % self.idLog
 
+    #CHANGE
     def logList(self):
         return {
             'id': self.idLog,
             'name': self.dateLog.strftime('%Y-%m-%d %H:%M:%S')
         }
 
+    #CHANGE
     def logData(self):
         return {
             'success': self.success,
-            'result': self.result
+            'result': self.result,
+            'date': self.dateLog.strftime('%Y-%m-%d %H:%M:%S')
         }
 
 # Output di default
@@ -133,7 +136,7 @@ def test_table_details(id=0):
     test = Log.query.get(id)  # gestione dell'id tramite il metodo http GET
     if test is None:
         return "error 404, no such plugin has been found"
-    return jsonify(test.to_dict())  # Use the renamed method
+    return jsonify(test.logData())  # Use the renamed method
 
 @app.route("/notification/<int:timestamp>", endpoint='notification', methods=["GET"])
 @jwt_required()

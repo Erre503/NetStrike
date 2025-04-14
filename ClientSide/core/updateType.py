@@ -19,7 +19,6 @@ Membri:
 
 class UpdateType(Enum):
     LISTA = 0
-    DETTAGLI_PLUGIN = 1
-    DETTAGLI_TEST = 2
-    RISULTATI_TEST = 3
-    AGGIORNA_LISTA = 4
+    DETTAGLI = 1
+    RISULTATI_TEST = 2
+    AGGIORNA_LISTA = 3

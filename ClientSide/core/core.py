@@ -75,12 +75,12 @@ class ClientCore:
     def aggiorna_ui(self, data, update_type):
         if update_type == UpdateType.LISTA:
             self.ui_handler.aggiorna_lista(data)
-        elif update_type == UpdateType.DETTAGLI_PLUGIN:
-            self.ui_handler.aggiorna_dettagli_plugin(data)
-        elif update_type == UpdateType.RISULTATI_TEST:
-            self.ui_handler.aggiorna_risultato_test(data)
+        elif update_type == UpdateType.DETTAGLI:
+            self.ui_handler.aggiorna_dettagli(data)
         elif update_type == UpdateType.AGGIORNA_LISTA:
             print("AGGIORNA LA CAZZO DI LISTA") #Chage
+        elif update_type == UpdateType.RISULTATI_TEST:
+            self.ui_handler.aggiorna_risultato_test(data)
         else:
             logging.error("Type of UIUpdate unknown: %s",update_type)
 
@@ -232,7 +232,7 @@ class ClientCore:
     def ottieni_dettagli_plugin(self, id_plugin):
         dati = self.invia_richiesta('/plugin_details/'+id_plugin)
         if dati:
-            self.aggiorna_ui(dati, UpdateType.DETTAGLI_PLUGIN)
+            self.aggiorna_ui(dati, UpdateType.DETTAGLI)
 
     """
     Ottiene la lista dei test eseguiti.
@@ -261,8 +261,13 @@ class ClientCore:
     def ottieni_dettagli_test(self, id_test):
         dati = self.invia_richiesta('/test_details/'+id_test)
         if dati:
-            self.aggiorna_ui(dati, UpdateType.DETTAGLI_TEST)
+            self.aggiorna_ui(dati, UpdateType.DETTAGLI)
 
+    def ottieni_dettagli(self, id, type):
+        if(type == 'plugin'):
+            self.ottieni_dettagli_plugin(id)
+        else:
+            self.ottieni_dettagli_test(id)
     """
     Esegui un test per un plugin specifico con i parametri forniti.
 

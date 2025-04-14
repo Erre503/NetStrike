@@ -10,6 +10,7 @@ class MainInterfaccia(ctk.CTkFrame):
         self.finestraPrincipale = finestraPrincipale
         self.coreApplicazione = coreApplicazione
         self.plugin_files = {}
+        self.mode = "p"
 
 
         self.plugin_selezionato = None
@@ -79,21 +80,13 @@ class MainInterfaccia(ctk.CTkFrame):
         self.labelInfoPluginSelezionato.pack(pady=10)
 
 
-        self.listaLog = ctk.CTkFrame(self.frameDX, width=350, height=200, corner_radius=10)
-        self.listaLog.pack_forget()
-
-
         self.informazioniTest = ctk.CTkTabview(self.frameDX, width=350, height=200, corner_radius=10)
         self.informazioniTest.pack(pady=10)
 
 
-        self.testDescription = self.informazioniTest.add("TEST DESCRIPTION")
+        self.testDescription = self.informazioniTest.add("DESCRIPTION")
         self.mostraDescrizioneTest = ctk.CTkLabel(self.testDescription, text="Select a plug-in to view the test details.")
         self.mostraDescrizioneTest.pack(pady=10)
-
-
-        self.testResult = self.informazioniTest.add("TEST RESULT")
-        self.mostraRisultatoTest = ctk.CTkLabel(self.testResult, text="Run a plug-in to view the test results.").pack(pady=10)
 
 
         self.bottoneConfig = ctk.CTkButton(self.frameDX, text="CONFIGURE TEST",corner_radius=8, command=self.configuraTest)
@@ -127,8 +120,13 @@ class MainInterfaccia(ctk.CTkFrame):
             widget.destroy()
 
 
-    def mostra_dettagli_plugin(self, description, parameters):
-        dettagli = f"Description: {description}\nParameters: {parameters}"
+    def mostra_dettagli(self, d):
+        dettagli = ""
+        for i in d:
+            dettagli += (i+": "+ str(d[i]) + "\n")
+
+        print(dettagli)
+
         self.mostraDescrizioneTest.configure(text=dettagli)
 
 
@@ -138,8 +136,8 @@ class MainInterfaccia(ctk.CTkFrame):
 
     def selezionaPlugin(self, name):
         self.plugin_selezionato = self.plugin_files.get(name)['id']
-        self.labelInfoPluginSelezionato.configure(text=f"SELECTED PLUG-IN: {name}")
-        self.coreApplicazione.ottieni_dettagli_plugin(self.plugin_selezionato)
+        self.labelInfoPluginSelezionato.configure(text="SELECTED "+("PLUGIN" if self.mode == "p" else "LOG")+f": {name}")
+        self.coreApplicazione.ottieni_dettagli(self.plugin_selezionato, 'plugin' if self.mode == "p" else 'test')
 
 
     def caricaPlugin(self):
@@ -198,7 +196,7 @@ class MainInterfaccia(ctk.CTkFrame):
             finestraEdit, 
             text="SUBMIT", 
             corner_radius=5, 
-            command=submitModificaPlugin  # Now this is defined
+            command=submitModificaPlugin
         )
         bottoneSubmit.pack(pady=20)
 
@@ -271,8 +269,8 @@ class MainInterfaccia(ctk.CTkFrame):
 
 
     def cambiaView(self):
-        if self.labelPSelezionabili.cget("text") == "AVAILABLE PLUG-IN":
-
+        if self.mode == "p":
+            self.mode = "t"
 
             self.labelCaricaP.pack_forget()
             self.bottoneCaricaP.pack_forget()
@@ -282,7 +280,6 @@ class MainInterfaccia(ctk.CTkFrame):
             self.labelInfoPluginSelezionato.configure(text="SELECTED LOG: None")
 
 
-            self.listaLog.pack(pady=10)
 
 
             self.labelPSelezionabili.configure(text="AVAILABLE LOGS")
@@ -294,14 +291,13 @@ class MainInterfaccia(ctk.CTkFrame):
             self.bottoneRinominaP.configure(text="EDIT LOG")
             self.bottoneView.configure(text="VIEW PLUG-INs")
             self.bottoneRimuoviP.pack_forget()
-            self.informazioniTest.pack_forget()
             self.bottoneConfig.pack_forget()
             self.bottoneStart.pack_forget()
 
             self.aggiornaListaTest()
            
         else:
-
+            self.mode = "p"
 
             self.labelCaricaP.pack(pady=10)
             self.bottoneCaricaP.pack(pady=10)
@@ -313,9 +309,6 @@ class MainInterfaccia(ctk.CTkFrame):
             self.labelInfoPluginSelezionato.configure(text="SELECTED PLUG-IN: None")
             self.labelInfoP.pack(pady=10)
             self.labelInfoPluginSelezionato.pack(pady=10)
-
-
-            self.listaLog.pack_forget()
 
 
             self.labelPSelezionabili.pack_forget()
@@ -341,3 +334,4 @@ class MainInterfaccia(ctk.CTkFrame):
             self.bottoneStart.pack(pady=10)
 
             self.aggiornaListaPlugin()
+        
