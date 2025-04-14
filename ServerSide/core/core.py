@@ -87,6 +87,7 @@ class Log(db.Model):
 
 class ProgrammedTest(db.Model):
     __tablename__ = 'ProgrammedTest'
+    __tablename__ = 'ProgrammedTest'
     idLog = db.Column(db.Integer, Sequence('logId'), primary_key=True)
     name = db.Column(db.String(32))
     dateLog = db.Column(db.DateTime, nullable=False)
@@ -262,6 +263,18 @@ def modifyPlugin(id=0):
         db.session.commit()
         logging.debug(get_jwt_identity()+": Edited plugin ("+plugin.name+") description")
         return "descrizione aggiornata"
+
+#Eliminare dal sistema un plugin
+@app.route("/remove_plugin/<int:id>", endpoint='remove_plugin', methods=["GET"])
+def modifyPlugin(id=0):
+    plugin = PlugTable.query.get(id)
+    if plugin and elimina_plugin(plugin.name):
+        logging.debug(get_jwt_identity()+": deleted plugin ("+plugin.name+") ")
+        PlugTable.query.filter_by(id=id).delete()
+        db.session.commit()
+        return "200"
+    logging.error(get_jwt_identity()+": Tried deleting a plugin ("+plugin.name+") but failed ")
+    return "500"
 
 # Funzione per ottenere la lista dei messaggi di log
 @app.route("/log_list", endpoint='log_list', methods=["GET"])
