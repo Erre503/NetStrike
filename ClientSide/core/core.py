@@ -320,7 +320,7 @@ class ClientCore:
         #INPUT VALUES ARE NOT BEIGN VERIFIED
         dati = self.invia_richiesta('/edit_plugin/'+id_plugin, 'PATCH', { 'name':name, 'description': description })
         if dati:
-            self.aggiorna_ui(dati, UpdateType.LISTA_PLUGIN)
+            self.aggiorna_ui(dati, UpdateType.LISTA)
 
     def rimuovi_plugin(self, id_plugin):
         self.invia_richiesta('/remove_plugin/'+id_plugin, 'GET')
