@@ -67,8 +67,8 @@ class Log(db.Model):
 
     def logList(self):
         return {
-            'idLog': self.idLog,
-            'dateLog': self.dateLog.strftime('%Y-%m-%d %H:%M:%S')
+            'id': self.idLog,
+            'name': self.dateLog.strftime('%Y-%m-%d %H:%M:%S')
         }
 
     def logData(self):
@@ -125,7 +125,7 @@ def test_table():
     testT = Log.query.all()
     if testT is None or not testT:
         return "error 404, no such test has been found"
-    return jsonify([test.list() for test in testT])
+    return jsonify([test.logList() for test in testT])
 
 @app.route("/test_details/<int:id>", endpoint='test_details', methods=["GET"])
 @jwt_required()

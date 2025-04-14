@@ -73,13 +73,12 @@ class ClientCore:
     """
 
     def aggiorna_ui(self, data, update_type):
-        if update_type == UpdateType.LISTA_PLUGIN:
-            self.ui_handler.aggiorna_lista_plugin(data)
+        if update_type == UpdateType.LISTA:
+            self.ui_handler.aggiorna_lista(data)
         elif update_type == UpdateType.DETTAGLI_PLUGIN:
             self.ui_handler.aggiorna_dettagli_plugin(data)
         elif update_type == UpdateType.RISULTATI_TEST:
             self.ui_handler.aggiorna_risultato_test(data)
-
         elif update_type == UpdateType.AGGIORNA_LISTA:
             print("AGGIORNA LA CAZZO DI LISTA") #Chage
         else:
@@ -217,7 +216,7 @@ class ClientCore:
         dati = self.invia_richiesta('/plugin_list')
         if dati:
             self.last_update = round(time.time())
-            self.aggiorna_ui(dati, UpdateType.LISTA_PLUGIN)
+            self.aggiorna_ui(dati, UpdateType.LISTA)
 
     """
     Ottiene i dettagli di un plugin disponibile dal server.
@@ -246,7 +245,7 @@ class ClientCore:
     def ottieni_lista_test(self):
         dati = self.invia_richiesta('/test_list')
         if dati:
-            self.aggiorna_ui(dati, UpdateType.LISTA_TEST)
+            self.aggiorna_ui(dati, UpdateType.LISTA)
 
     """
     Ottiene i dettagli di un test eseguito.

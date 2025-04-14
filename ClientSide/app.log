@@ -60611,3 +60611,645 @@ TypeError: The view function for 'edit_plugin' did not return a valid response. 
 2025-04-14 14:42:56,485 - DEBUG - https://127.0.0.1:5000 "POST /test_execute/3 HTTP/1.1" 200 90
 2025-04-14 14:42:56,527 - DEBUG - Received response: {"datetime":"Mon, 14 Apr 2025 14:42:56 GMT","log":"Hello, World! \n","status":"finished"}
 
+2025-04-14 14:50:53,637 - INFO - Application started.
+2025-04-14 14:50:53,637 - INFO - ClientCore initialized with server URL: https://127.0.0.1:5000
+2025-04-14 14:50:53,637 - INFO - Attempting to log in user: test
+2025-04-14 14:50:53,640 - DEBUG - Loading KWallet
+2025-04-14 14:50:53,640 - DEBUG - Loading SecretService
+2025-04-14 14:50:53,648 - DEBUG - Loading Windows
+2025-04-14 14:50:53,649 - DEBUG - Loading chainer
+2025-04-14 14:50:53,649 - DEBUG - Loading libsecret
+2025-04-14 14:50:53,649 - DEBUG - Loading macOS
+2025-04-14 14:50:53,693 - DEBUG - Sending POST request to https://127.0.0.1:5000/login
+2025-04-14 14:50:53,694 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 14:50:53,698 - DEBUG - https://127.0.0.1:5000 "POST /login HTTP/1.1" 200 349
+2025-04-14 14:50:53,708 - DEBUG - Received response
+2025-04-14 14:50:53,722 - INFO - User test logged in successfully.
+2025-04-14 14:50:53,722 - INFO - Starting polling for notifications.
+2025-04-14 14:50:53,722 - DEBUG - Polling for notifications...
+2025-04-14 14:50:53,732 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1744638654 with data: None
+2025-04-14 14:50:53,733 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 14:50:53,747 - DEBUG - https://127.0.0.1:5000 "GET /notification/1744638654 HTTP/1.1" 200 14
+2025-04-14 14:50:53,747 - DEBUG - Received response: {"update":-9}
+
+2025-04-14 14:50:53,893 - DEBUG - Sending GET request to https://127.0.0.1:5000/plugin_list with data: None
+2025-04-14 14:50:53,894 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 14:50:53,910 - DEBUG - https://127.0.0.1:5000 "GET /plugin_list HTTP/1.1" 200 57
+2025-04-14 14:50:53,911 - DEBUG - Received response: [{"id":2,"name":"ioSono.py"},{"id":3,"name":"hello.sh"}]
+
+2025-04-14 14:50:54,710 - DEBUG - Sending GET request to https://127.0.0.1:5000/plugin_details/3 with data: None
+2025-04-14 14:50:54,711 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 14:50:54,727 - DEBUG - https://127.0.0.1:5000 "GET /plugin_details/3 HTTP/1.1" 200 31
+2025-04-14 14:50:54,727 - DEBUG - Received response: {"description":"","params":""}
+
+2025-04-14 14:50:55,285 - DEBUG - Sending POST request to https://127.0.0.1:5000/test_execute/3 with data: {}
+2025-04-14 14:50:55,286 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 14:50:55,297 - DEBUG - https://127.0.0.1:5000 "POST /test_execute/3 HTTP/1.1" 200 90
+2025-04-14 14:50:55,337 - DEBUG - Received response: {"datetime":"Mon, 14 Apr 2025 14:50:55 GMT","log":"Hello, World! \n","status":"finished"}
+
+2025-04-14 14:50:58,753 - DEBUG - Polling for notifications...
+2025-04-14 14:50:58,765 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1744638654 with data: None
+2025-04-14 14:50:58,766 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 14:50:58,780 - DEBUG - https://127.0.0.1:5000 "GET /notification/1744638654 HTTP/1.1" 200 14
+2025-04-14 14:50:58,781 - DEBUG - Received response: {"update":-9}
+
+2025-04-14 14:51:03,786 - DEBUG - Polling for notifications...
+2025-04-14 14:51:03,799 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1744638654 with data: None
+2025-04-14 14:51:03,800 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 14:51:03,813 - DEBUG - https://127.0.0.1:5000 "GET /notification/1744638654 HTTP/1.1" 200 14
+2025-04-14 14:51:03,814 - DEBUG - Received response: {"update":-9}
+
+2025-04-14 14:51:08,819 - DEBUG - Polling for notifications...
+2025-04-14 14:51:08,831 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1744638654 with data: None
+2025-04-14 14:51:08,832 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 14:51:08,846 - DEBUG - https://127.0.0.1:5000 "GET /notification/1744638654 HTTP/1.1" 200 14
+2025-04-14 14:51:08,847 - DEBUG - Received response: {"update":-9}
+
+2025-04-14 14:54:12,301 - INFO - Application started.
+2025-04-14 14:54:12,301 - INFO - ClientCore initialized with server URL: https://127.0.0.1:5000
+2025-04-14 14:54:12,301 - INFO - Attempting to log in user: test
+2025-04-14 14:54:12,304 - DEBUG - Loading KWallet
+2025-04-14 14:54:12,304 - DEBUG - Loading SecretService
+2025-04-14 14:54:12,313 - DEBUG - Loading Windows
+2025-04-14 14:54:12,313 - DEBUG - Loading chainer
+2025-04-14 14:54:12,314 - DEBUG - Loading libsecret
+2025-04-14 14:54:12,314 - DEBUG - Loading macOS
+2025-04-14 14:54:12,359 - DEBUG - Sending POST request to https://127.0.0.1:5000/login
+2025-04-14 14:54:12,360 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 14:54:12,364 - DEBUG - https://127.0.0.1:5000 "POST /login HTTP/1.1" 200 349
+2025-04-14 14:54:12,374 - DEBUG - Received response
+2025-04-14 14:54:12,386 - INFO - User test logged in successfully.
+2025-04-14 14:54:12,387 - INFO - Starting polling for notifications.
+2025-04-14 14:54:12,387 - DEBUG - Polling for notifications...
+2025-04-14 14:54:12,397 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1744638852 with data: None
+2025-04-14 14:54:12,397 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 14:54:12,411 - DEBUG - https://127.0.0.1:5000 "GET /notification/1744638852 HTTP/1.1" 200 16
+2025-04-14 14:54:12,411 - DEBUG - Received response: {"update":-207}
+
+2025-04-14 14:54:12,549 - DEBUG - Sending GET request to https://127.0.0.1:5000/plugin_list with data: None
+2025-04-14 14:54:12,549 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 14:54:12,564 - DEBUG - https://127.0.0.1:5000 "GET /plugin_list HTTP/1.1" 200 57
+2025-04-14 14:54:12,564 - DEBUG - Received response: [{"id":2,"name":"ioSono.py"},{"id":3,"name":"hello.sh"}]
+
+2025-04-14 14:54:45,889 - INFO - Application started.
+2025-04-14 14:54:45,889 - INFO - ClientCore initialized with server URL: https://127.0.0.1:5000
+2025-04-14 14:54:45,889 - INFO - Attempting to log in user: test
+2025-04-14 14:54:45,893 - DEBUG - Loading KWallet
+2025-04-14 14:54:45,893 - DEBUG - Loading SecretService
+2025-04-14 14:54:45,903 - DEBUG - Loading Windows
+2025-04-14 14:54:45,903 - DEBUG - Loading chainer
+2025-04-14 14:54:45,904 - DEBUG - Loading libsecret
+2025-04-14 14:54:45,904 - DEBUG - Loading macOS
+2025-04-14 14:54:45,948 - DEBUG - Sending POST request to https://127.0.0.1:5000/login
+2025-04-14 14:54:45,949 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 14:54:45,952 - DEBUG - https://127.0.0.1:5000 "POST /login HTTP/1.1" 200 349
+2025-04-14 14:54:45,963 - DEBUG - Received response
+2025-04-14 14:54:45,976 - INFO - User test logged in successfully.
+2025-04-14 14:54:45,976 - INFO - Starting polling for notifications.
+2025-04-14 14:54:45,976 - DEBUG - Polling for notifications...
+2025-04-14 14:54:45,987 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1744638886 with data: None
+2025-04-14 14:54:45,987 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 14:54:46,001 - DEBUG - https://127.0.0.1:5000 "GET /notification/1744638886 HTTP/1.1" 200 16
+2025-04-14 14:54:46,001 - DEBUG - Received response: {"update":-241}
+
+2025-04-14 14:54:46,136 - DEBUG - Sending GET request to https://127.0.0.1:5000/plugin_list with data: None
+2025-04-14 14:54:46,136 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 14:54:46,150 - DEBUG - https://127.0.0.1:5000 "GET /plugin_list HTTP/1.1" 200 57
+2025-04-14 14:54:46,151 - DEBUG - Received response: [{"id":2,"name":"ioSono.py"},{"id":3,"name":"hello.sh"}]
+
+2025-04-14 14:54:47,491 - DEBUG - Sending GET request to https://127.0.0.1:5000/plugin_details/2 with data: None
+2025-04-14 14:54:47,492 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 14:54:47,507 - DEBUG - https://127.0.0.1:5000 "GET /plugin_details/2 HTTP/1.1" 200 31
+2025-04-14 14:54:47,507 - DEBUG - Received response: {"description":"","params":""}
+
+2025-04-14 14:54:48,328 - DEBUG - Sending POST request to https://127.0.0.1:5000/test_execute/2 with data: {}
+2025-04-14 14:54:48,328 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 14:54:48,337 - DEBUG - https://127.0.0.1:5000 "POST /test_execute/2 HTTP/1.1" 200 96
+2025-04-14 14:54:48,378 - DEBUG - Received response: {"datetime":"Mon, 14 Apr 2025 14:54:48 GMT","log":"Io sono stato caricato","status":"finished"}
+
+2025-04-14 14:54:49,836 - DEBUG - Sending GET request to https://127.0.0.1:5000/test_list with data: None
+2025-04-14 14:54:49,837 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 14:54:49,854 - DEBUG - https://127.0.0.1:5000 "GET /test_list HTTP/1.1" 500 265
+2025-04-14 14:54:49,854 - DEBUG - Received response: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+
+2025-04-14 14:54:49,855 - ERROR - Error 500: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+
+2025-04-14 14:54:51,006 - DEBUG - Polling for notifications...
+2025-04-14 14:54:51,019 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1744638886 with data: None
+2025-04-14 14:54:51,019 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 14:54:51,034 - DEBUG - https://127.0.0.1:5000 "GET /notification/1744638886 HTTP/1.1" 200 16
+2025-04-14 14:54:51,034 - DEBUG - Received response: {"update":-241}
+
+2025-04-14 14:57:47,073 - INFO - Application started.
+2025-04-14 14:57:47,073 - INFO - ClientCore initialized with server URL: https://127.0.0.1:5000
+2025-04-14 14:57:47,073 - INFO - Attempting to log in user: test
+2025-04-14 14:57:47,076 - DEBUG - Loading KWallet
+2025-04-14 14:57:47,076 - DEBUG - Loading SecretService
+2025-04-14 14:57:47,085 - DEBUG - Loading Windows
+2025-04-14 14:57:47,085 - DEBUG - Loading chainer
+2025-04-14 14:57:47,085 - DEBUG - Loading libsecret
+2025-04-14 14:57:47,086 - DEBUG - Loading macOS
+2025-04-14 14:57:47,129 - DEBUG - Sending POST request to https://127.0.0.1:5000/login
+2025-04-14 14:57:47,131 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 14:57:47,134 - DEBUG - https://127.0.0.1:5000 "POST /login HTTP/1.1" 200 349
+2025-04-14 14:57:47,144 - DEBUG - Received response
+2025-04-14 14:57:47,158 - INFO - User test logged in successfully.
+2025-04-14 14:57:47,158 - INFO - Starting polling for notifications.
+2025-04-14 14:57:47,158 - DEBUG - Polling for notifications...
+2025-04-14 14:57:47,168 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1744639067 with data: None
+2025-04-14 14:57:47,169 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 14:57:47,183 - DEBUG - https://127.0.0.1:5000 "GET /notification/1744639067 HTTP/1.1" 200 16
+2025-04-14 14:57:47,183 - DEBUG - Received response: {"update":-422}
+
+2025-04-14 14:57:47,322 - DEBUG - Sending GET request to https://127.0.0.1:5000/plugin_list with data: None
+2025-04-14 14:57:47,323 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 14:57:47,337 - DEBUG - https://127.0.0.1:5000 "GET /plugin_list HTTP/1.1" 200 57
+2025-04-14 14:57:47,338 - DEBUG - Received response: [{"id":2,"name":"ioSono.py"},{"id":3,"name":"hello.sh"}]
+
+2025-04-14 14:58:13,986 - INFO - Application started.
+2025-04-14 14:58:13,986 - INFO - ClientCore initialized with server URL: https://127.0.0.1:5000
+2025-04-14 14:58:13,986 - INFO - Attempting to log in user: test
+2025-04-14 14:58:13,989 - DEBUG - Loading KWallet
+2025-04-14 14:58:13,990 - DEBUG - Loading SecretService
+2025-04-14 14:58:13,998 - DEBUG - Loading Windows
+2025-04-14 14:58:13,999 - DEBUG - Loading chainer
+2025-04-14 14:58:13,999 - DEBUG - Loading libsecret
+2025-04-14 14:58:13,999 - DEBUG - Loading macOS
+2025-04-14 14:58:14,044 - DEBUG - Sending POST request to https://127.0.0.1:5000/login
+2025-04-14 14:58:14,046 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 14:58:14,049 - DEBUG - https://127.0.0.1:5000 "POST /login HTTP/1.1" 200 349
+2025-04-14 14:58:14,059 - DEBUG - Received response
+2025-04-14 14:58:14,072 - INFO - User test logged in successfully.
+2025-04-14 14:58:14,072 - INFO - Starting polling for notifications.
+2025-04-14 14:58:14,073 - DEBUG - Polling for notifications...
+2025-04-14 14:58:14,083 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1744639094 with data: None
+2025-04-14 14:58:14,084 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 14:58:14,097 - DEBUG - https://127.0.0.1:5000 "GET /notification/1744639094 HTTP/1.1" 200 16
+2025-04-14 14:58:14,098 - DEBUG - Received response: {"update":-449}
+
+2025-04-14 14:58:14,233 - DEBUG - Sending GET request to https://127.0.0.1:5000/plugin_list with data: None
+2025-04-14 14:58:14,234 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 14:58:14,248 - DEBUG - https://127.0.0.1:5000 "GET /plugin_list HTTP/1.1" 200 57
+2025-04-14 14:58:14,248 - DEBUG - Received response: [{"id":2,"name":"ioSono.py"},{"id":3,"name":"hello.sh"}]
+
+2025-04-14 14:58:15,734 - DEBUG - Sending GET request to https://127.0.0.1:5000/test_list with data: None
+2025-04-14 14:58:15,734 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 14:58:15,749 - DEBUG - https://127.0.0.1:5000 "GET /test_list HTTP/1.1" 500 265
+2025-04-14 14:58:15,749 - DEBUG - Received response: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+
+2025-04-14 14:58:15,750 - ERROR - Error 500: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+
+2025-04-14 14:58:19,103 - DEBUG - Polling for notifications...
+2025-04-14 14:58:19,116 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1744639094 with data: None
+2025-04-14 14:58:19,117 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 14:58:19,131 - DEBUG - https://127.0.0.1:5000 "GET /notification/1744639094 HTTP/1.1" 200 16
+2025-04-14 14:58:19,131 - DEBUG - Received response: {"update":-449}
+
+2025-04-14 14:58:22,960 - DEBUG - Sending GET request to https://127.0.0.1:5000/test_list with data: None
+2025-04-14 14:58:22,960 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 14:58:22,975 - DEBUG - https://127.0.0.1:5000 "GET /test_list HTTP/1.1" 500 265
+2025-04-14 14:58:22,976 - DEBUG - Received response: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+
+2025-04-14 14:58:22,976 - ERROR - Error 500: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+
+2025-04-14 15:00:43,203 - INFO - Application started.
+2025-04-14 15:00:43,203 - INFO - ClientCore initialized with server URL: https://127.0.0.1:5000
+2025-04-14 15:00:43,203 - INFO - Attempting to log in user: test
+2025-04-14 15:00:43,206 - DEBUG - Loading KWallet
+2025-04-14 15:00:43,206 - DEBUG - Loading SecretService
+2025-04-14 15:00:43,216 - DEBUG - Loading Windows
+2025-04-14 15:00:43,216 - DEBUG - Loading chainer
+2025-04-14 15:00:43,216 - DEBUG - Loading libsecret
+2025-04-14 15:00:43,217 - DEBUG - Loading macOS
+2025-04-14 15:00:43,262 - DEBUG - Sending POST request to https://127.0.0.1:5000/login
+2025-04-14 15:00:43,263 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 15:00:43,267 - DEBUG - https://127.0.0.1:5000 "POST /login HTTP/1.1" 200 349
+2025-04-14 15:00:43,277 - DEBUG - Received response
+2025-04-14 15:00:43,291 - INFO - User test logged in successfully.
+2025-04-14 15:00:43,291 - INFO - Starting polling for notifications.
+2025-04-14 15:00:43,291 - DEBUG - Polling for notifications...
+2025-04-14 15:00:43,301 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1744639243 with data: None
+2025-04-14 15:00:43,302 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 15:00:43,316 - DEBUG - https://127.0.0.1:5000 "GET /notification/1744639243 HTTP/1.1" 200 14
+2025-04-14 15:00:43,316 - DEBUG - Received response: {"update":-8}
+
+2025-04-14 15:00:43,451 - DEBUG - Sending GET request to https://127.0.0.1:5000/plugin_list with data: None
+2025-04-14 15:00:43,452 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 15:00:43,468 - DEBUG - https://127.0.0.1:5000 "GET /plugin_list HTTP/1.1" 200 57
+2025-04-14 15:00:43,469 - DEBUG - Received response: [{"id":2,"name":"ioSono.py"},{"id":3,"name":"hello.sh"}]
+
+2025-04-14 15:00:45,330 - DEBUG - Sending GET request to https://127.0.0.1:5000/test_list with data: None
+2025-04-14 15:00:45,331 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 15:00:45,346 - DEBUG - https://127.0.0.1:5000 "GET /test_list HTTP/1.1" 200 2153
+2025-04-14 15:00:45,346 - DEBUG - Received response: [{"dateLog":"2025-04-14 14:24:51","idLog":1},{"dateLog":"2025-04-14 14:25:34","idLog":2},{"dateLog":"2025-04-14 14:25:40","idLog":3},{"dateLog":"2025-04-14 14:25:51","idLog":4},{"dateLog":"2025-04-14 14:27:21","idLog":5},{"dateLog":"2025-04-14 14:27:30","idLog":6},{"dateLog":"2025-04-14 14:27:34","idLog":7},{"dateLog":"2025-04-14 14:28:29","idLog":8},{"dateLog":"2025-04-14 14:28:39","idLog":9},{"dateLog":"2025-04-14 14:28:43","idLog":10},{"dateLog":"2025-04-14 14:28:45","idLog":11},{"dateLog":"2025-04-14 14:28:57","idLog":12},{"dateLog":"2025-04-14 14:29:07","idLog":13},{"dateLog":"2025-04-14 14:29:17","idLog":14},{"dateLog":"2025-04-14 14:29:57","idLog":15},{"dateLog":"2025-04-14 14:30:07","idLog":16},{"dateLog":"2025-04-14 14:30:30","idLog":17},{"dateLog":"2025-04-14 14:31:23","idLog":18},{"dateLog":"2025-04-14 14:31:56","idLog":19},{"dateLog":"2025-04-14 14:33:14","idLog":20},{"dateLog":"2025-04-14 14:33:24","idLog":21},{"dateLog":"2025-04-14 14:33:37","idLog":22},{"dateLog":"2025-04-14 14:33:48","idLog":23},{"dateLog":"2025-04-14 14:33:58","idLog":24},{"dateLog":"2025-04-14 14:34:00","idLog":25},{"dateLog":"2025-04-14 14:35:59","idLog":26},{"dateLog":"2025-04-14 14:36:04","idLog":27},{"dateLog":"2025-04-14 14:37:17","idLog":28},{"dateLog":"2025-04-14 14:37:22","idLog":29},{"dateLog":"2025-04-14 14:37:35","idLog":30},{"dateLog":"2025-04-14 14:37:48","idLog":31},{"dateLog":"2025-04-14 14:38:28","idLog":32},{"dateLog":"2025-04-14 14:38:37","idLog":33},{"dateLog":"2025-04-14 14:38:40","idLog":34},{"dateLog":"2025-04-14 14:39:03","idLog":35},{"dateLog":"2025-04-14 14:39:51","idLog":36},{"dateLog":"2025-04-14 14:39:54","idLog":37},{"dateLog":"2025-04-14 14:39:56","idLog":38},{"dateLog":"2025-04-14 14:41:00","idLog":39},{"dateLog":"2025-04-14 14:41:02","idLog":40},{"dateLog":"2025-04-14 14:41:19","idLog":41},{"dateLog":"2025-04-14 14:41:33","idLog":42},{"dateLog":"2025-04-14 14:42:09","idLog":43},{"dateLog":"2025-04-14 14:42:15","idLog":44},{"dateLog":"2025-04-14 14:42:48","idLog":45},{"dateLog":"2025-04-14 14:42:56","idLog":46},{"dateLog":"2025-04-14 14:50:55","idLog":47},{"dateLog":"2025-04-14 14:54:48","idLog":48}]
+
+2025-04-14 15:00:48,321 - DEBUG - Polling for notifications...
+2025-04-14 15:00:48,333 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1744639243 with data: None
+2025-04-14 15:00:48,334 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 15:00:48,348 - DEBUG - https://127.0.0.1:5000 "GET /notification/1744639243 HTTP/1.1" 200 14
+2025-04-14 15:00:48,348 - DEBUG - Received response: {"update":-8}
+
+2025-04-14 15:00:53,353 - DEBUG - Polling for notifications...
+2025-04-14 15:00:53,366 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1744639243 with data: None
+2025-04-14 15:00:53,367 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 15:00:53,380 - DEBUG - https://127.0.0.1:5000 "GET /notification/1744639243 HTTP/1.1" 200 14
+2025-04-14 15:00:53,381 - DEBUG - Received response: {"update":-8}
+
+2025-04-14 15:00:57,862 - DEBUG - Sending GET request to https://127.0.0.1:5000/test_list with data: None
+2025-04-14 15:00:57,863 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 15:00:57,877 - DEBUG - https://127.0.0.1:5000 "GET /test_list HTTP/1.1" 200 2153
+2025-04-14 15:00:57,878 - DEBUG - Received response: [{"dateLog":"2025-04-14 14:24:51","idLog":1},{"dateLog":"2025-04-14 14:25:34","idLog":2},{"dateLog":"2025-04-14 14:25:40","idLog":3},{"dateLog":"2025-04-14 14:25:51","idLog":4},{"dateLog":"2025-04-14 14:27:21","idLog":5},{"dateLog":"2025-04-14 14:27:30","idLog":6},{"dateLog":"2025-04-14 14:27:34","idLog":7},{"dateLog":"2025-04-14 14:28:29","idLog":8},{"dateLog":"2025-04-14 14:28:39","idLog":9},{"dateLog":"2025-04-14 14:28:43","idLog":10},{"dateLog":"2025-04-14 14:28:45","idLog":11},{"dateLog":"2025-04-14 14:28:57","idLog":12},{"dateLog":"2025-04-14 14:29:07","idLog":13},{"dateLog":"2025-04-14 14:29:17","idLog":14},{"dateLog":"2025-04-14 14:29:57","idLog":15},{"dateLog":"2025-04-14 14:30:07","idLog":16},{"dateLog":"2025-04-14 14:30:30","idLog":17},{"dateLog":"2025-04-14 14:31:23","idLog":18},{"dateLog":"2025-04-14 14:31:56","idLog":19},{"dateLog":"2025-04-14 14:33:14","idLog":20},{"dateLog":"2025-04-14 14:33:24","idLog":21},{"dateLog":"2025-04-14 14:33:37","idLog":22},{"dateLog":"2025-04-14 14:33:48","idLog":23},{"dateLog":"2025-04-14 14:33:58","idLog":24},{"dateLog":"2025-04-14 14:34:00","idLog":25},{"dateLog":"2025-04-14 14:35:59","idLog":26},{"dateLog":"2025-04-14 14:36:04","idLog":27},{"dateLog":"2025-04-14 14:37:17","idLog":28},{"dateLog":"2025-04-14 14:37:22","idLog":29},{"dateLog":"2025-04-14 14:37:35","idLog":30},{"dateLog":"2025-04-14 14:37:48","idLog":31},{"dateLog":"2025-04-14 14:38:28","idLog":32},{"dateLog":"2025-04-14 14:38:37","idLog":33},{"dateLog":"2025-04-14 14:38:40","idLog":34},{"dateLog":"2025-04-14 14:39:03","idLog":35},{"dateLog":"2025-04-14 14:39:51","idLog":36},{"dateLog":"2025-04-14 14:39:54","idLog":37},{"dateLog":"2025-04-14 14:39:56","idLog":38},{"dateLog":"2025-04-14 14:41:00","idLog":39},{"dateLog":"2025-04-14 14:41:02","idLog":40},{"dateLog":"2025-04-14 14:41:19","idLog":41},{"dateLog":"2025-04-14 14:41:33","idLog":42},{"dateLog":"2025-04-14 14:42:09","idLog":43},{"dateLog":"2025-04-14 14:42:15","idLog":44},{"dateLog":"2025-04-14 14:42:48","idLog":45},{"dateLog":"2025-04-14 14:42:56","idLog":46},{"dateLog":"2025-04-14 14:50:55","idLog":47},{"dateLog":"2025-04-14 14:54:48","idLog":48}]
+
+2025-04-14 15:00:58,386 - DEBUG - Polling for notifications...
+2025-04-14 15:00:58,398 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1744639243 with data: None
+2025-04-14 15:00:58,399 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 15:00:58,413 - DEBUG - https://127.0.0.1:5000 "GET /notification/1744639243 HTTP/1.1" 200 14
+2025-04-14 15:00:58,413 - DEBUG - Received response: {"update":-8}
+
+2025-04-14 15:01:30,518 - INFO - Application started.
+2025-04-14 15:01:30,518 - INFO - ClientCore initialized with server URL: https://127.0.0.1:5000
+2025-04-14 15:01:30,518 - INFO - Attempting to log in user: test
+2025-04-14 15:01:30,521 - DEBUG - Loading KWallet
+2025-04-14 15:01:30,521 - DEBUG - Loading SecretService
+2025-04-14 15:01:30,529 - DEBUG - Loading Windows
+2025-04-14 15:01:30,530 - DEBUG - Loading chainer
+2025-04-14 15:01:30,530 - DEBUG - Loading libsecret
+2025-04-14 15:01:30,530 - DEBUG - Loading macOS
+2025-04-14 15:01:30,574 - DEBUG - Sending POST request to https://127.0.0.1:5000/login
+2025-04-14 15:01:30,576 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 15:01:30,579 - DEBUG - https://127.0.0.1:5000 "POST /login HTTP/1.1" 200 349
+2025-04-14 15:01:30,589 - DEBUG - Received response
+2025-04-14 15:01:30,602 - INFO - User test logged in successfully.
+2025-04-14 15:01:30,603 - INFO - Starting polling for notifications.
+2025-04-14 15:01:30,603 - DEBUG - Polling for notifications...
+2025-04-14 15:01:30,613 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1744639291 with data: None
+2025-04-14 15:01:30,614 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 15:01:30,627 - DEBUG - https://127.0.0.1:5000 "GET /notification/1744639291 HTTP/1.1" 200 15
+2025-04-14 15:01:30,628 - DEBUG - Received response: {"update":-56}
+
+2025-04-14 15:01:30,764 - DEBUG - Sending GET request to https://127.0.0.1:5000/plugin_list with data: None
+2025-04-14 15:01:30,765 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 15:01:30,779 - DEBUG - https://127.0.0.1:5000 "GET /plugin_list HTTP/1.1" 200 57
+2025-04-14 15:01:30,780 - DEBUG - Received response: [{"id":2,"name":"ioSono.py"},{"id":3,"name":"hello.sh"}]
+
+2025-04-14 15:01:31,611 - DEBUG - Sending GET request to https://127.0.0.1:5000/plugin_details/3 with data: None
+2025-04-14 15:01:31,612 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 15:01:31,628 - DEBUG - https://127.0.0.1:5000 "GET /plugin_details/3 HTTP/1.1" 200 31
+2025-04-14 15:01:31,628 - DEBUG - Received response: {"description":"","params":""}
+
+2025-04-14 15:01:32,096 - DEBUG - Sending POST request to https://127.0.0.1:5000/test_execute/3 with data: {}
+2025-04-14 15:01:32,097 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 15:01:32,108 - DEBUG - https://127.0.0.1:5000 "POST /test_execute/3 HTTP/1.1" 200 90
+2025-04-14 15:01:32,149 - DEBUG - Received response: {"datetime":"Mon, 14 Apr 2025 15:01:32 GMT","log":"Hello, World! \n","status":"finished"}
+
+2025-04-14 15:01:33,520 - DEBUG - Sending GET request to https://127.0.0.1:5000/plugin_details/2 with data: None
+2025-04-14 15:01:33,521 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 15:01:33,536 - DEBUG - https://127.0.0.1:5000 "GET /plugin_details/2 HTTP/1.1" 200 31
+2025-04-14 15:01:33,536 - DEBUG - Received response: {"description":"","params":""}
+
+2025-04-14 15:01:34,343 - DEBUG - Sending POST request to https://127.0.0.1:5000/test_execute/2 with data: {}
+2025-04-14 15:01:34,344 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 15:01:34,352 - DEBUG - https://127.0.0.1:5000 "POST /test_execute/2 HTTP/1.1" 200 96
+2025-04-14 15:01:34,394 - DEBUG - Received response: {"datetime":"Mon, 14 Apr 2025 15:01:34 GMT","log":"Io sono stato caricato","status":"finished"}
+
+2025-04-14 15:01:35,633 - DEBUG - Polling for notifications...
+2025-04-14 15:01:35,645 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1744639291 with data: None
+2025-04-14 15:01:35,645 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 15:01:35,659 - DEBUG - https://127.0.0.1:5000 "GET /notification/1744639291 HTTP/1.1" 200 15
+2025-04-14 15:01:35,660 - DEBUG - Received response: {"update":-56}
+
+2025-04-14 15:01:35,791 - DEBUG - Sending GET request to https://127.0.0.1:5000/test_list with data: None
+2025-04-14 15:01:35,791 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 15:01:35,806 - DEBUG - https://127.0.0.1:5000 "GET /test_list HTTP/1.1" 200 2243
+2025-04-14 15:01:35,806 - DEBUG - Received response: [{"dateLog":"2025-04-14 14:24:51","idLog":1},{"dateLog":"2025-04-14 14:25:34","idLog":2},{"dateLog":"2025-04-14 14:25:40","idLog":3},{"dateLog":"2025-04-14 14:25:51","idLog":4},{"dateLog":"2025-04-14 14:27:21","idLog":5},{"dateLog":"2025-04-14 14:27:30","idLog":6},{"dateLog":"2025-04-14 14:27:34","idLog":7},{"dateLog":"2025-04-14 14:28:29","idLog":8},{"dateLog":"2025-04-14 14:28:39","idLog":9},{"dateLog":"2025-04-14 14:28:43","idLog":10},{"dateLog":"2025-04-14 14:28:45","idLog":11},{"dateLog":"2025-04-14 14:28:57","idLog":12},{"dateLog":"2025-04-14 14:29:07","idLog":13},{"dateLog":"2025-04-14 14:29:17","idLog":14},{"dateLog":"2025-04-14 14:29:57","idLog":15},{"dateLog":"2025-04-14 14:30:07","idLog":16},{"dateLog":"2025-04-14 14:30:30","idLog":17},{"dateLog":"2025-04-14 14:31:23","idLog":18},{"dateLog":"2025-04-14 14:31:56","idLog":19},{"dateLog":"2025-04-14 14:33:14","idLog":20},{"dateLog":"2025-04-14 14:33:24","idLog":21},{"dateLog":"2025-04-14 14:33:37","idLog":22},{"dateLog":"2025-04-14 14:33:48","idLog":23},{"dateLog":"2025-04-14 14:33:58","idLog":24},{"dateLog":"2025-04-14 14:34:00","idLog":25},{"dateLog":"2025-04-14 14:35:59","idLog":26},{"dateLog":"2025-04-14 14:36:04","idLog":27},{"dateLog":"2025-04-14 14:37:17","idLog":28},{"dateLog":"2025-04-14 14:37:22","idLog":29},{"dateLog":"2025-04-14 14:37:35","idLog":30},{"dateLog":"2025-04-14 14:37:48","idLog":31},{"dateLog":"2025-04-14 14:38:28","idLog":32},{"dateLog":"2025-04-14 14:38:37","idLog":33},{"dateLog":"2025-04-14 14:38:40","idLog":34},{"dateLog":"2025-04-14 14:39:03","idLog":35},{"dateLog":"2025-04-14 14:39:51","idLog":36},{"dateLog":"2025-04-14 14:39:54","idLog":37},{"dateLog":"2025-04-14 14:39:56","idLog":38},{"dateLog":"2025-04-14 14:41:00","idLog":39},{"dateLog":"2025-04-14 14:41:02","idLog":40},{"dateLog":"2025-04-14 14:41:19","idLog":41},{"dateLog":"2025-04-14 14:41:33","idLog":42},{"dateLog":"2025-04-14 14:42:09","idLog":43},{"dateLog":"2025-04-14 14:42:15","idLog":44},{"dateLog":"2025-04-14 14:42:48","idLog":45},{"dateLog":"2025-04-14 14:42:56","idLog":46},{"dateLog":"2025-04-14 14:50:55","idLog":47},{"dateLog":"2025-04-14 14:54:48","idLog":48},{"dateLog":"2025-04-14 15:01:32","idLog":49},{"dateLog":"2025-04-14 15:01:34","idLog":50}]
+
+2025-04-14 15:01:36,391 - DEBUG - Sending GET request to https://127.0.0.1:5000/plugin_list with data: None
+2025-04-14 15:01:36,392 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 15:01:36,406 - DEBUG - https://127.0.0.1:5000 "GET /plugin_list HTTP/1.1" 200 57
+2025-04-14 15:01:36,407 - DEBUG - Received response: [{"id":2,"name":"ioSono.py"},{"id":3,"name":"hello.sh"}]
+
+2025-04-14 15:01:37,121 - DEBUG - Sending GET request to https://127.0.0.1:5000/test_list with data: None
+2025-04-14 15:01:37,121 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 15:01:37,136 - DEBUG - https://127.0.0.1:5000 "GET /test_list HTTP/1.1" 200 2243
+2025-04-14 15:01:37,136 - DEBUG - Received response: [{"dateLog":"2025-04-14 14:24:51","idLog":1},{"dateLog":"2025-04-14 14:25:34","idLog":2},{"dateLog":"2025-04-14 14:25:40","idLog":3},{"dateLog":"2025-04-14 14:25:51","idLog":4},{"dateLog":"2025-04-14 14:27:21","idLog":5},{"dateLog":"2025-04-14 14:27:30","idLog":6},{"dateLog":"2025-04-14 14:27:34","idLog":7},{"dateLog":"2025-04-14 14:28:29","idLog":8},{"dateLog":"2025-04-14 14:28:39","idLog":9},{"dateLog":"2025-04-14 14:28:43","idLog":10},{"dateLog":"2025-04-14 14:28:45","idLog":11},{"dateLog":"2025-04-14 14:28:57","idLog":12},{"dateLog":"2025-04-14 14:29:07","idLog":13},{"dateLog":"2025-04-14 14:29:17","idLog":14},{"dateLog":"2025-04-14 14:29:57","idLog":15},{"dateLog":"2025-04-14 14:30:07","idLog":16},{"dateLog":"2025-04-14 14:30:30","idLog":17},{"dateLog":"2025-04-14 14:31:23","idLog":18},{"dateLog":"2025-04-14 14:31:56","idLog":19},{"dateLog":"2025-04-14 14:33:14","idLog":20},{"dateLog":"2025-04-14 14:33:24","idLog":21},{"dateLog":"2025-04-14 14:33:37","idLog":22},{"dateLog":"2025-04-14 14:33:48","idLog":23},{"dateLog":"2025-04-14 14:33:58","idLog":24},{"dateLog":"2025-04-14 14:34:00","idLog":25},{"dateLog":"2025-04-14 14:35:59","idLog":26},{"dateLog":"2025-04-14 14:36:04","idLog":27},{"dateLog":"2025-04-14 14:37:17","idLog":28},{"dateLog":"2025-04-14 14:37:22","idLog":29},{"dateLog":"2025-04-14 14:37:35","idLog":30},{"dateLog":"2025-04-14 14:37:48","idLog":31},{"dateLog":"2025-04-14 14:38:28","idLog":32},{"dateLog":"2025-04-14 14:38:37","idLog":33},{"dateLog":"2025-04-14 14:38:40","idLog":34},{"dateLog":"2025-04-14 14:39:03","idLog":35},{"dateLog":"2025-04-14 14:39:51","idLog":36},{"dateLog":"2025-04-14 14:39:54","idLog":37},{"dateLog":"2025-04-14 14:39:56","idLog":38},{"dateLog":"2025-04-14 14:41:00","idLog":39},{"dateLog":"2025-04-14 14:41:02","idLog":40},{"dateLog":"2025-04-14 14:41:19","idLog":41},{"dateLog":"2025-04-14 14:41:33","idLog":42},{"dateLog":"2025-04-14 14:42:09","idLog":43},{"dateLog":"2025-04-14 14:42:15","idLog":44},{"dateLog":"2025-04-14 14:42:48","idLog":45},{"dateLog":"2025-04-14 14:42:56","idLog":46},{"dateLog":"2025-04-14 14:50:55","idLog":47},{"dateLog":"2025-04-14 14:54:48","idLog":48},{"dateLog":"2025-04-14 15:01:32","idLog":49},{"dateLog":"2025-04-14 15:01:34","idLog":50}]
+
+2025-04-14 15:01:37,624 - DEBUG - Sending GET request to https://127.0.0.1:5000/plugin_list with data: None
+2025-04-14 15:01:37,625 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 15:01:37,640 - DEBUG - https://127.0.0.1:5000 "GET /plugin_list HTTP/1.1" 200 57
+2025-04-14 15:01:37,640 - DEBUG - Received response: [{"id":2,"name":"ioSono.py"},{"id":3,"name":"hello.sh"}]
+
+2025-04-14 15:01:38,523 - DEBUG - Sending GET request to https://127.0.0.1:5000/test_list with data: None
+2025-04-14 15:01:38,524 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 15:01:38,539 - DEBUG - https://127.0.0.1:5000 "GET /test_list HTTP/1.1" 200 2243
+2025-04-14 15:01:38,539 - DEBUG - Received response: [{"dateLog":"2025-04-14 14:24:51","idLog":1},{"dateLog":"2025-04-14 14:25:34","idLog":2},{"dateLog":"2025-04-14 14:25:40","idLog":3},{"dateLog":"2025-04-14 14:25:51","idLog":4},{"dateLog":"2025-04-14 14:27:21","idLog":5},{"dateLog":"2025-04-14 14:27:30","idLog":6},{"dateLog":"2025-04-14 14:27:34","idLog":7},{"dateLog":"2025-04-14 14:28:29","idLog":8},{"dateLog":"2025-04-14 14:28:39","idLog":9},{"dateLog":"2025-04-14 14:28:43","idLog":10},{"dateLog":"2025-04-14 14:28:45","idLog":11},{"dateLog":"2025-04-14 14:28:57","idLog":12},{"dateLog":"2025-04-14 14:29:07","idLog":13},{"dateLog":"2025-04-14 14:29:17","idLog":14},{"dateLog":"2025-04-14 14:29:57","idLog":15},{"dateLog":"2025-04-14 14:30:07","idLog":16},{"dateLog":"2025-04-14 14:30:30","idLog":17},{"dateLog":"2025-04-14 14:31:23","idLog":18},{"dateLog":"2025-04-14 14:31:56","idLog":19},{"dateLog":"2025-04-14 14:33:14","idLog":20},{"dateLog":"2025-04-14 14:33:24","idLog":21},{"dateLog":"2025-04-14 14:33:37","idLog":22},{"dateLog":"2025-04-14 14:33:48","idLog":23},{"dateLog":"2025-04-14 14:33:58","idLog":24},{"dateLog":"2025-04-14 14:34:00","idLog":25},{"dateLog":"2025-04-14 14:35:59","idLog":26},{"dateLog":"2025-04-14 14:36:04","idLog":27},{"dateLog":"2025-04-14 14:37:17","idLog":28},{"dateLog":"2025-04-14 14:37:22","idLog":29},{"dateLog":"2025-04-14 14:37:35","idLog":30},{"dateLog":"2025-04-14 14:37:48","idLog":31},{"dateLog":"2025-04-14 14:38:28","idLog":32},{"dateLog":"2025-04-14 14:38:37","idLog":33},{"dateLog":"2025-04-14 14:38:40","idLog":34},{"dateLog":"2025-04-14 14:39:03","idLog":35},{"dateLog":"2025-04-14 14:39:51","idLog":36},{"dateLog":"2025-04-14 14:39:54","idLog":37},{"dateLog":"2025-04-14 14:39:56","idLog":38},{"dateLog":"2025-04-14 14:41:00","idLog":39},{"dateLog":"2025-04-14 14:41:02","idLog":40},{"dateLog":"2025-04-14 14:41:19","idLog":41},{"dateLog":"2025-04-14 14:41:33","idLog":42},{"dateLog":"2025-04-14 14:42:09","idLog":43},{"dateLog":"2025-04-14 14:42:15","idLog":44},{"dateLog":"2025-04-14 14:42:48","idLog":45},{"dateLog":"2025-04-14 14:42:56","idLog":46},{"dateLog":"2025-04-14 14:50:55","idLog":47},{"dateLog":"2025-04-14 14:54:48","idLog":48},{"dateLog":"2025-04-14 15:01:32","idLog":49},{"dateLog":"2025-04-14 15:01:34","idLog":50}]
+
+2025-04-14 15:01:38,848 - DEBUG - Sending GET request to https://127.0.0.1:5000/plugin_list with data: None
+2025-04-14 15:01:38,849 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 15:01:38,863 - DEBUG - https://127.0.0.1:5000 "GET /plugin_list HTTP/1.1" 200 57
+2025-04-14 15:01:38,864 - DEBUG - Received response: [{"id":2,"name":"ioSono.py"},{"id":3,"name":"hello.sh"}]
+
+2025-04-14 15:01:40,665 - DEBUG - Polling for notifications...
+2025-04-14 15:01:40,677 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1744639299 with data: None
+2025-04-14 15:01:40,678 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 15:01:40,692 - DEBUG - https://127.0.0.1:5000 "GET /notification/1744639299 HTTP/1.1" 200 15
+2025-04-14 15:01:40,692 - DEBUG - Received response: {"update":-64}
+
+2025-04-14 15:01:45,697 - DEBUG - Polling for notifications...
+2025-04-14 15:01:45,712 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1744639299 with data: None
+2025-04-14 15:01:45,712 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 15:01:45,726 - DEBUG - https://127.0.0.1:5000 "GET /notification/1744639299 HTTP/1.1" 200 15
+2025-04-14 15:01:45,727 - DEBUG - Received response: {"update":-64}
+
+2025-04-14 15:02:13,854 - INFO - Application started.
+2025-04-14 15:02:13,855 - INFO - ClientCore initialized with server URL: https://127.0.0.1:5000
+2025-04-14 15:02:13,855 - INFO - Attempting to log in user: test
+2025-04-14 15:02:13,858 - DEBUG - Loading KWallet
+2025-04-14 15:02:13,858 - DEBUG - Loading SecretService
+2025-04-14 15:02:13,867 - DEBUG - Loading Windows
+2025-04-14 15:02:13,867 - DEBUG - Loading chainer
+2025-04-14 15:02:13,867 - DEBUG - Loading libsecret
+2025-04-14 15:02:13,868 - DEBUG - Loading macOS
+2025-04-14 15:02:13,913 - DEBUG - Sending POST request to https://127.0.0.1:5000/login
+2025-04-14 15:02:13,914 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 15:02:13,918 - DEBUG - https://127.0.0.1:5000 "POST /login HTTP/1.1" 200 349
+2025-04-14 15:02:13,928 - DEBUG - Received response
+2025-04-14 15:02:13,941 - INFO - User test logged in successfully.
+2025-04-14 15:02:13,942 - INFO - Starting polling for notifications.
+2025-04-14 15:02:13,942 - DEBUG - Polling for notifications...
+2025-04-14 15:02:13,952 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1744639334 with data: None
+2025-04-14 15:02:13,952 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 15:02:13,966 - DEBUG - https://127.0.0.1:5000 "GET /notification/1744639334 HTTP/1.1" 200 14
+2025-04-14 15:02:13,967 - DEBUG - Received response: {"update":-5}
+
+2025-04-14 15:02:14,102 - DEBUG - Sending GET request to https://127.0.0.1:5000/plugin_list with data: None
+2025-04-14 15:02:14,103 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 15:02:14,119 - DEBUG - https://127.0.0.1:5000 "GET /plugin_list HTTP/1.1" 200 57
+2025-04-14 15:02:14,119 - DEBUG - Received response: [{"id":2,"name":"ioSono.py"},{"id":3,"name":"hello.sh"}]
+
+2025-04-14 15:02:15,174 - DEBUG - Sending GET request to https://127.0.0.1:5000/test_list with data: None
+2025-04-14 15:02:15,174 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 15:02:15,190 - DEBUG - https://127.0.0.1:5000 "GET /test_list HTTP/1.1" 200 1943
+2025-04-14 15:02:15,190 - DEBUG - Received response: [{"id":1,"name":"2025-04-14 14:24:51"},{"id":2,"name":"2025-04-14 14:25:34"},{"id":3,"name":"2025-04-14 14:25:40"},{"id":4,"name":"2025-04-14 14:25:51"},{"id":5,"name":"2025-04-14 14:27:21"},{"id":6,"name":"2025-04-14 14:27:30"},{"id":7,"name":"2025-04-14 14:27:34"},{"id":8,"name":"2025-04-14 14:28:29"},{"id":9,"name":"2025-04-14 14:28:39"},{"id":10,"name":"2025-04-14 14:28:43"},{"id":11,"name":"2025-04-14 14:28:45"},{"id":12,"name":"2025-04-14 14:28:57"},{"id":13,"name":"2025-04-14 14:29:07"},{"id":14,"name":"2025-04-14 14:29:17"},{"id":15,"name":"2025-04-14 14:29:57"},{"id":16,"name":"2025-04-14 14:30:07"},{"id":17,"name":"2025-04-14 14:30:30"},{"id":18,"name":"2025-04-14 14:31:23"},{"id":19,"name":"2025-04-14 14:31:56"},{"id":20,"name":"2025-04-14 14:33:14"},{"id":21,"name":"2025-04-14 14:33:24"},{"id":22,"name":"2025-04-14 14:33:37"},{"id":23,"name":"2025-04-14 14:33:48"},{"id":24,"name":"2025-04-14 14:33:58"},{"id":25,"name":"2025-04-14 14:34:00"},{"id":26,"name":"2025-04-14 14:35:59"},{"id":27,"name":"2025-04-14 14:36:04"},{"id":28,"name":"2025-04-14 14:37:17"},{"id":29,"name":"2025-04-14 14:37:22"},{"id":30,"name":"2025-04-14 14:37:35"},{"id":31,"name":"2025-04-14 14:37:48"},{"id":32,"name":"2025-04-14 14:38:28"},{"id":33,"name":"2025-04-14 14:38:37"},{"id":34,"name":"2025-04-14 14:38:40"},{"id":35,"name":"2025-04-14 14:39:03"},{"id":36,"name":"2025-04-14 14:39:51"},{"id":37,"name":"2025-04-14 14:39:54"},{"id":38,"name":"2025-04-14 14:39:56"},{"id":39,"name":"2025-04-14 14:41:00"},{"id":40,"name":"2025-04-14 14:41:02"},{"id":41,"name":"2025-04-14 14:41:19"},{"id":42,"name":"2025-04-14 14:41:33"},{"id":43,"name":"2025-04-14 14:42:09"},{"id":44,"name":"2025-04-14 14:42:15"},{"id":45,"name":"2025-04-14 14:42:48"},{"id":46,"name":"2025-04-14 14:42:56"},{"id":47,"name":"2025-04-14 14:50:55"},{"id":48,"name":"2025-04-14 14:54:48"},{"id":49,"name":"2025-04-14 15:01:32"},{"id":50,"name":"2025-04-14 15:01:34"}]
+
+2025-04-14 15:02:16,939 - DEBUG - Sending GET request to https://127.0.0.1:5000/plugin_list with data: None
+2025-04-14 15:02:16,939 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 15:02:16,954 - DEBUG - https://127.0.0.1:5000 "GET /plugin_list HTTP/1.1" 200 57
+2025-04-14 15:02:16,954 - DEBUG - Received response: [{"id":2,"name":"ioSono.py"},{"id":3,"name":"hello.sh"}]
+
+2025-04-14 15:02:17,562 - DEBUG - Sending GET request to https://127.0.0.1:5000/test_list with data: None
+2025-04-14 15:02:17,562 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 15:02:17,577 - DEBUG - https://127.0.0.1:5000 "GET /test_list HTTP/1.1" 200 1943
+2025-04-14 15:02:17,577 - DEBUG - Received response: [{"id":1,"name":"2025-04-14 14:24:51"},{"id":2,"name":"2025-04-14 14:25:34"},{"id":3,"name":"2025-04-14 14:25:40"},{"id":4,"name":"2025-04-14 14:25:51"},{"id":5,"name":"2025-04-14 14:27:21"},{"id":6,"name":"2025-04-14 14:27:30"},{"id":7,"name":"2025-04-14 14:27:34"},{"id":8,"name":"2025-04-14 14:28:29"},{"id":9,"name":"2025-04-14 14:28:39"},{"id":10,"name":"2025-04-14 14:28:43"},{"id":11,"name":"2025-04-14 14:28:45"},{"id":12,"name":"2025-04-14 14:28:57"},{"id":13,"name":"2025-04-14 14:29:07"},{"id":14,"name":"2025-04-14 14:29:17"},{"id":15,"name":"2025-04-14 14:29:57"},{"id":16,"name":"2025-04-14 14:30:07"},{"id":17,"name":"2025-04-14 14:30:30"},{"id":18,"name":"2025-04-14 14:31:23"},{"id":19,"name":"2025-04-14 14:31:56"},{"id":20,"name":"2025-04-14 14:33:14"},{"id":21,"name":"2025-04-14 14:33:24"},{"id":22,"name":"2025-04-14 14:33:37"},{"id":23,"name":"2025-04-14 14:33:48"},{"id":24,"name":"2025-04-14 14:33:58"},{"id":25,"name":"2025-04-14 14:34:00"},{"id":26,"name":"2025-04-14 14:35:59"},{"id":27,"name":"2025-04-14 14:36:04"},{"id":28,"name":"2025-04-14 14:37:17"},{"id":29,"name":"2025-04-14 14:37:22"},{"id":30,"name":"2025-04-14 14:37:35"},{"id":31,"name":"2025-04-14 14:37:48"},{"id":32,"name":"2025-04-14 14:38:28"},{"id":33,"name":"2025-04-14 14:38:37"},{"id":34,"name":"2025-04-14 14:38:40"},{"id":35,"name":"2025-04-14 14:39:03"},{"id":36,"name":"2025-04-14 14:39:51"},{"id":37,"name":"2025-04-14 14:39:54"},{"id":38,"name":"2025-04-14 14:39:56"},{"id":39,"name":"2025-04-14 14:41:00"},{"id":40,"name":"2025-04-14 14:41:02"},{"id":41,"name":"2025-04-14 14:41:19"},{"id":42,"name":"2025-04-14 14:41:33"},{"id":43,"name":"2025-04-14 14:42:09"},{"id":44,"name":"2025-04-14 14:42:15"},{"id":45,"name":"2025-04-14 14:42:48"},{"id":46,"name":"2025-04-14 14:42:56"},{"id":47,"name":"2025-04-14 14:50:55"},{"id":48,"name":"2025-04-14 14:54:48"},{"id":49,"name":"2025-04-14 15:01:32"},{"id":50,"name":"2025-04-14 15:01:34"}]
+
+2025-04-14 15:02:18,971 - DEBUG - Polling for notifications...
+2025-04-14 15:02:18,984 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1744639337 with data: None
+2025-04-14 15:02:18,985 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 15:02:18,999 - DEBUG - https://127.0.0.1:5000 "GET /notification/1744639337 HTTP/1.1" 200 14
+2025-04-14 15:02:18,999 - DEBUG - Received response: {"update":-8}
+
+2025-04-14 15:02:24,003 - DEBUG - Polling for notifications...
+2025-04-14 15:02:24,015 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1744639337 with data: None
+2025-04-14 15:02:24,016 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 15:02:24,030 - DEBUG - https://127.0.0.1:5000 "GET /notification/1744639337 HTTP/1.1" 200 14
+2025-04-14 15:02:24,030 - DEBUG - Received response: {"update":-8}
+
+2025-04-14 15:02:29,036 - DEBUG - Polling for notifications...
+2025-04-14 15:02:29,048 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1744639337 with data: None
+2025-04-14 15:02:29,049 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 15:02:29,062 - DEBUG - https://127.0.0.1:5000 "GET /notification/1744639337 HTTP/1.1" 200 14
+2025-04-14 15:02:29,063 - DEBUG - Received response: {"update":-8}
+
+2025-04-14 15:04:25,861 - INFO - Application started.
+2025-04-14 15:04:25,861 - INFO - ClientCore initialized with server URL: https://127.0.0.1:5000
+2025-04-14 15:04:25,861 - INFO - Attempting to log in user: TEST
+2025-04-14 15:04:25,864 - DEBUG - Loading KWallet
+2025-04-14 15:04:25,865 - DEBUG - Loading SecretService
+2025-04-14 15:04:25,873 - DEBUG - Loading Windows
+2025-04-14 15:04:25,874 - DEBUG - Loading chainer
+2025-04-14 15:04:25,874 - DEBUG - Loading libsecret
+2025-04-14 15:04:25,874 - DEBUG - Loading macOS
+2025-04-14 15:04:25,919 - DEBUG - Sending POST request to https://127.0.0.1:5000/login
+2025-04-14 15:04:25,920 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 15:04:25,923 - DEBUG - https://127.0.0.1:5000 "POST /login HTTP/1.1" 401 30
+2025-04-14 15:04:25,934 - DEBUG - Received response
+2025-04-14 15:04:25,934 - ERROR - Error 401: {"msg":"Error, login failed"}
+
+2025-04-14 15:04:34,658 - INFO - Application started.
+2025-04-14 15:04:34,658 - INFO - ClientCore initialized with server URL: https://127.0.0.1:5000
+2025-04-14 15:04:34,658 - INFO - Attempting to log in user: test
+2025-04-14 15:04:34,661 - DEBUG - Loading KWallet
+2025-04-14 15:04:34,661 - DEBUG - Loading SecretService
+2025-04-14 15:04:34,670 - DEBUG - Loading Windows
+2025-04-14 15:04:34,670 - DEBUG - Loading chainer
+2025-04-14 15:04:34,670 - DEBUG - Loading libsecret
+2025-04-14 15:04:34,671 - DEBUG - Loading macOS
+2025-04-14 15:04:34,715 - DEBUG - Sending POST request to https://127.0.0.1:5000/login
+2025-04-14 15:04:34,716 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 15:04:34,719 - DEBUG - https://127.0.0.1:5000 "POST /login HTTP/1.1" 200 349
+2025-04-14 15:04:34,729 - DEBUG - Received response
+2025-04-14 15:04:34,743 - INFO - User test logged in successfully.
+2025-04-14 15:04:34,743 - INFO - Starting polling for notifications.
+2025-04-14 15:04:34,743 - DEBUG - Polling for notifications...
+2025-04-14 15:04:34,753 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1744639475 with data: None
+2025-04-14 15:04:34,754 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 15:04:34,767 - DEBUG - https://127.0.0.1:5000 "GET /notification/1744639475 HTTP/1.1" 200 16
+2025-04-14 15:04:34,768 - DEBUG - Received response: {"update":-146}
+
+2025-04-14 15:04:34,912 - DEBUG - Sending GET request to https://127.0.0.1:5000/plugin_list with data: None
+2025-04-14 15:04:34,912 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 15:04:34,927 - DEBUG - https://127.0.0.1:5000 "GET /plugin_list HTTP/1.1" 200 57
+2025-04-14 15:04:34,927 - DEBUG - Received response: [{"id":2,"name":"ioSono.py"},{"id":3,"name":"hello.sh"}]
+
+2025-04-14 15:04:35,740 - DEBUG - Sending GET request to https://127.0.0.1:5000/plugin_details/3 with data: None
+2025-04-14 15:04:35,740 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 15:04:35,756 - DEBUG - https://127.0.0.1:5000 "GET /plugin_details/3 HTTP/1.1" 200 31
+2025-04-14 15:04:35,757 - DEBUG - Received response: {"description":"","params":""}
+
+2025-04-14 15:04:36,278 - DEBUG - Sending POST request to https://127.0.0.1:5000/test_execute/3 with data: {}
+2025-04-14 15:04:36,278 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 15:04:36,290 - DEBUG - https://127.0.0.1:5000 "POST /test_execute/3 HTTP/1.1" 200 90
+2025-04-14 15:04:36,331 - DEBUG - Received response: {"datetime":"Mon, 14 Apr 2025 15:04:36 GMT","log":"Hello, World! \n","status":"finished"}
+
+2025-04-14 15:04:37,411 - DEBUG - Sending GET request to https://127.0.0.1:5000/test_list with data: None
+2025-04-14 15:04:37,411 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 15:04:37,426 - DEBUG - https://127.0.0.1:5000 "GET /test_list HTTP/1.1" 200 1982
+2025-04-14 15:04:37,427 - DEBUG - Received response: [{"id":1,"name":"2025-04-14 14:24:51"},{"id":2,"name":"2025-04-14 14:25:34"},{"id":3,"name":"2025-04-14 14:25:40"},{"id":4,"name":"2025-04-14 14:25:51"},{"id":5,"name":"2025-04-14 14:27:21"},{"id":6,"name":"2025-04-14 14:27:30"},{"id":7,"name":"2025-04-14 14:27:34"},{"id":8,"name":"2025-04-14 14:28:29"},{"id":9,"name":"2025-04-14 14:28:39"},{"id":10,"name":"2025-04-14 14:28:43"},{"id":11,"name":"2025-04-14 14:28:45"},{"id":12,"name":"2025-04-14 14:28:57"},{"id":13,"name":"2025-04-14 14:29:07"},{"id":14,"name":"2025-04-14 14:29:17"},{"id":15,"name":"2025-04-14 14:29:57"},{"id":16,"name":"2025-04-14 14:30:07"},{"id":17,"name":"2025-04-14 14:30:30"},{"id":18,"name":"2025-04-14 14:31:23"},{"id":19,"name":"2025-04-14 14:31:56"},{"id":20,"name":"2025-04-14 14:33:14"},{"id":21,"name":"2025-04-14 14:33:24"},{"id":22,"name":"2025-04-14 14:33:37"},{"id":23,"name":"2025-04-14 14:33:48"},{"id":24,"name":"2025-04-14 14:33:58"},{"id":25,"name":"2025-04-14 14:34:00"},{"id":26,"name":"2025-04-14 14:35:59"},{"id":27,"name":"2025-04-14 14:36:04"},{"id":28,"name":"2025-04-14 14:37:17"},{"id":29,"name":"2025-04-14 14:37:22"},{"id":30,"name":"2025-04-14 14:37:35"},{"id":31,"name":"2025-04-14 14:37:48"},{"id":32,"name":"2025-04-14 14:38:28"},{"id":33,"name":"2025-04-14 14:38:37"},{"id":34,"name":"2025-04-14 14:38:40"},{"id":35,"name":"2025-04-14 14:39:03"},{"id":36,"name":"2025-04-14 14:39:51"},{"id":37,"name":"2025-04-14 14:39:54"},{"id":38,"name":"2025-04-14 14:39:56"},{"id":39,"name":"2025-04-14 14:41:00"},{"id":40,"name":"2025-04-14 14:41:02"},{"id":41,"name":"2025-04-14 14:41:19"},{"id":42,"name":"2025-04-14 14:41:33"},{"id":43,"name":"2025-04-14 14:42:09"},{"id":44,"name":"2025-04-14 14:42:15"},{"id":45,"name":"2025-04-14 14:42:48"},{"id":46,"name":"2025-04-14 14:42:56"},{"id":47,"name":"2025-04-14 14:50:55"},{"id":48,"name":"2025-04-14 14:54:48"},{"id":49,"name":"2025-04-14 15:01:32"},{"id":50,"name":"2025-04-14 15:01:34"},{"id":51,"name":"2025-04-14 15:04:36"}]
+
+2025-04-14 15:04:39,435 - DEBUG - Sending GET request to https://127.0.0.1:5000/plugin_details/3 with data: None
+2025-04-14 15:04:39,436 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 15:04:39,450 - DEBUG - https://127.0.0.1:5000 "GET /plugin_details/3 HTTP/1.1" 200 31
+2025-04-14 15:04:39,451 - DEBUG - Received response: {"description":"","params":""}
+
+2025-04-14 15:04:39,773 - DEBUG - Polling for notifications...
+2025-04-14 15:04:39,785 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1744639475 with data: None
+2025-04-14 15:04:39,786 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 15:04:39,800 - DEBUG - https://127.0.0.1:5000 "GET /notification/1744639475 HTTP/1.1" 200 16
+2025-04-14 15:04:39,800 - DEBUG - Received response: {"update":-146}
+
+2025-04-14 15:04:40,629 - DEBUG - Sending GET request to https://127.0.0.1:5000/plugin_details/2 with data: None
+2025-04-14 15:04:40,630 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 15:04:40,644 - DEBUG - https://127.0.0.1:5000 "GET /plugin_details/2 HTTP/1.1" 200 31
+2025-04-14 15:04:40,645 - DEBUG - Received response: {"description":"","params":""}
+
+2025-04-14 15:04:42,898 - DEBUG - Sending GET request to https://127.0.0.1:5000/plugin_details/1 with data: None
+2025-04-14 15:04:42,899 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 15:04:42,914 - DEBUG - https://127.0.0.1:5000 "GET /plugin_details/1 HTTP/1.1" 200 40
+2025-04-14 15:04:42,914 - DEBUG - Received response: error 404, no such plugin has been found
+2025-04-14 15:04:42,914 - ERROR - Error during request: Expecting value: line 1 column 1 (char 0)
+2025-04-14 15:04:43,497 - DEBUG - Sending GET request to https://127.0.0.1:5000/plugin_details/2 with data: None
+2025-04-14 15:04:43,498 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 15:04:43,512 - DEBUG - https://127.0.0.1:5000 "GET /plugin_details/2 HTTP/1.1" 200 31
+2025-04-14 15:04:43,513 - DEBUG - Received response: {"description":"","params":""}
+
+2025-04-14 15:04:44,806 - DEBUG - Polling for notifications...
+2025-04-14 15:04:44,818 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1744639475 with data: None
+2025-04-14 15:04:44,819 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 15:04:44,833 - DEBUG - https://127.0.0.1:5000 "GET /notification/1744639475 HTTP/1.1" 200 16
+2025-04-14 15:04:44,833 - DEBUG - Received response: {"update":-146}
+
+2025-04-14 15:04:47,649 - DEBUG - Sending GET request to https://127.0.0.1:5000/plugin_list with data: None
+2025-04-14 15:04:47,649 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 15:04:47,664 - DEBUG - https://127.0.0.1:5000 "GET /plugin_list HTTP/1.1" 200 57
+2025-04-14 15:04:47,664 - DEBUG - Received response: [{"id":2,"name":"ioSono.py"},{"id":3,"name":"hello.sh"}]
+
+2025-04-14 15:04:48,282 - DEBUG - Sending GET request to https://127.0.0.1:5000/plugin_details/2 with data: None
+2025-04-14 15:04:48,283 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 15:04:48,298 - DEBUG - https://127.0.0.1:5000 "GET /plugin_details/2 HTTP/1.1" 200 31
+2025-04-14 15:04:48,298 - DEBUG - Received response: {"description":"","params":""}
+
+2025-04-14 15:04:48,890 - DEBUG - Sending POST request to https://127.0.0.1:5000/test_execute/2 with data: {}
+2025-04-14 15:04:48,890 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 15:04:48,898 - DEBUG - https://127.0.0.1:5000 "POST /test_execute/2 HTTP/1.1" 200 96
+2025-04-14 15:04:48,939 - DEBUG - Received response: {"datetime":"Mon, 14 Apr 2025 15:04:48 GMT","log":"Io sono stato caricato","status":"finished"}
+
+2025-04-14 15:04:49,839 - DEBUG - Polling for notifications...
+2025-04-14 15:04:49,851 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1744639488 with data: None
+2025-04-14 15:04:49,852 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 15:04:49,866 - DEBUG - https://127.0.0.1:5000 "GET /notification/1744639488 HTTP/1.1" 200 16
+2025-04-14 15:04:49,866 - DEBUG - Received response: {"update":-159}
+
+2025-04-14 15:04:51,238 - DEBUG - Sending GET request to https://127.0.0.1:5000/test_list with data: None
+2025-04-14 15:04:51,239 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 15:04:51,253 - DEBUG - https://127.0.0.1:5000 "GET /test_list HTTP/1.1" 200 2021
+2025-04-14 15:04:51,254 - DEBUG - Received response: [{"id":1,"name":"2025-04-14 14:24:51"},{"id":2,"name":"2025-04-14 14:25:34"},{"id":3,"name":"2025-04-14 14:25:40"},{"id":4,"name":"2025-04-14 14:25:51"},{"id":5,"name":"2025-04-14 14:27:21"},{"id":6,"name":"2025-04-14 14:27:30"},{"id":7,"name":"2025-04-14 14:27:34"},{"id":8,"name":"2025-04-14 14:28:29"},{"id":9,"name":"2025-04-14 14:28:39"},{"id":10,"name":"2025-04-14 14:28:43"},{"id":11,"name":"2025-04-14 14:28:45"},{"id":12,"name":"2025-04-14 14:28:57"},{"id":13,"name":"2025-04-14 14:29:07"},{"id":14,"name":"2025-04-14 14:29:17"},{"id":15,"name":"2025-04-14 14:29:57"},{"id":16,"name":"2025-04-14 14:30:07"},{"id":17,"name":"2025-04-14 14:30:30"},{"id":18,"name":"2025-04-14 14:31:23"},{"id":19,"name":"2025-04-14 14:31:56"},{"id":20,"name":"2025-04-14 14:33:14"},{"id":21,"name":"2025-04-14 14:33:24"},{"id":22,"name":"2025-04-14 14:33:37"},{"id":23,"name":"2025-04-14 14:33:48"},{"id":24,"name":"2025-04-14 14:33:58"},{"id":25,"name":"2025-04-14 14:34:00"},{"id":26,"name":"2025-04-14 14:35:59"},{"id":27,"name":"2025-04-14 14:36:04"},{"id":28,"name":"2025-04-14 14:37:17"},{"id":29,"name":"2025-04-14 14:37:22"},{"id":30,"name":"2025-04-14 14:37:35"},{"id":31,"name":"2025-04-14 14:37:48"},{"id":32,"name":"2025-04-14 14:38:28"},{"id":33,"name":"2025-04-14 14:38:37"},{"id":34,"name":"2025-04-14 14:38:40"},{"id":35,"name":"2025-04-14 14:39:03"},{"id":36,"name":"2025-04-14 14:39:51"},{"id":37,"name":"2025-04-14 14:39:54"},{"id":38,"name":"2025-04-14 14:39:56"},{"id":39,"name":"2025-04-14 14:41:00"},{"id":40,"name":"2025-04-14 14:41:02"},{"id":41,"name":"2025-04-14 14:41:19"},{"id":42,"name":"2025-04-14 14:41:33"},{"id":43,"name":"2025-04-14 14:42:09"},{"id":44,"name":"2025-04-14 14:42:15"},{"id":45,"name":"2025-04-14 14:42:48"},{"id":46,"name":"2025-04-14 14:42:56"},{"id":47,"name":"2025-04-14 14:50:55"},{"id":48,"name":"2025-04-14 14:54:48"},{"id":49,"name":"2025-04-14 15:01:32"},{"id":50,"name":"2025-04-14 15:01:34"},{"id":51,"name":"2025-04-14 15:04:36"},{"id":52,"name":"2025-04-14 15:04:48"}]
+
+2025-04-14 15:04:53,025 - DEBUG - Sending GET request to https://127.0.0.1:5000/plugin_details/1 with data: None
+2025-04-14 15:04:53,026 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 15:04:53,040 - DEBUG - https://127.0.0.1:5000 "GET /plugin_details/1 HTTP/1.1" 200 40
+2025-04-14 15:04:53,041 - DEBUG - Received response: error 404, no such plugin has been found
+2025-04-14 15:04:53,041 - ERROR - Error during request: Expecting value: line 1 column 1 (char 0)
+2025-04-14 15:04:54,872 - DEBUG - Polling for notifications...
+2025-04-14 15:04:54,884 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1744639488 with data: None
+2025-04-14 15:04:54,885 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 15:04:54,899 - DEBUG - https://127.0.0.1:5000 "GET /notification/1744639488 HTTP/1.1" 200 16
+2025-04-14 15:04:54,899 - DEBUG - Received response: {"update":-159}
+
+2025-04-14 15:04:59,905 - DEBUG - Polling for notifications...
+2025-04-14 15:04:59,917 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1744639488 with data: None
+2025-04-14 15:04:59,918 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 15:04:59,932 - DEBUG - https://127.0.0.1:5000 "GET /notification/1744639488 HTTP/1.1" 200 16
+2025-04-14 15:04:59,932 - DEBUG - Received response: {"update":-159}
+
+2025-04-14 15:05:00,669 - DEBUG - Sending PATCH request to https://127.0.0.1:5000/edit_plugin/1 with data: {'name': 'ciao', 'description': ''}
+2025-04-14 15:05:00,670 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 15:05:00,675 - DEBUG - https://127.0.0.1:5000 "PATCH /edit_plugin/1 HTTP/1.1" 500 265
+2025-04-14 15:05:00,685 - DEBUG - Received response: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+
+2025-04-14 15:05:00,686 - ERROR - Error 500: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+
+2025-04-14 15:05:00,725 - DEBUG - Sending GET request to https://127.0.0.1:5000/plugin_list with data: None
+2025-04-14 15:05:00,726 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 15:05:00,740 - DEBUG - https://127.0.0.1:5000 "GET /plugin_list HTTP/1.1" 200 57
+2025-04-14 15:05:00,741 - DEBUG - Received response: [{"id":2,"name":"ioSono.py"},{"id":3,"name":"hello.sh"}]
+
+2025-04-14 15:05:03,424 - DEBUG - Sending GET request to https://127.0.0.1:5000/plugin_list with data: None
+2025-04-14 15:05:03,425 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 15:05:03,439 - DEBUG - https://127.0.0.1:5000 "GET /plugin_list HTTP/1.1" 200 57
+2025-04-14 15:05:03,440 - DEBUG - Received response: [{"id":2,"name":"ioSono.py"},{"id":3,"name":"hello.sh"}]
+
+2025-04-14 15:05:04,442 - DEBUG - Sending GET request to https://127.0.0.1:5000/test_list with data: None
+2025-04-14 15:05:04,443 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 15:05:04,458 - DEBUG - https://127.0.0.1:5000 "GET /test_list HTTP/1.1" 200 2021
+2025-04-14 15:05:04,458 - DEBUG - Received response: [{"id":1,"name":"2025-04-14 14:24:51"},{"id":2,"name":"2025-04-14 14:25:34"},{"id":3,"name":"2025-04-14 14:25:40"},{"id":4,"name":"2025-04-14 14:25:51"},{"id":5,"name":"2025-04-14 14:27:21"},{"id":6,"name":"2025-04-14 14:27:30"},{"id":7,"name":"2025-04-14 14:27:34"},{"id":8,"name":"2025-04-14 14:28:29"},{"id":9,"name":"2025-04-14 14:28:39"},{"id":10,"name":"2025-04-14 14:28:43"},{"id":11,"name":"2025-04-14 14:28:45"},{"id":12,"name":"2025-04-14 14:28:57"},{"id":13,"name":"2025-04-14 14:29:07"},{"id":14,"name":"2025-04-14 14:29:17"},{"id":15,"name":"2025-04-14 14:29:57"},{"id":16,"name":"2025-04-14 14:30:07"},{"id":17,"name":"2025-04-14 14:30:30"},{"id":18,"name":"2025-04-14 14:31:23"},{"id":19,"name":"2025-04-14 14:31:56"},{"id":20,"name":"2025-04-14 14:33:14"},{"id":21,"name":"2025-04-14 14:33:24"},{"id":22,"name":"2025-04-14 14:33:37"},{"id":23,"name":"2025-04-14 14:33:48"},{"id":24,"name":"2025-04-14 14:33:58"},{"id":25,"name":"2025-04-14 14:34:00"},{"id":26,"name":"2025-04-14 14:35:59"},{"id":27,"name":"2025-04-14 14:36:04"},{"id":28,"name":"2025-04-14 14:37:17"},{"id":29,"name":"2025-04-14 14:37:22"},{"id":30,"name":"2025-04-14 14:37:35"},{"id":31,"name":"2025-04-14 14:37:48"},{"id":32,"name":"2025-04-14 14:38:28"},{"id":33,"name":"2025-04-14 14:38:37"},{"id":34,"name":"2025-04-14 14:38:40"},{"id":35,"name":"2025-04-14 14:39:03"},{"id":36,"name":"2025-04-14 14:39:51"},{"id":37,"name":"2025-04-14 14:39:54"},{"id":38,"name":"2025-04-14 14:39:56"},{"id":39,"name":"2025-04-14 14:41:00"},{"id":40,"name":"2025-04-14 14:41:02"},{"id":41,"name":"2025-04-14 14:41:19"},{"id":42,"name":"2025-04-14 14:41:33"},{"id":43,"name":"2025-04-14 14:42:09"},{"id":44,"name":"2025-04-14 14:42:15"},{"id":45,"name":"2025-04-14 14:42:48"},{"id":46,"name":"2025-04-14 14:42:56"},{"id":47,"name":"2025-04-14 14:50:55"},{"id":48,"name":"2025-04-14 14:54:48"},{"id":49,"name":"2025-04-14 15:01:32"},{"id":50,"name":"2025-04-14 15:01:34"},{"id":51,"name":"2025-04-14 15:04:36"},{"id":52,"name":"2025-04-14 15:04:48"}]
+
+2025-04-14 15:05:04,937 - DEBUG - Polling for notifications...
+2025-04-14 15:05:04,951 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1744639503 with data: None
+2025-04-14 15:05:04,951 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 15:05:04,965 - DEBUG - https://127.0.0.1:5000 "GET /notification/1744639503 HTTP/1.1" 200 16
+2025-04-14 15:05:04,966 - DEBUG - Received response: {"update":-174}
+
+2025-04-14 15:05:05,663 - DEBUG - Sending GET request to https://127.0.0.1:5000/plugin_list with data: None
+2025-04-14 15:05:05,664 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 15:05:05,678 - DEBUG - https://127.0.0.1:5000 "GET /plugin_list HTTP/1.1" 200 57
+2025-04-14 15:05:05,678 - DEBUG - Received response: [{"id":2,"name":"ioSono.py"},{"id":3,"name":"hello.sh"}]
+
+2025-04-14 15:05:09,971 - DEBUG - Polling for notifications...
+2025-04-14 15:05:09,984 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1744639506 with data: None
+2025-04-14 15:05:09,985 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 15:05:09,998 - DEBUG - https://127.0.0.1:5000 "GET /notification/1744639506 HTTP/1.1" 200 16
+2025-04-14 15:05:09,999 - DEBUG - Received response: {"update":-177}
+
+2025-04-14 15:05:15,004 - DEBUG - Polling for notifications...
+2025-04-14 15:05:15,017 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1744639506 with data: None
+2025-04-14 15:05:15,017 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 15:05:15,030 - DEBUG - Sending GET request to https://127.0.0.1:5000/test_list with data: None
+2025-04-14 15:05:15,031 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 15:05:15,032 - DEBUG - https://127.0.0.1:5000 "GET /notification/1744639506 HTTP/1.1" 200 16
+2025-04-14 15:05:15,032 - DEBUG - Received response: {"update":-177}
+
+2025-04-14 15:05:15,046 - DEBUG - https://127.0.0.1:5000 "GET /test_list HTTP/1.1" 200 2021
+2025-04-14 15:05:15,046 - DEBUG - Received response: [{"id":1,"name":"2025-04-14 14:24:51"},{"id":2,"name":"2025-04-14 14:25:34"},{"id":3,"name":"2025-04-14 14:25:40"},{"id":4,"name":"2025-04-14 14:25:51"},{"id":5,"name":"2025-04-14 14:27:21"},{"id":6,"name":"2025-04-14 14:27:30"},{"id":7,"name":"2025-04-14 14:27:34"},{"id":8,"name":"2025-04-14 14:28:29"},{"id":9,"name":"2025-04-14 14:28:39"},{"id":10,"name":"2025-04-14 14:28:43"},{"id":11,"name":"2025-04-14 14:28:45"},{"id":12,"name":"2025-04-14 14:28:57"},{"id":13,"name":"2025-04-14 14:29:07"},{"id":14,"name":"2025-04-14 14:29:17"},{"id":15,"name":"2025-04-14 14:29:57"},{"id":16,"name":"2025-04-14 14:30:07"},{"id":17,"name":"2025-04-14 14:30:30"},{"id":18,"name":"2025-04-14 14:31:23"},{"id":19,"name":"2025-04-14 14:31:56"},{"id":20,"name":"2025-04-14 14:33:14"},{"id":21,"name":"2025-04-14 14:33:24"},{"id":22,"name":"2025-04-14 14:33:37"},{"id":23,"name":"2025-04-14 14:33:48"},{"id":24,"name":"2025-04-14 14:33:58"},{"id":25,"name":"2025-04-14 14:34:00"},{"id":26,"name":"2025-04-14 14:35:59"},{"id":27,"name":"2025-04-14 14:36:04"},{"id":28,"name":"2025-04-14 14:37:17"},{"id":29,"name":"2025-04-14 14:37:22"},{"id":30,"name":"2025-04-14 14:37:35"},{"id":31,"name":"2025-04-14 14:37:48"},{"id":32,"name":"2025-04-14 14:38:28"},{"id":33,"name":"2025-04-14 14:38:37"},{"id":34,"name":"2025-04-14 14:38:40"},{"id":35,"name":"2025-04-14 14:39:03"},{"id":36,"name":"2025-04-14 14:39:51"},{"id":37,"name":"2025-04-14 14:39:54"},{"id":38,"name":"2025-04-14 14:39:56"},{"id":39,"name":"2025-04-14 14:41:00"},{"id":40,"name":"2025-04-14 14:41:02"},{"id":41,"name":"2025-04-14 14:41:19"},{"id":42,"name":"2025-04-14 14:41:33"},{"id":43,"name":"2025-04-14 14:42:09"},{"id":44,"name":"2025-04-14 14:42:15"},{"id":45,"name":"2025-04-14 14:42:48"},{"id":46,"name":"2025-04-14 14:42:56"},{"id":47,"name":"2025-04-14 14:50:55"},{"id":48,"name":"2025-04-14 14:54:48"},{"id":49,"name":"2025-04-14 15:01:32"},{"id":50,"name":"2025-04-14 15:01:34"},{"id":51,"name":"2025-04-14 15:04:36"},{"id":52,"name":"2025-04-14 15:04:48"}]
+
+2025-04-14 15:05:16,607 - DEBUG - Sending GET request to https://127.0.0.1:5000/plugin_details/1 with data: None
+2025-04-14 15:05:16,608 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 15:05:16,623 - DEBUG - https://127.0.0.1:5000 "GET /plugin_details/1 HTTP/1.1" 200 40
+2025-04-14 15:05:16,623 - DEBUG - Received response: error 404, no such plugin has been found
+2025-04-14 15:05:16,623 - ERROR - Error during request: Expecting value: line 1 column 1 (char 0)
+2025-04-14 15:05:17,168 - DEBUG - Sending GET request to https://127.0.0.1:5000/plugin_details/2 with data: None
+2025-04-14 15:05:17,168 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 15:05:17,183 - DEBUG - https://127.0.0.1:5000 "GET /plugin_details/2 HTTP/1.1" 200 31
+2025-04-14 15:05:17,183 - DEBUG - Received response: {"description":"","params":""}
+
+2025-04-14 15:05:17,636 - DEBUG - Sending GET request to https://127.0.0.1:5000/plugin_details/3 with data: None
+2025-04-14 15:05:17,637 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 15:05:17,652 - DEBUG - https://127.0.0.1:5000 "GET /plugin_details/3 HTTP/1.1" 200 31
+2025-04-14 15:05:17,652 - DEBUG - Received response: {"description":"","params":""}
+
+2025-04-14 15:05:20,037 - DEBUG - Polling for notifications...
+2025-04-14 15:05:20,050 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1744639506 with data: None
+2025-04-14 15:05:20,051 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-14 15:05:20,065 - DEBUG - https://127.0.0.1:5000 "GET /notification/1744639506 HTTP/1.1" 200 16
+2025-04-14 15:05:20,065 - DEBUG - Received response: {"update":-177}
+

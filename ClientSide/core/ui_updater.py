@@ -34,19 +34,19 @@ class UIUpdater:
         self.ui = ui
 
     """
-    Aggiorna la lista dei plugin nell'interfaccia grafica.
+    Aggiorna la lista nell'interfaccia grafica.
 
     Args:
-        plugins (dict): Dati per aggiornare la lista dei plugin.
+        items (dict): Dati per aggiornare la lista.
             Struttura attesa:
-            - name (str): Nome del plugin.
-            - id (str): ID univoco del plugin.
+            - name (str): Nome.
+            - id (str): ID univoco.
     """
-    def aggiorna_lista_plugin(self, plugins):
-        self.ui.svuota_lista_plugin()
+    def aggiorna_lista(self, items):
+        self.ui.svuota_lista()
 
-        for plugin in plugins:
-            self.ui.aggiungi_plugin(plugin["name"], str(plugin["id"]))
+        for item in items:
+            self.ui.aggiungi_elemento(item["name"], str(item["id"]))
 
     """
     Mostra i dettagli di un plugin selezionato nell'interfaccia grafica.

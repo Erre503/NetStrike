@@ -108,17 +108,21 @@ class MainInterfaccia(ctk.CTkFrame):
 
 
     def aggiornaListaPlugin(self):
-        self.svuota_lista_plugin()
+        self.svuota_lista()
         self.coreApplicazione.ottieni_lista_plugin()
 
+    def aggiornaListaTest(self):
+        self.svuota_lista()
+        self.coreApplicazione.ottieni_lista_test()
 
-    def aggiungi_plugin(self, name, plugin_id):
+
+    def aggiungi_elemento(self, name, plugin_id):
         button = ctk.CTkButton(self.listaPlugin, text=name, command=lambda name=name: self.selezionaPlugin(name))
         button.pack(pady=5, fill="x")
         self.plugin_files[name] = {'id': plugin_id}
 
 
-    def svuota_lista_plugin(self):
+    def svuota_lista(self):
         for widget in self.listaPlugin.winfo_children():
             widget.destroy()
 
@@ -145,7 +149,7 @@ class MainInterfaccia(ctk.CTkFrame):
         percorsoPlugin = filedialog.askopenfilename(filetypes=[("Python Files", "*.*")])
         if percorsoPlugin:
             try:
-                idPlugin = self.coreApplicazione.aggiungi_plugin(percorsoPlugin)
+                idPlugin = self.coreApplicazione.aggiungi_elemento(percorsoPlugin)
                 self.aggiungiPlugin(percorsoPlugin, idPlugin)
                 self.aggiornaListaPlugin()
             except Exception as e:
@@ -293,6 +297,8 @@ class MainInterfaccia(ctk.CTkFrame):
             self.informazioniTest.pack_forget()
             self.bottoneConfig.pack_forget()
             self.bottoneStart.pack_forget()
+
+            self.aggiornaListaTest()
            
         else:
 
@@ -333,3 +339,5 @@ class MainInterfaccia(ctk.CTkFrame):
             self.informazioniTest.pack(pady=10)
             self.bottoneConfig.pack(pady=10)
             self.bottoneStart.pack(pady=10)
+
+            self.aggiornaListaPlugin()
