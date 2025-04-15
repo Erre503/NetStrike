@@ -1,27 +1,65 @@
-# login_window.py
-import tkinter as tk
+import customtkinter as ctk
+from tkinter import messagebox
+import os
 
-def get_ip_address():
-    """Create a Tkinter window to prompt for the IP address."""
-    ip_address = None  # Default value in case the user cancels or closes the window
+def get_login_info():
+    ip_address = None
+    username = None
+    password = None
 
-    def submit_ip():
-        nonlocal ip_address  # Access the outer function's variable
-        ip_address = ip_entry.get()
-        root.quit()
-        root.destroy()
-    root = tk.Tk()
-    root.title("IP Address Login")
+    root = ctk.CTk()
+    ctk.set_appearance_mode("Dark")
+    ctk.set_default_color_theme("green")
+    root.title("NetStrike Login")
+    root.geometry("500x500")
+    root.resizable(False, False)
+    def submit_info():
+        nonlocal ip_address, username, password
+        ip_address = ipEntry.get()
+        username = usernameEntry.get()
+        password = passwordEntry.get()
+        if not ip_address or not username or not password:
+            messagebox.showerror("Error", "all the fields are required!")
+            return
+        else:
+            root.quit()
+            root.destroy()
 
-    ip_label = tk.Label(root, text="Enter IP Address:")
-    ip_label.pack(pady=10)
+    def inviaSubmit(event):
+        submit_info()
+    
+    frame_titolo = ctk.CTkFrame(root, fg_color="transparent")
+    frame_titolo.pack(pady=25)
 
-    ip_entry = tk.Entry(root)
-    ip_entry.pack(pady=5)
+    label_net = ctk.CTkLabel(frame_titolo,text="Net",font=("Felix Titling", 50))
+    label_net.pack(side="left") 
 
-    submit_button = tk.Button(root, text="Submit", command=submit_ip)
-    submit_button.pack(pady=10)
+    label_strike = ctk.CTkLabel(frame_titolo,text="Strike",font=("Felix Titling", 50),text_color="#76ca7f")
+    label_strike.pack(side="left")
+    
+    ipLabel = ctk.CTkLabel(root, text="ENTER IP ADDRESS:", font=("Felix Titling", 25))
+    ipLabel.pack(pady=5)
 
-    root.mainloop()  # Start the Tkinter main event loop
+    ipEntry = ctk.CTkEntry(root)
+    ipEntry.pack(pady=10)
 
-    return ip_address  # Return the IP address after the window is closed
+    usernameLabel = ctk.CTkLabel(root, text="ENTER USERNAME:", font=("Felix Titling", 25))
+    usernameLabel.pack(pady=5)
+
+    usernameEntry = ctk.CTkEntry(root)
+    usernameEntry.pack(pady=10)
+
+    passwordLabel = ctk.CTkLabel(root, text="ENTER PASSWORD:", font=("Felix Titling", 25))
+    passwordLabel.pack(pady=5)
+
+    passwordEntry = ctk.CTkEntry(root, show='*') 
+    passwordEntry.pack(pady=10)
+
+    submitButton =  ctk.CTkButton(root, text="SUBMIT", corner_radius=5, command=submit_info)
+    submitButton.pack(pady=50)
+    
+    root.bind('<Return>', inviaSubmit)
+    
+    root.mainloop()
+
+    return ip_address, username, password

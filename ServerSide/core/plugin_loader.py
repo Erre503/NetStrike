@@ -1,96 +1,196 @@
-import os  # Libreria per operare con file e cartelle
-import importlib  # Per importare dinamicamente moduli senza conoscere i loro nomi
-import sys  # Per modificare il percorso da cui importare i file Python
+import os #libreria per poter lavorare con le cartelle e file dell'applicazione
+import importlib #va a sostituire la funzione manuale di import dato che non siamo a conoscenza dei nomi dei file
+                 #e per rendere l'importazione dinamica
+import sys  #serve per modificare a riga 38 i percorsi da cui prendere i file python
+import abc
+import inspect #serve per vedere i parametri
+import subprocess #serve per i file bash
+from pathlib import Path #serve per ottenere il riferimento al percorso del file corrente
 from datetime import datetime
-from pathlib import Path  # Per ottenere il percorso assoluto della cartella corrente
+import platform
 
+FOLDER = Path(__file__).resolve().parent.parent / "plugins"
 
-# Funzione che carica un plugin dal folder "plugins" e lo esegue se esistente
-def caricaPlugin(nome_plugin):
+def get_plugin_extension(nome_file):
+    if nome_file.endswith('.sh'):
+        return '.sh'
+    if nome_file.endswith('.py'):
+        return '.py'
+    return None
 
-    if (nome_plugin.endswith('.py')):  # Se il nome del file finisce con .py, rimuove l'estensione
-        nome_plugin = nome_plugin[:-3]
-
-    guardia = False
-    for file in os.listdir('.plugins'):  # Esamina tutti i file nella cartella "plugins"
-        if nome_plugin == file[:-3]:  # Se il nome del file corrisponde
-            modulo = importlib.import_module(nome_plugin)  # Importa dinamicamente il modulo
-            guardia = True
-
-    if (guardia):  # Se il file è stato trovato e importato
-        return modulo  # Ritorna il modulo importato
-    else:
-        print("File NON trovato")  # Se il file non è trovato, stampa un messaggio di errore
-        return None
-
-
-# Funzione che restituisce una lista di tutti i file Python nella cartella "plugins"
-def lista_plugin():
-    vet = []  # Lista che conterrà i nomi dei file Python
-    for file in os.listdir(folder):  # Esamina tutti i file nella cartella "plugins"
-        if file[:-3] and file.endswith('.py'):  # Se il file è un file Python
-            vet.append(file)  # Aggiunge il nome del file alla lista
-    return vet  # Restituisce la lista di file Python
-
-
-# Funzione che esegue la funzione "execute" di un plugin caricato
-def avvia_plugin(nome_plugin):  # funzione del diagramma richiesta per avviare il plugin
-    try:
-        modulo = importlib.import_module('plugins.'+nome_plugin)
-<<<<<<< HEAD
-=======
-        res = {}
->>>>>>> 585c174d4a54bd1595053b31ae2e13d32768b5a0
-        res['log'] = (modulo.execute())
-        res['status'] = 'finished'
-        res['datetime'] = datetime.now()
-        return res
-    except:
-        return {'status':'Error', 'log': 'Error during the execution of the plugin: '+nome_plugin, 'datetime': datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
-
-
-# Funzione che crea un nuovo plugin con il contenuto specificato
-def creaPlugin(nome_file, contenuto):
-    if not nome_file.endswith('.py'):  # Se il nome del file non termina con ".py", lo aggiunge
-        nome_file = nome_file + ".py"
-
-    req = "def execute():"  # La funzione che il file deve contenere
-    folder = Path(__file__).resolve().parent.parent / "plugins"
-    # Percorso completo del file
-    percorso_file = os.path.join(folder, nome_file)
-
-    # Verifica se un file con lo stesso nome esiste già nella cartella "plugins"
-    guardia = True
-    for file in os.listdir(folder):
-        if nome_file == file and file.endswith('.py'):  # Se il file esiste già
-            guardia = False
-
-    if (guardia):  # Se il file non esiste già
-        if req in contenuto:  # Se il contenuto del file include la funzione "execute"
-            with open(percorso_file, "w", encoding="utf-8") as file:  # Crea e scrive nel file
-                file.write(contenuto)
-            return "File " + nome_file + " creato con successo nella cartella plugins"
+def lista_plugin(): #crea una lista con tutti i file python all'interno della cartella
+    var = []
+    for file in os.listdir(FOLDER):
+        if get_plugin_type(file)=='sh':
+            if file[:-3] and file.endswith('.sh'):
+                var.append(file)
         else:
-            return "Errore: il file non rispetta i requisiti: " + req  # Se il file non rispetta i requisiti, ritorna un errore
+            if file[:-3] and file.endswith('.py'):
+                var.append(file)
+    return var
+
+def rinomina_plugin(nomeVecchio, nomeNuovo): #dato il nome del file da rinominare e quello nuovo, rinomina il file
+    try:
+        vecchio_path = FOLDER / nomeVecchio
+        nuovo_path = FOLDER / nomeNuovo
+        vecchio_path.rename(nuovo_path)
+        return True
+    except Exception:
+        print("Errore: impossibile rinominare il nome del file")
+        return False
+
+def elimina_plugin(nome):
+    try:
+        os.remove(FOLDER / nome)
+        return True
+    except Exception:
+        print("Errore: impossibile eliminare il nome del file")
+        return False
+
+
+
+
+def estraiParametriBash(plugin):
+    try:
+        comando = ["bash", plugin, "get_param"]
+        parametri = subprocess.run(comando, capture_output=True, text=True, check=True)
+        listaParametri = parametri.stdout.strip().split(", ")
+        return listaParametri
+    except Exception:
+        return f"Errore nell'estrazione dei parametri Bash"
+
+def interfacciaBash(content):
+    functions_to_check = ['set_param', 'get_param', 'execute']
+    for x in functions_to_check:
+        if x not in content:
+            return False
+    return True
+
+def avvia_plugin_bash(plugin, vet_param):
+    try:
+        # Prepare the command to execute the Bash script
+        if platform.system() == "Windows":
+            shell = "powershell"
+            comando = f"& {{ {comando} }}"
+        else:
+            shell = "/bin/bash"
+            comando = f"bash {plugin}"
+
+        # Prepare the environment variables
+        env_vars = {**os.environ, **vet_param}  # Combine existing and new environment variables
+
+        # Execute the command in a shell
+        ret = subprocess.run(comando, shell=True, check=True, env=env_vars, executable=shell, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        return ret.stdout.decode('utf-8')
+    except subprocess.CalledProcessError as e:
+        return f"Errore nell'esecuzione del plugin Bash: {e}"
+    except Exception as e:
+        return f"Errore generico: {e}"
+
+
+def creaPluginPy(nome_file, contenuto):
+    # Add .py extension if missing
+    if not nome_file.endswith('.py'):
+        nome_file += '.py'
+
+    file = FOLDER / nome_file
+
+    if os.path.isfile(file):
+        return f"Error: File {nome_file} already exists"
+
+    # Add required import
+    full_content = f"from core.interfaccia_plugin import Interfaccia_Plugin\n\n{contenuto}"
+        
+    try:
+        # Write to temporary file
+        file.write_text(full_content, encoding="utf-8")
+        
+        # Validate through temporary file
+        spec = importlib.util.spec_from_file_location(nome_file[:-3], file)
+        modulo = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(modulo)
+
+        # Class validation
+        if not hasattr(modulo, "Plugin"):
+            os.remove(file)
+            raise AttributeError("Missing 'Plugin' class")
+
+        classe_plugin = modulo.Plugin
+
+        if not inspect.isclass(classe_plugin):
+            os.remove(file)
+            raise TypeError("'Plugin' is not a class")
+
+        if not issubclass(classe_plugin, Interfaccia_Plugin):
+            os.remove(file)
+            raise TypeError("Must inherit from Interfaccia_Plugin")
+
+        if len(classe_plugin.__abstractmethods__) > 0:
+            os.remove(file)
+            raise NotImplementedError(f"Unimplemented abstract methods: {classe_plugin.__abstractmethods__}")
+
+        return f"Plugin created successfully: {nome_file}"
+
+    except Exception as e:            
+        # Temporary file is automatically deleted with the directory
+        return f"Validation failed: {e}"
+
+def creaPluginSh(nome_file, contenuto):
+    if not nome_file.endswith('.sh'):
+        nome_file = nome_file + ".sh"
+    if nome_file in os.listdir(FOLDER):
+        return False
+    if interfacciaBash(contenuto):
+        percorso_file = os.path.join(FOLDER, nome_file)
+        with open(percorso_file, "w", encoding="utf-8") as file:
+            file.write(contenuto)
+        return True
     else:
-        return "Nome del File già presente"  # Se il file esiste già, ritorna un messaggio di errore
+        return False
+    
+    
 
 
-# Codice principale che esegue l'intero processo
-if (__name__ == "__main__"):
-    folder = Path(__file__).resolve().parent.parent / "plugins"  # Imposta il percorso della cartella "plugins"
-    sys.path.append(str(folder))  # Aggiunge la cartella "plugins" alla lista dei percorsi di ricerca dei moduli Python
 
-    print("Nome del Plug In da creare: ")
-    nome_plugin = input()  # Chiede il nome del plugin da creare
-    print(creaPlugin(nome_plugin, "def execute(): print(1)"))  # Crea il plugin con una funzione di esempio
+def creaPlugin(nome_file, contenuto):
+    if nome_file.endswith('.sh'):
+        return creaPluginSh(nome_file, contenuto)
+    if nome_file.endswith('.py'):
+        return creaPluginPy(nome_file, contenuto)
+    print("Il tipo di file non e' supportato")
+    return None
 
-    # Carica e stampa i nomi di tutti i plugin presenti
-    for i in lista_plugin():
-        print(i)
 
-    # Carica il plugin richiesto dall'utente
-    plugin = caricaPlugin()  # Viene caricato il modulo del file richiesto
+def avvia_plugin(nome_plugin, vet_param, type):
+    # Se il plugin è Python
+    res = {}
+    res['datetime'] = datetime.now()
+    if type == 'py':
+        try:
+            # Importa dinamicamente il modulo Python
+            modulo = importlib.import_module('plugins.'+nome_plugin[:-3])  # Rimuove ".py"
+            plugin_instance = modulo.Plugin()  # Crea l'istanza del plugin
+            plugin_instance.set_param(vet_param)  # Imposta i parametri
 
-    if (plugin != None):  # Se il plugin è stato trovato
-        avvia_plugin(plugin)  # Esegui il plugin
+
+            res['log'] = plugin_instance.execute()  # Esegui il plugin
+            res['status'] = 'finished'
+
+
+        except Exception as e:
+            res['log'] = f"Errore nell'importazione ed esecuzione del modulo Python {nome_plugin}: {e}"
+            res['status'] = 'failed'
+
+    # Se il plugin è Bash
+    elif type == 'sh':
+        # Verifica che il file esista
+        percorso_file = FOLDER / nome_plugin
+
+        res['log'] = avvia_plugin_bash(percorso_file, vet_param)  # Esegui il plugin Bash
+        res['status'] = 'finished'
+    else:
+        res['log'] = "Tipo di plugin non supportato."
+        res['status'] = failed
+    return res
+
+
