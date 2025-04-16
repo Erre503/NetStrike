@@ -36,6 +36,7 @@ class PlugTable(db.Model):
     name = db.Column(db.String(64), nullable=False)
     params = db.Column(db.String(256), default="")
     description = db.Column(db.String(512), default="Il plugin non esiste")
+    permit  =db.Column(db.Interger(8), default=0 ,nullable=False)
 
     def __repr__(self):
         return '<Name %r>' % self.id
@@ -80,20 +81,22 @@ class Log(db.Model):
             'success': self.success,
             'result': self.result
         }
-
-# log:
-#   idLog : Integer
-#   dateLog : String       //data dell'esecuzione
-#   success : Boolean      //esito dell'attacco (riuscito? true:false)
-#   result : String        //Informazioni ottenute dall'attacco sul suo esito
-
+"""
+# ProgrammedTest:
+    idRoutine :
+    name : optional name for the routine
+    dateStart : start date of the routine
+    dateFinish : finish date of the routine
+    plugin : foreign key poiting to the table PlugTable id
+    frequence : frequence of the execution of the test expressed in days
+"""
 class ProgrammedTest(db.Model):
     __tablename__ = 'ProgrammedTest'
     idRoutine = db.Column(db.Integer, Sequence('routineId'), primary_key=True)
     name = db.Column(db.String(32))
     dateStart = db.Column(db.DateTime, nullable=False)
     dateFinish = db.Column(db.DateTime, nullable=False)
-    plugin = db.Column(db.Integer,ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
+    plugin = db.Column(db.Integer,ForeignKey('PlugTable.id', ondelete='CASCADE'), nullable=False)
     frequence = db.Column(db.Integer(255), default=0)
 
     def __repr__(self):
@@ -106,14 +109,19 @@ class ProgrammedTest(db.Model):
             'dateFinish': self.dateLog.strftime('%Y-%m-%d %H:%M:%S')        
         }
 
-
-
+"""
+# ProgrammedTest:
+    id : id of the user
+    name : name of the user
+    password : password of the user
+    type : role and type of privilage
+"""
 class Users(db.Model):
     __tablename__ = 'Users'
     id = db.Column(db.Integer, Sequence('userID'), primary_key=True)
     name = db.Column(db.String(64), nullable=False)
     password = db.Column(db.String(64), nullable=False)
-    type = db.Column(db.String(8), nullable=False)
+    type = db.Column(db.Interger(8), nullable=False)
 
     def __repr__(self):
         return '<Name %r>' % self.id
