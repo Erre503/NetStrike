@@ -1,8 +1,10 @@
 # Punto d'ingresso del servizio
+from numpy import integer
 from utils.security_functions import *
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import create_engine, Column, Integer, String, Sequence
+from sqlalchemy import Nullable, create_engine, Column, Integer, String, Sequence, false
+from sqlalchemy.orm import relationship
 from .plugin_loader import *
 import time
 import datetime
@@ -87,27 +89,41 @@ class Log(db.Model):
 
 class ProgrammedTest(db.Model):
     __tablename__ = 'ProgrammedTest'
-    __tablename__ = 'ProgrammedTest'
-    idLog = db.Column(db.Integer, Sequence('logId'), primary_key=True)
+    idRoutine = db.Column(db.Integer, Sequence('routineId'), primary_key=True)
     name = db.Column(db.String(32))
-    dateLog = db.Column(db.DateTime, nullable=False)
-    success = db.Column(db.Boolean, default=False)
-    result = db.Column(db.String(512), default="Il test non ha fornito risultati")
+    dateStart = db.Column(db.DateTime, nullable=False)
+    dateFinish = db.Column(db.DateTime, nullable=False)
+    plugin = db.Column(db.Integer,ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
+    frequence = db.Column(db.Integer(255), default=0)
 
     def __repr__(self):
-        return '<Name %r>' % self.idLog
+        return '<Name %r>' % self.idRoutine
 
-    def logList(self):
+    def routine(self):
         return {
-            'idLog': self.idLog,
-            'dateLog': self.dateLog.strftime('%Y-%m-%d %H:%M:%S')            
+            'routineId': self.idRoutine,
+            'dateStart': self.dateLog.strftime('%Y-%m-%d %H:%M:%S'),
+            'dateFinish': self.dateLog.strftime('%Y-%m-%d %H:%M:%S')        
         }
 
-    def logData(self):
+
+
+class Users(db.Model):
+    __tablename__ = 'Users'
+    id = db.Column(db.Integer, Sequence('userID'), primary_key=True)
+    name = db.Column(db.String(64), nullable=False)
+    password = db.Column(db.String(64), nullable=False)
+    type = db.Column(db.String(8), nullable=False)
+
+    def __repr__(self):
+        return '<Name %r>' % self.id
+
+    def list(self):
         return {
-            'success': self.success,
-            'result': self.result
+            'id': self.id,
+            'name': self.name
         }
+
 # Output di default
 
 # output di default all'accesso alla route del server con disclaimer
