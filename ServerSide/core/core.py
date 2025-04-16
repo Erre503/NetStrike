@@ -272,7 +272,6 @@ def plug_table_details(id=0,parametri=''):
 def modifyPlugin(id=0):
     plugin = PlugTable.query.get(id)
     data = request.get_json()
-    sanitize_dict(data)
     if data.description == None and data.name == None:
         logging.error(get_jwt_identity()+": Tried editing a plugin without sending parameters")
         return "nessun parametro passato"
