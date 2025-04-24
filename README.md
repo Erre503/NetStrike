@@ -1,6 +1,6 @@
 
-# NetStrike
-![NetStrikeLogo3](https://github.com/user-attachments/assets/00db6229-3905-4653-bfc0-c653079358ae)
+
+# ![NetStrikeLogo3](https://github.com/user-attachments/assets/00db6229-3905-4653-bfc0-c653079358ae)
 
 
 NetStrike is a remote script manager based on a client-server structure where the server executes the scripts when needed by the client.
