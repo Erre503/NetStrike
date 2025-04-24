@@ -1,6 +1,8 @@
 
 # NetStrike
 ![NetStrikeLogo3](https://github.com/user-attachments/assets/fb35bc1b-835b-4d34-9e95-103ee77d0b5b)
+
+
 NetStrike is a remote script manager based on a client-server structure where the server executes the scripts when needed by the client.
 
 The project was initially born for cyber-secuity purposes simulating attacks on a network, for this reason it is oriented to a secure dial structure  managing encryption and user autentication.
