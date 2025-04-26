@@ -24,16 +24,18 @@ jwt = JWTManager(app)
 last_update = round(time.time())
 # classi per le tabelle nel database:
 
-# plugTable:
-#   id : Integer
-#   name : String          //nome del plugin
-#   params : String        //parametri modificabili di un plugin
-#   description : String   //descrizione del plugin
+"""
+ plugTable:
+   id : Integer
+   name : String          //nome del plugin
+   params : String        //parametri modificabili di un plugin
+   description : String   //descrizione del plugin
+"""
 
 class PlugTable(db.Model):
     __tablename__ = 'plugTable'
     id = db.Column(db.Integer, Sequence('plugin_id_seq'), primary_key=True)
-    name = db.Column(db.String(64), nullable=False)
+    name = db.Column(db.String(64), nullable=False, unique=True)
     params = db.Column(db.String(256), default="")
     description = db.Column(db.String(512), default="Il plugin non esiste")
     permit  =db.Column(db.Interger(8), default=0 ,nullable=False)
@@ -52,13 +54,13 @@ class PlugTable(db.Model):
             'params': self.params,
             'description': self.description
         }
-
-# log:
-#   idLog : Integer
-#   dateLog : String       //data dell'esecuzione
-#   success : Boolean      //esito dell'attacco (riuscito? true:false)
-#   result : String        //Informazioni ottenute dall'attacco sul suo esito
-
+"""
+ log:
+   idLog : Integer
+   dateLog : String       //data dell'esecuzione
+   success : Boolean      //esito dell'attacco (riuscito? true:false)
+   result : String        //Informazioni ottenute dall'attacco sul suo esito
+"""
 class Log(db.Model):
     __tablename__ = 'Log'
     idLog = db.Column(db.Integer, Sequence('logId'), primary_key=True)
@@ -82,7 +84,7 @@ class Log(db.Model):
             'result': self.result
         }
 """
-# ProgrammedTest:
+ ProgrammedTest:
     idRoutine :
     name : optional name for the routine
     dateStart : start date of the routine
@@ -110,7 +112,7 @@ class ProgrammedTest(db.Model):
         }
 
 """
-# ProgrammedTest:
+# Users:
     id : id of the user
     name : name of the user
     password : password of the user
@@ -119,7 +121,7 @@ class ProgrammedTest(db.Model):
 class Users(db.Model):
     __tablename__ = 'Users'
     id = db.Column(db.Integer, Sequence('userID'), primary_key=True)
-    name = db.Column(db.String(64), nullable=False)
+    name = db.Column(db.String(64), nullable=False,unique=True)
     password = db.Column(db.String(64), nullable=False)
     type = db.Column(db.Interger(8), nullable=False)
 
