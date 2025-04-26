@@ -5,13 +5,13 @@
 
 NetStrike is a remote script manager based on a client-server architecture, where the server is responsible for executing scripts on demand from authenticated clients.
 
-The project was initially developed for cybersecurity purposes, enabling simulation of network attacks in a controlled environment.
-Because of this focus, NetStrike has been built with a strong emphasis on security, featuring encryption, secure authentication (JWT), and input validation.
+The project was initially developed for cybersecurity purposes, enabling the simulation of network attacks in a controlled environment.
+Due to this focus, NetStrike has been built with a strong emphasis on security, featuring encryption, secure authentication (JWT), and input validation.
 
 # Features
 -Upload and manage scripts remotely
 
--Supported script types: .py, .sh, .ps1 (future upgrade)
+-Supported script types: .py, .sh, .ps1 (PowerShell support coming in future upgrades)
 
 -Scheduled execution of scripts (future upgrade)
 
@@ -34,7 +34,7 @@ class Script(Interface_Script):
         self.keys = []
 
     def execute(self):
-        #The actual script
+        # The actual script
         return "Output"
 
     def get_param(self):
@@ -103,12 +103,12 @@ POST /login
 
 | Parameter | Type     | Description                |
 | :-------- | :------- | :------------------------- |
-| `token` | `string` | **Required**. Your JWT token|
+| `token` | `string` | **Required**. JWT token|
 
 ##### Example of request
 ```yaml
 GET /script_list
-Authorization: Bearer token
+Authorization: Bearer <token>
 ```
 
 ##### Example of response
@@ -126,12 +126,13 @@ Authorization: Bearer token
 
 | Parameter | Type     | Description                       |
 | :-------- | :------- | :-------------------------------- |
-| `script_name`      | `string` | **Required**. Name of item to fetch (without extension) |
+| `script_name`      | `string` | **Required**. Name of the script (without extension) |
+| `token` | `string` | **Required**. JWT token|
 
 ##### Example of request
 ```yaml
 GET /script_details/pythonScript
-Authorization: Bearer token
+Authorization: Bearer <token>
 ```
 
 ##### Example of response
@@ -139,6 +140,91 @@ Authorization: Bearer token
 {
   "description": "This script returns the status of every port of the specified host.", 
   "params": "ip_address"
+}
+```
+
+## Edit script
+
+```https
+  PATCH /edit_script/<script_name>
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `script_name`      | `string` | **Required**. Name of the script (without extension) |
+| `token` | `string` | **Required**. JWT token|
+| `name`      | `string` | **Required**. New name (set to None if it should not be changed) |
+| `description`      | `string` | **Required**. New description (set to None if it should not be changed) |
+
+##### Example of request
+```yaml
+PATCH /edit_script/pythonScript
+Authorization: Bearer <token>
+
+{
+  "name": <name>,
+  "description": <description>
+}
+```
+
+
+##### Example of response
+```yaml
+{}
+```
+
+## Remove script
+
+```https
+  DELETE /remove_script/<script_name>
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `script_name`      | `string` | **Required**. Name of the script (without extension) |
+| `token` | `string` | **Required**. JWT token|
+
+##### Example of request
+```yaml
+DELETE /remove_script/pythonScript
+Authorization: Bearer <token>
+```
+
+##### Example of response
+```yaml
+{}
+```
+
+## Execute script
+All parameters are required unless otherwise stated.
+The keys of the parameters in the body of the request must have the correct name (see 'get script description').
+```https
+  POST /execute/<script_name>
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `script_name`      | `string` | **Required**. Name of the script (without extension) |
+| `token` | `string` | **Required**. JWT token|
+| Request body      | `dictionary` | **Required**. Dictionary of parameters. The keys must match the expected names (see 'Get Script Description'). All parameters are required unless otherwise stated. |
+
+##### Example of request
+```yaml
+POST /execute/pythonScript
+Authorization: Bearer <token>
+
+{
+  "param1": "value",
+  "param2": "value"
+}
+```
+
+##### Example of response
+```yaml
+{
+  "date": "2025-04-14 18:51:30",
+  "result": "Output of pythonScript", 
+  "status": "finished"
 }
 ```
 
@@ -150,12 +236,12 @@ Authorization: Bearer token
 
 | Parameter | Type     | Description                |
 | :-------- | :------- | :------------------------- |
-| `token` | `string` | **Required**. Your JWT token|
+| `token` | `string` | **Required**. JWT token|
 
 ##### Example of request
 ```yaml
 GET /test_list
-Authorization: Bearer token
+Authorization: Bearer <token>
 ```
 
 ##### Example of response
@@ -174,11 +260,12 @@ Authorization: Bearer token
 | Parameter | Type     | Description                       |
 | :-------- | :------- | :-------------------------------- |
 | `test_name`      | `string` | **Required**. Name of item to fetch |
+| `token` | `string` | **Required**. JWT token|
 
 ##### Example of request
 ```yaml
 GET /test_details/Routine_test_3
-Authorization: Bearer token
+Authorization: Bearer <token>
 ```
 
 ##### Example of response
@@ -187,7 +274,7 @@ Authorization: Bearer token
   "name": "Routine_test_3",
   "date": "2025-04-14 18:51:30",
   "result": "Output of pythonScript", 
-  "success": True,
+  "status": "finished",
   "script_executed": "pythonScript"
 }
 ```
@@ -202,11 +289,12 @@ Authorization: Bearer token
 | :-------- | :------- | :-------------------------------- |
 | `list`      | `string` | **Required**. Type of resource to check. Must be either "plugin" or "test". |
 | `timestamp`      | `string` | **Required**. Name of item to fetch |
+| `token` | `string` | **Required**. JWT token|
 
 ##### Example of request
 ```yaml
 GET /notification/plugin/1745667165
-Authorization: Bearer token
+Authorization: Bearer <token>
 ```
 
 ##### Example of response
