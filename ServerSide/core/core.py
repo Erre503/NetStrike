@@ -30,7 +30,7 @@ last_update = round(time.time())
 class PlugTable(db.Model):
     __tablename__ = 'plugTable'
     id = db.Column(db.Integer, Sequence('plugin_id_seq'), primary_key=True)
-    name = db.Column(db.String(50), nullable=False)
+    name = db.Column(db.String(50), nullable=False, unique=True)
     params = db.Column(db.String(300), default="")
     description = db.Column(db.String(300), default="Il plugin non esiste")
 
@@ -222,11 +222,22 @@ def log():
         return "error 404"
     return jsonify([log_entries.logList()])
 
-@app.route("/set_routine", endpoint='set_routine', methods=["POST"])
+@app.route("/create_routine", endpoint='set_routine', methods=["POST"])
 @jwt_required()
 def set_routine():
-    pass
+    data = sanitize_dict(request.get_json())
 
+    frequency = data["frequency"]
+    #Check if frequency is accettable
+
+    first_execution_dt = data["first_dt"]
+    #Check if the first execution datetime is accettable
+
+    script = data["script"]
+    #Check if script exists
+
+    params = data["params"]
+    #Check if params are correct and complete
 
 # Update del Log
 def logUpdate(result):

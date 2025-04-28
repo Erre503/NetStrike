@@ -64146,3 +64146,664 @@ TypeError: The view function for 'edit_plugin' did not return a valid response. 
 2025-04-14 21:13:01,064 - DEBUG - https://127.0.0.1:5000 "GET /notification/1744661555 HTTP/1.1" 200 16
 2025-04-14 21:13:01,064 - DEBUG - Received response: {"update":-119}
 
+2025-04-28 19:55:54,420 - INFO - Application started.
+2025-04-28 19:55:54,420 - INFO - ClientCore initialized with server URL: https://127.0.0.1:5000
+2025-04-28 19:55:54,420 - INFO - Attempting to log in user: test
+2025-04-28 19:55:54,426 - DEBUG - Loading KWallet
+2025-04-28 19:55:54,427 - DEBUG - Loading SecretService
+2025-04-28 19:55:54,469 - DEBUG - Loading Windows
+2025-04-28 19:55:54,469 - DEBUG - Loading chainer
+2025-04-28 19:55:54,470 - DEBUG - Loading libsecret
+2025-04-28 19:55:54,470 - DEBUG - Loading macOS
+2025-04-28 19:55:54,547 - DEBUG - Sending POST request to https://127.0.0.1:5000/login
+2025-04-28 19:55:54,549 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 19:55:54,553 - DEBUG - https://127.0.0.1:5000 "POST /login HTTP/1.1" 200 349
+2025-04-28 19:55:54,563 - DEBUG - Received response
+2025-04-28 19:55:54,577 - INFO - User test logged in successfully.
+2025-04-28 19:55:54,577 - INFO - Starting polling for notifications.
+2025-04-28 19:55:54,577 - DEBUG - Polling for notifications...
+2025-04-28 19:55:54,587 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1745866554 with data: None
+2025-04-28 19:55:54,588 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 19:55:54,602 - DEBUG - https://127.0.0.1:5000 "GET /notification/1745866554 HTTP/1.1" 200 15
+2025-04-28 19:55:54,602 - DEBUG - Received response: {"update":-15}
+
+2025-04-28 19:55:54,733 - DEBUG - Sending GET request to https://127.0.0.1:5000/plugin_list with data: None
+2025-04-28 19:55:54,733 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 19:55:54,750 - DEBUG - https://127.0.0.1:5000 "GET /plugin_list HTTP/1.1" 200 57
+2025-04-28 19:55:54,750 - DEBUG - Received response: [{"id":2,"name":"ioSono.py"},{"id":3,"name":"hello.sh"}]
+
+2025-04-28 19:55:55,768 - DEBUG - Sending GET request to https://127.0.0.1:5000/plugin_details/3 with data: None
+2025-04-28 19:55:55,769 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 19:55:55,784 - DEBUG - https://127.0.0.1:5000 "GET /plugin_details/3 HTTP/1.1" 200 31
+2025-04-28 19:55:55,785 - DEBUG - Received response: {"description":"","params":""}
+
+2025-04-28 19:55:56,751 - DEBUG - Sending POST request to https://127.0.0.1:5000/test_execute/3 with data: {}
+2025-04-28 19:55:56,751 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 19:55:56,763 - DEBUG - https://127.0.0.1:5000 "POST /test_execute/3 HTTP/1.1" 200 90
+2025-04-28 19:55:56,803 - DEBUG - Received response: {"datetime":"Mon, 28 Apr 2025 19:55:56 GMT","log":"Hello, World! \n","status":"finished"}
+
+2025-04-28 19:55:59,607 - DEBUG - Polling for notifications...
+2025-04-28 19:55:59,619 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1745866555 with data: None
+2025-04-28 19:55:59,619 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 19:55:59,633 - DEBUG - https://127.0.0.1:5000 "GET /notification/1745866555 HTTP/1.1" 200 15
+2025-04-28 19:55:59,634 - DEBUG - Received response: {"update":-16}
+
+2025-04-28 20:44:40,691 - INFO - Application started.
+2025-04-28 20:44:40,691 - INFO - ClientCore initialized with server URL: https://127.0.0.1:5000
+2025-04-28 20:44:40,691 - INFO - Attempting to log in user: test
+2025-04-28 20:44:40,694 - DEBUG - Loading KWallet
+2025-04-28 20:44:40,695 - DEBUG - Loading SecretService
+2025-04-28 20:44:40,705 - DEBUG - Loading Windows
+2025-04-28 20:44:40,705 - DEBUG - Loading chainer
+2025-04-28 20:44:40,705 - DEBUG - Loading libsecret
+2025-04-28 20:44:40,706 - DEBUG - Loading macOS
+2025-04-28 20:44:40,752 - DEBUG - Sending POST request to https://127.0.0.1:5000/login
+2025-04-28 20:44:40,753 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 20:44:40,757 - DEBUG - https://127.0.0.1:5000 "POST /login HTTP/1.1" 200 349
+2025-04-28 20:44:40,767 - DEBUG - Received response
+2025-04-28 20:44:40,780 - INFO - User test logged in successfully.
+2025-04-28 20:44:40,780 - INFO - Starting polling for notifications.
+2025-04-28 20:44:40,781 - DEBUG - Polling for notifications...
+2025-04-28 20:44:40,791 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1745869481 with data: None
+2025-04-28 20:44:40,791 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 20:44:40,805 - DEBUG - https://127.0.0.1:5000 "GET /notification/1745869481 HTTP/1.1" 200 14
+2025-04-28 20:44:40,806 - DEBUG - Received response: {"update":-6}
+
+2025-04-28 20:44:40,936 - DEBUG - Sending GET request to https://127.0.0.1:5000/plugin_list with data: None
+2025-04-28 20:44:40,937 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 20:44:40,953 - DEBUG - https://127.0.0.1:5000 "GET /plugin_list HTTP/1.1" 200 57
+2025-04-28 20:44:40,953 - DEBUG - Received response: [{"id":2,"name":"ioSono.py"},{"id":3,"name":"hello.sh"}]
+
+2025-04-28 20:44:45,811 - DEBUG - Polling for notifications...
+2025-04-28 20:44:45,823 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1745869481 with data: None
+2025-04-28 20:44:45,824 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 20:44:45,838 - DEBUG - https://127.0.0.1:5000 "GET /notification/1745869481 HTTP/1.1" 200 14
+2025-04-28 20:44:45,838 - DEBUG - Received response: {"update":-6}
+
+2025-04-28 20:44:47,490 - DEBUG - Sending GET request to https://127.0.0.1:5000/plugin_details/3 with data: None
+2025-04-28 20:44:47,490 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 20:44:47,506 - DEBUG - https://127.0.0.1:5000 "GET /plugin_details/3 HTTP/1.1" 200 31
+2025-04-28 20:44:47,506 - DEBUG - Received response: {"description":"","params":""}
+
+2025-04-28 20:44:48,259 - DEBUG - Sending GET request to https://127.0.0.1:5000/plugin_details/2 with data: None
+2025-04-28 20:44:48,260 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 20:44:48,274 - DEBUG - https://127.0.0.1:5000 "GET /plugin_details/2 HTTP/1.1" 200 40
+2025-04-28 20:44:48,275 - DEBUG - Received response: {"description":"Ciao Aure","params":""}
+
+2025-04-28 20:44:50,839 - DEBUG - Polling for notifications...
+2025-04-28 20:44:50,852 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1745869481 with data: None
+2025-04-28 20:44:50,853 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 20:44:50,867 - DEBUG - https://127.0.0.1:5000 "GET /notification/1745869481 HTTP/1.1" 200 14
+2025-04-28 20:44:50,867 - DEBUG - Received response: {"update":-6}
+
+2025-04-28 20:44:52,451 - DEBUG - Sending GET request to https://127.0.0.1:5000/plugin_details/2 with data: None
+2025-04-28 20:44:52,452 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 20:44:52,466 - DEBUG - https://127.0.0.1:5000 "GET /plugin_details/2 HTTP/1.1" 200 40
+2025-04-28 20:44:52,467 - DEBUG - Received response: {"description":"Ciao Aure","params":""}
+
+2025-04-28 20:44:55,873 - DEBUG - Polling for notifications...
+2025-04-28 20:44:55,885 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1745869481 with data: None
+2025-04-28 20:44:55,886 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 20:44:55,900 - DEBUG - https://127.0.0.1:5000 "GET /notification/1745869481 HTTP/1.1" 200 14
+2025-04-28 20:44:55,900 - DEBUG - Received response: {"update":-6}
+
+2025-04-28 20:45:00,905 - DEBUG - Polling for notifications...
+2025-04-28 20:45:00,918 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1745869481 with data: None
+2025-04-28 20:45:00,919 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 20:45:00,933 - DEBUG - https://127.0.0.1:5000 "GET /notification/1745869481 HTTP/1.1" 200 14
+2025-04-28 20:45:00,933 - DEBUG - Received response: {"update":-6}
+
+2025-04-28 20:45:05,939 - DEBUG - Polling for notifications...
+2025-04-28 20:45:05,952 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1745869481 with data: None
+2025-04-28 20:45:05,953 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 20:45:05,967 - DEBUG - https://127.0.0.1:5000 "GET /notification/1745869481 HTTP/1.1" 200 14
+2025-04-28 20:45:05,967 - DEBUG - Received response: {"update":-6}
+
+2025-04-28 20:45:10,973 - DEBUG - Polling for notifications...
+2025-04-28 20:45:10,986 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1745869481 with data: None
+2025-04-28 20:45:10,987 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 20:45:11,000 - DEBUG - https://127.0.0.1:5000 "GET /notification/1745869481 HTTP/1.1" 200 14
+2025-04-28 20:45:11,001 - DEBUG - Received response: {"update":-6}
+
+2025-04-28 20:45:16,007 - DEBUG - Polling for notifications...
+2025-04-28 20:45:16,020 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1745869481 with data: None
+2025-04-28 20:45:16,021 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 20:45:16,035 - DEBUG - https://127.0.0.1:5000 "GET /notification/1745869481 HTTP/1.1" 200 14
+2025-04-28 20:45:16,035 - DEBUG - Received response: {"update":-6}
+
+2025-04-28 20:45:21,041 - DEBUG - Polling for notifications...
+2025-04-28 20:45:21,053 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1745869481 with data: None
+2025-04-28 20:45:21,054 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 20:45:21,068 - DEBUG - https://127.0.0.1:5000 "GET /notification/1745869481 HTTP/1.1" 200 14
+2025-04-28 20:45:21,069 - DEBUG - Received response: {"update":-6}
+
+2025-04-28 20:45:26,074 - DEBUG - Polling for notifications...
+2025-04-28 20:45:26,086 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1745869481 with data: None
+2025-04-28 20:45:26,087 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 20:45:26,101 - DEBUG - https://127.0.0.1:5000 "GET /notification/1745869481 HTTP/1.1" 200 14
+2025-04-28 20:45:26,101 - DEBUG - Received response: {"update":-6}
+
+2025-04-28 20:46:04,996 - INFO - Application started.
+2025-04-28 20:46:04,996 - INFO - ClientCore initialized with server URL: https://127.0.0.1:5000
+2025-04-28 20:46:04,996 - INFO - Attempting to log in user: test
+2025-04-28 20:46:04,999 - DEBUG - Loading KWallet
+2025-04-28 20:46:05,000 - DEBUG - Loading SecretService
+2025-04-28 20:46:05,008 - DEBUG - Loading Windows
+2025-04-28 20:46:05,009 - DEBUG - Loading chainer
+2025-04-28 20:46:05,009 - DEBUG - Loading libsecret
+2025-04-28 20:46:05,009 - DEBUG - Loading macOS
+2025-04-28 20:46:05,054 - DEBUG - Sending POST request to https://127.0.0.1:5000/login
+2025-04-28 20:46:05,055 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 20:46:05,059 - DEBUG - https://127.0.0.1:5000 "POST /login HTTP/1.1" 200 349
+2025-04-28 20:46:05,070 - DEBUG - Received response
+2025-04-28 20:46:05,082 - INFO - User test logged in successfully.
+2025-04-28 20:46:05,082 - INFO - Starting polling for notifications.
+2025-04-28 20:46:05,082 - DEBUG - Polling for notifications...
+2025-04-28 20:46:05,092 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1745869565 with data: None
+2025-04-28 20:46:05,093 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 20:46:05,107 - DEBUG - https://127.0.0.1:5000 "GET /notification/1745869565 HTTP/1.1" 200 14
+2025-04-28 20:46:05,108 - DEBUG - Received response: {"update":-8}
+
+2025-04-28 20:46:05,248 - DEBUG - Sending GET request to https://127.0.0.1:5000/plugin_list with data: None
+2025-04-28 20:46:05,249 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 20:46:05,265 - DEBUG - https://127.0.0.1:5000 "GET /plugin_list HTTP/1.1" 200 57
+2025-04-28 20:46:05,266 - DEBUG - Received response: [{"id":2,"name":"ioSono.py"},{"id":3,"name":"hello.sh"}]
+
+2025-04-28 20:46:10,113 - DEBUG - Polling for notifications...
+2025-04-28 20:46:10,126 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1745869565 with data: None
+2025-04-28 20:46:10,127 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 20:46:10,142 - DEBUG - https://127.0.0.1:5000 "GET /notification/1745869565 HTTP/1.1" 200 14
+2025-04-28 20:46:10,142 - DEBUG - Received response: {"update":-8}
+
+2025-04-28 20:46:15,168 - DEBUG - Polling for notifications...
+2025-04-28 20:46:15,180 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1745869565 with data: None
+2025-04-28 20:46:15,181 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 20:46:15,195 - DEBUG - https://127.0.0.1:5000 "GET /notification/1745869565 HTTP/1.1" 200 14
+2025-04-28 20:46:15,196 - DEBUG - Received response: {"update":-8}
+
+2025-04-28 20:46:20,221 - DEBUG - Polling for notifications...
+2025-04-28 20:46:20,234 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1745869565 with data: None
+2025-04-28 20:46:20,235 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 20:46:20,249 - DEBUG - https://127.0.0.1:5000 "GET /notification/1745869565 HTTP/1.1" 200 14
+2025-04-28 20:46:20,250 - DEBUG - Received response: {"update":-8}
+
+2025-04-28 20:46:25,275 - DEBUG - Polling for notifications...
+2025-04-28 20:46:25,287 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1745869565 with data: None
+2025-04-28 20:46:25,288 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 20:46:25,301 - DEBUG - https://127.0.0.1:5000 "GET /notification/1745869565 HTTP/1.1" 200 14
+2025-04-28 20:46:25,302 - DEBUG - Received response: {"update":-8}
+
+2025-04-28 20:46:30,327 - DEBUG - Polling for notifications...
+2025-04-28 20:46:30,339 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1745869565 with data: None
+2025-04-28 20:46:30,340 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 20:46:30,354 - DEBUG - https://127.0.0.1:5000 "GET /notification/1745869565 HTTP/1.1" 200 14
+2025-04-28 20:46:30,354 - DEBUG - Received response: {"update":-8}
+
+2025-04-28 20:46:35,379 - DEBUG - Polling for notifications...
+2025-04-28 20:46:35,390 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1745869565 with data: None
+2025-04-28 20:46:35,391 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 20:46:35,405 - DEBUG - https://127.0.0.1:5000 "GET /notification/1745869565 HTTP/1.1" 200 14
+2025-04-28 20:46:35,405 - DEBUG - Received response: {"update":-8}
+
+2025-04-28 20:46:40,431 - DEBUG - Polling for notifications...
+2025-04-28 20:46:40,443 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1745869565 with data: None
+2025-04-28 20:46:40,444 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 20:46:40,458 - DEBUG - https://127.0.0.1:5000 "GET /notification/1745869565 HTTP/1.1" 200 14
+2025-04-28 20:46:40,458 - DEBUG - Received response: {"update":-8}
+
+2025-04-28 20:46:45,467 - DEBUG - Polling for notifications...
+2025-04-28 20:46:45,480 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1745869565 with data: None
+2025-04-28 20:46:45,480 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 20:46:45,494 - DEBUG - https://127.0.0.1:5000 "GET /notification/1745869565 HTTP/1.1" 200 14
+2025-04-28 20:46:45,495 - DEBUG - Received response: {"update":-8}
+
+2025-04-28 20:46:50,521 - DEBUG - Polling for notifications...
+2025-04-28 20:46:50,533 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1745869565 with data: None
+2025-04-28 20:46:50,534 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 20:46:50,548 - DEBUG - https://127.0.0.1:5000 "GET /notification/1745869565 HTTP/1.1" 200 14
+2025-04-28 20:46:50,548 - DEBUG - Received response: {"update":-8}
+
+2025-04-28 20:46:55,574 - DEBUG - Polling for notifications...
+2025-04-28 20:46:55,586 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1745869565 with data: None
+2025-04-28 20:46:55,587 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 20:46:55,601 - DEBUG - https://127.0.0.1:5000 "GET /notification/1745869565 HTTP/1.1" 200 14
+2025-04-28 20:46:55,601 - DEBUG - Received response: {"update":-8}
+
+2025-04-28 20:47:00,616 - DEBUG - Polling for notifications...
+2025-04-28 20:47:00,629 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1745869565 with data: None
+2025-04-28 20:47:00,630 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 20:47:00,643 - DEBUG - https://127.0.0.1:5000 "GET /notification/1745869565 HTTP/1.1" 200 14
+2025-04-28 20:47:00,644 - DEBUG - Received response: {"update":-8}
+
+2025-04-28 20:47:05,649 - DEBUG - Polling for notifications...
+2025-04-28 20:47:05,663 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1745869565 with data: None
+2025-04-28 20:47:05,663 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 20:47:05,677 - DEBUG - https://127.0.0.1:5000 "GET /notification/1745869565 HTTP/1.1" 200 14
+2025-04-28 20:47:05,677 - DEBUG - Received response: {"update":-8}
+
+2025-04-28 20:47:15,748 - INFO - Application started.
+2025-04-28 20:47:15,748 - INFO - ClientCore initialized with server URL: https://127.0.0.1:5000
+2025-04-28 20:47:15,748 - INFO - Attempting to log in user: test
+2025-04-28 20:47:15,751 - DEBUG - Loading KWallet
+2025-04-28 20:47:15,751 - DEBUG - Loading SecretService
+2025-04-28 20:47:15,760 - DEBUG - Loading Windows
+2025-04-28 20:47:15,760 - DEBUG - Loading chainer
+2025-04-28 20:47:15,760 - DEBUG - Loading libsecret
+2025-04-28 20:47:15,761 - DEBUG - Loading macOS
+2025-04-28 20:47:15,805 - DEBUG - Sending POST request to https://127.0.0.1:5000/login
+2025-04-28 20:47:15,806 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 20:47:15,810 - DEBUG - https://127.0.0.1:5000 "POST /login HTTP/1.1" 200 349
+2025-04-28 20:47:15,820 - DEBUG - Received response
+2025-04-28 20:47:15,833 - INFO - User test logged in successfully.
+2025-04-28 20:47:15,833 - INFO - Starting polling for notifications.
+2025-04-28 20:47:15,834 - DEBUG - Polling for notifications...
+2025-04-28 20:47:15,844 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1745869636 with data: None
+2025-04-28 20:47:15,844 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 20:47:15,858 - DEBUG - https://127.0.0.1:5000 "GET /notification/1745869636 HTTP/1.1" 200 15
+2025-04-28 20:47:15,859 - DEBUG - Received response: {"update":-79}
+
+2025-04-28 20:47:16,002 - DEBUG - Sending GET request to https://127.0.0.1:5000/plugin_list with data: None
+2025-04-28 20:47:16,003 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 20:47:16,017 - DEBUG - https://127.0.0.1:5000 "GET /plugin_list HTTP/1.1" 200 57
+2025-04-28 20:47:16,018 - DEBUG - Received response: [{"id":2,"name":"ioSono.py"},{"id":3,"name":"hello.sh"}]
+
+2025-04-28 20:59:58,216 - INFO - Application started.
+2025-04-28 20:59:58,216 - INFO - ClientCore initialized with server URL: https://127.0.0.1:5000
+2025-04-28 20:59:58,217 - INFO - Attempting to log in user: test
+2025-04-28 20:59:58,219 - DEBUG - Loading KWallet
+2025-04-28 20:59:58,220 - DEBUG - Loading SecretService
+2025-04-28 20:59:58,228 - DEBUG - Loading Windows
+2025-04-28 20:59:58,229 - DEBUG - Loading chainer
+2025-04-28 20:59:58,229 - DEBUG - Loading libsecret
+2025-04-28 20:59:58,229 - DEBUG - Loading macOS
+2025-04-28 20:59:58,273 - DEBUG - Sending POST request to https://127.0.0.1:5000/login
+2025-04-28 20:59:58,274 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 20:59:58,278 - DEBUG - https://127.0.0.1:5000 "POST /login HTTP/1.1" 200 349
+2025-04-28 20:59:58,288 - DEBUG - Received response
+2025-04-28 20:59:58,301 - INFO - User test logged in successfully.
+2025-04-28 20:59:58,301 - INFO - Starting polling for notifications.
+2025-04-28 20:59:58,301 - DEBUG - Polling for notifications...
+2025-04-28 20:59:58,311 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1745870398 with data: None
+2025-04-28 20:59:58,312 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 20:59:58,326 - DEBUG - https://127.0.0.1:5000 "GET /notification/1745870398 HTTP/1.1" 200 16
+2025-04-28 20:59:58,327 - DEBUG - Received response: {"update":-841}
+
+2025-04-28 20:59:58,470 - DEBUG - Sending GET request to https://127.0.0.1:5000/plugin_list with data: None
+2025-04-28 20:59:58,471 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 20:59:58,485 - DEBUG - https://127.0.0.1:5000 "GET /plugin_list HTTP/1.1" 200 57
+2025-04-28 20:59:58,485 - DEBUG - Received response: [{"id":2,"name":"ioSono.py"},{"id":3,"name":"hello.sh"}]
+
+2025-04-28 21:00:01,500 - DEBUG - Sending GET request to https://127.0.0.1:5000/plugin_details/2 with data: None
+2025-04-28 21:00:01,501 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 21:00:01,517 - DEBUG - https://127.0.0.1:5000 "GET /plugin_details/2 HTTP/1.1" 200 40
+2025-04-28 21:00:01,517 - DEBUG - Received response: {"description":"Ciao Aure","params":""}
+
+2025-04-28 21:00:03,332 - DEBUG - Polling for notifications...
+2025-04-28 21:00:03,344 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1745870398 with data: None
+2025-04-28 21:00:03,345 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 21:00:03,359 - DEBUG - https://127.0.0.1:5000 "GET /notification/1745870398 HTTP/1.1" 200 16
+2025-04-28 21:00:03,359 - DEBUG - Received response: {"update":-841}
+
+2025-04-28 21:00:06,801 - DEBUG - Sending GET request to https://127.0.0.1:5000/plugin_details/2 with data: None
+2025-04-28 21:00:06,802 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 21:00:06,816 - DEBUG - https://127.0.0.1:5000 "GET /plugin_details/2 HTTP/1.1" 200 40
+2025-04-28 21:00:06,817 - DEBUG - Received response: {"description":"Ciao Aure","params":""}
+
+2025-04-28 21:00:08,365 - DEBUG - Polling for notifications...
+2025-04-28 21:00:08,377 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1745870398 with data: None
+2025-04-28 21:00:08,377 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 21:00:08,391 - DEBUG - https://127.0.0.1:5000 "GET /notification/1745870398 HTTP/1.1" 200 16
+2025-04-28 21:00:08,392 - DEBUG - Received response: {"update":-841}
+
+2025-04-28 21:00:13,397 - DEBUG - Polling for notifications...
+2025-04-28 21:00:13,410 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1745870398 with data: None
+2025-04-28 21:00:13,411 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 21:00:13,425 - DEBUG - https://127.0.0.1:5000 "GET /notification/1745870398 HTTP/1.1" 200 16
+2025-04-28 21:00:13,425 - DEBUG - Received response: {"update":-841}
+
+2025-04-28 21:07:22,485 - INFO - Application started.
+2025-04-28 21:07:22,485 - INFO - ClientCore initialized with server URL: https://127.0.0.1:5000
+2025-04-28 21:07:22,485 - INFO - Attempting to log in user: test
+2025-04-28 21:07:22,488 - DEBUG - Loading KWallet
+2025-04-28 21:07:22,488 - DEBUG - Loading SecretService
+2025-04-28 21:07:22,497 - DEBUG - Loading Windows
+2025-04-28 21:07:22,497 - DEBUG - Loading chainer
+2025-04-28 21:07:22,497 - DEBUG - Loading libsecret
+2025-04-28 21:07:22,498 - DEBUG - Loading macOS
+2025-04-28 21:07:22,543 - DEBUG - Sending POST request to https://127.0.0.1:5000/login
+2025-04-28 21:07:22,544 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 21:07:22,547 - DEBUG - https://127.0.0.1:5000 "POST /login HTTP/1.1" 200 349
+2025-04-28 21:07:22,558 - DEBUG - Received response
+2025-04-28 21:07:22,572 - INFO - User test logged in successfully.
+2025-04-28 21:07:22,572 - INFO - Starting polling for notifications.
+2025-04-28 21:07:22,572 - DEBUG - Polling for notifications...
+2025-04-28 21:07:22,582 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1745870842 with data: None
+2025-04-28 21:07:22,582 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 21:07:22,596 - DEBUG - https://127.0.0.1:5000 "GET /notification/1745870842 HTTP/1.1" 200 17
+2025-04-28 21:07:22,597 - DEBUG - Received response: {"update":-1285}
+
+2025-04-28 21:07:22,731 - DEBUG - Sending GET request to https://127.0.0.1:5000/plugin_list with data: None
+2025-04-28 21:07:22,732 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 21:07:22,746 - DEBUG - https://127.0.0.1:5000 "GET /plugin_list HTTP/1.1" 200 57
+2025-04-28 21:07:22,747 - DEBUG - Received response: [{"id":2,"name":"ioSono.py"},{"id":3,"name":"hello.sh"}]
+
+2025-04-28 21:07:25,605 - DEBUG - Sending GET request to https://127.0.0.1:5000/plugin_details/2 with data: None
+2025-04-28 21:07:25,606 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 21:07:25,620 - DEBUG - https://127.0.0.1:5000 "GET /plugin_details/2 HTTP/1.1" 200 40
+2025-04-28 21:07:25,621 - DEBUG - Received response: {"description":"Ciao Aure","params":""}
+
+2025-04-28 21:07:27,602 - DEBUG - Polling for notifications...
+2025-04-28 21:07:27,614 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1745870843 with data: None
+2025-04-28 21:07:27,615 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 21:07:27,629 - DEBUG - https://127.0.0.1:5000 "GET /notification/1745870843 HTTP/1.1" 200 17
+2025-04-28 21:07:27,630 - DEBUG - Received response: {"update":-1286}
+
+2025-04-28 21:08:25,404 - INFO - Application started.
+2025-04-28 21:08:25,404 - INFO - ClientCore initialized with server URL: https://127.0.0.1:5000
+2025-04-28 21:08:25,404 - INFO - Attempting to log in user: test
+2025-04-28 21:08:25,407 - DEBUG - Loading KWallet
+2025-04-28 21:08:25,408 - DEBUG - Loading SecretService
+2025-04-28 21:08:25,416 - DEBUG - Loading Windows
+2025-04-28 21:08:25,417 - DEBUG - Loading chainer
+2025-04-28 21:08:25,417 - DEBUG - Loading libsecret
+2025-04-28 21:08:25,417 - DEBUG - Loading macOS
+2025-04-28 21:08:25,461 - DEBUG - Sending POST request to https://127.0.0.1:5000/login
+2025-04-28 21:08:25,462 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 21:08:25,466 - DEBUG - https://127.0.0.1:5000 "POST /login HTTP/1.1" 200 349
+2025-04-28 21:08:25,476 - DEBUG - Received response
+2025-04-28 21:08:25,489 - INFO - User test logged in successfully.
+2025-04-28 21:08:25,489 - INFO - Starting polling for notifications.
+2025-04-28 21:08:25,489 - DEBUG - Polling for notifications...
+2025-04-28 21:08:25,499 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1745870905 with data: None
+2025-04-28 21:08:25,500 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 21:08:25,514 - DEBUG - https://127.0.0.1:5000 "GET /notification/1745870905 HTTP/1.1" 200 17
+2025-04-28 21:08:25,514 - DEBUG - Received response: {"update":-1348}
+
+2025-04-28 21:08:25,655 - DEBUG - Sending GET request to https://127.0.0.1:5000/plugin_list with data: None
+2025-04-28 21:08:25,656 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 21:08:25,670 - DEBUG - https://127.0.0.1:5000 "GET /plugin_list HTTP/1.1" 200 57
+2025-04-28 21:08:25,670 - DEBUG - Received response: [{"id":2,"name":"ioSono.py"},{"id":3,"name":"hello.sh"}]
+
+2025-04-28 21:08:27,490 - DEBUG - Sending GET request to https://127.0.0.1:5000/plugin_details/2 with data: None
+2025-04-28 21:08:27,491 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 21:08:27,506 - DEBUG - https://127.0.0.1:5000 "GET /plugin_details/2 HTTP/1.1" 200 40
+2025-04-28 21:08:27,506 - DEBUG - Received response: {"description":"Ciao Aure","params":""}
+
+2025-04-28 21:08:30,520 - DEBUG - Polling for notifications...
+2025-04-28 21:08:30,533 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1745870906 with data: None
+2025-04-28 21:08:30,533 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 21:08:30,548 - DEBUG - https://127.0.0.1:5000 "GET /notification/1745870906 HTTP/1.1" 200 17
+2025-04-28 21:08:30,548 - DEBUG - Received response: {"update":-1349}
+
+2025-04-28 21:08:47,826 - INFO - Application started.
+2025-04-28 21:08:47,826 - INFO - ClientCore initialized with server URL: https://127.0.0.1:5000
+2025-04-28 21:08:47,826 - INFO - Attempting to log in user: test
+2025-04-28 21:08:47,830 - DEBUG - Loading KWallet
+2025-04-28 21:08:47,830 - DEBUG - Loading SecretService
+2025-04-28 21:08:47,840 - DEBUG - Loading Windows
+2025-04-28 21:08:47,840 - DEBUG - Loading chainer
+2025-04-28 21:08:47,840 - DEBUG - Loading libsecret
+2025-04-28 21:08:47,840 - DEBUG - Loading macOS
+2025-04-28 21:08:47,884 - DEBUG - Sending POST request to https://127.0.0.1:5000/login
+2025-04-28 21:08:47,885 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 21:08:47,889 - DEBUG - https://127.0.0.1:5000 "POST /login HTTP/1.1" 200 349
+2025-04-28 21:08:47,899 - DEBUG - Received response
+2025-04-28 21:08:47,913 - INFO - User test logged in successfully.
+2025-04-28 21:08:47,913 - INFO - Starting polling for notifications.
+2025-04-28 21:08:47,913 - DEBUG - Polling for notifications...
+2025-04-28 21:08:47,923 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1745870928 with data: None
+2025-04-28 21:08:47,923 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 21:08:47,937 - DEBUG - https://127.0.0.1:5000 "GET /notification/1745870928 HTTP/1.1" 200 17
+2025-04-28 21:08:47,938 - DEBUG - Received response: {"update":-1371}
+
+2025-04-28 21:08:48,064 - DEBUG - Sending GET request to https://127.0.0.1:5000/plugin_list with data: None
+2025-04-28 21:08:48,065 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 21:08:48,079 - DEBUG - https://127.0.0.1:5000 "GET /plugin_list HTTP/1.1" 200 57
+2025-04-28 21:08:48,079 - DEBUG - Received response: [{"id":2,"name":"ioSono.py"},{"id":3,"name":"hello.sh"}]
+
+2025-04-28 21:08:49,293 - DEBUG - Sending GET request to https://127.0.0.1:5000/plugin_details/2 with data: None
+2025-04-28 21:08:49,294 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 21:08:49,309 - DEBUG - https://127.0.0.1:5000 "GET /plugin_details/2 HTTP/1.1" 200 40
+2025-04-28 21:08:49,309 - DEBUG - Received response: {"description":"Ciao Aure","params":""}
+
+2025-04-28 21:08:52,943 - DEBUG - Polling for notifications...
+2025-04-28 21:08:52,955 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1745870928 with data: None
+2025-04-28 21:08:52,956 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 21:08:52,970 - DEBUG - https://127.0.0.1:5000 "GET /notification/1745870928 HTTP/1.1" 200 17
+2025-04-28 21:08:52,970 - DEBUG - Received response: {"update":-1371}
+
+2025-04-28 21:10:22,640 - INFO - Application started.
+2025-04-28 21:10:22,640 - INFO - ClientCore initialized with server URL: https://127.0.0.1:5000
+2025-04-28 21:10:22,640 - INFO - Attempting to log in user: test
+2025-04-28 21:10:22,644 - DEBUG - Loading KWallet
+2025-04-28 21:10:22,644 - DEBUG - Loading SecretService
+2025-04-28 21:10:22,653 - DEBUG - Loading Windows
+2025-04-28 21:10:22,654 - DEBUG - Loading chainer
+2025-04-28 21:10:22,654 - DEBUG - Loading libsecret
+2025-04-28 21:10:22,654 - DEBUG - Loading macOS
+2025-04-28 21:10:22,698 - DEBUG - Sending POST request to https://127.0.0.1:5000/login
+2025-04-28 21:10:22,699 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 21:10:22,703 - DEBUG - https://127.0.0.1:5000 "POST /login HTTP/1.1" 200 349
+2025-04-28 21:10:22,713 - DEBUG - Received response
+2025-04-28 21:10:22,726 - INFO - User test logged in successfully.
+2025-04-28 21:10:22,726 - INFO - Starting polling for notifications.
+2025-04-28 21:10:22,726 - DEBUG - Polling for notifications...
+2025-04-28 21:10:22,736 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1745871023 with data: None
+2025-04-28 21:10:22,736 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 21:10:22,750 - DEBUG - https://127.0.0.1:5000 "GET /notification/1745871023 HTTP/1.1" 200 17
+2025-04-28 21:10:22,750 - DEBUG - Received response: {"update":-1466}
+
+2025-04-28 21:10:22,879 - DEBUG - Sending GET request to https://127.0.0.1:5000/plugin_list with data: None
+2025-04-28 21:10:22,880 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 21:10:22,894 - DEBUG - https://127.0.0.1:5000 "GET /plugin_list HTTP/1.1" 200 57
+2025-04-28 21:10:22,895 - DEBUG - Received response: [{"id":2,"name":"ioSono.py"},{"id":3,"name":"hello.sh"}]
+
+2025-04-28 21:10:24,037 - DEBUG - Sending GET request to https://127.0.0.1:5000/plugin_details/2 with data: None
+2025-04-28 21:10:24,037 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 21:10:24,052 - DEBUG - https://127.0.0.1:5000 "GET /plugin_details/2 HTTP/1.1" 200 40
+2025-04-28 21:10:24,052 - DEBUG - Received response: {"description":"Ciao Aure","params":""}
+
+2025-04-28 21:10:27,755 - DEBUG - Polling for notifications...
+2025-04-28 21:10:27,767 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1745871023 with data: None
+2025-04-28 21:10:27,768 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 21:10:27,782 - DEBUG - https://127.0.0.1:5000 "GET /notification/1745871023 HTTP/1.1" 200 17
+2025-04-28 21:10:27,782 - DEBUG - Received response: {"update":-1466}
+
+2025-04-28 21:10:32,788 - DEBUG - Polling for notifications...
+2025-04-28 21:10:32,801 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1745871023 with data: None
+2025-04-28 21:10:32,801 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 21:10:32,815 - DEBUG - https://127.0.0.1:5000 "GET /notification/1745871023 HTTP/1.1" 200 17
+2025-04-28 21:10:32,815 - DEBUG - Received response: {"update":-1466}
+
+2025-04-28 21:10:37,821 - DEBUG - Polling for notifications...
+2025-04-28 21:10:37,833 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1745871023 with data: None
+2025-04-28 21:10:37,834 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 21:10:37,848 - DEBUG - https://127.0.0.1:5000 "GET /notification/1745871023 HTTP/1.1" 200 17
+2025-04-28 21:10:37,849 - DEBUG - Received response: {"update":-1466}
+
+2025-04-28 21:10:42,852 - DEBUG - Polling for notifications...
+2025-04-28 21:10:42,864 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1745871023 with data: None
+2025-04-28 21:10:42,865 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 21:10:42,879 - DEBUG - https://127.0.0.1:5000 "GET /notification/1745871023 HTTP/1.1" 200 17
+2025-04-28 21:10:42,880 - DEBUG - Received response: {"update":-1466}
+
+2025-04-28 21:10:47,885 - DEBUG - Polling for notifications...
+2025-04-28 21:10:47,898 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1745871023 with data: None
+2025-04-28 21:10:47,899 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 21:10:47,913 - DEBUG - https://127.0.0.1:5000 "GET /notification/1745871023 HTTP/1.1" 200 17
+2025-04-28 21:10:47,913 - DEBUG - Received response: {"update":-1466}
+
+2025-04-28 21:10:52,918 - DEBUG - Polling for notifications...
+2025-04-28 21:10:52,931 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1745871023 with data: None
+2025-04-28 21:10:52,932 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 21:10:52,946 - DEBUG - https://127.0.0.1:5000 "GET /notification/1745871023 HTTP/1.1" 200 17
+2025-04-28 21:10:52,946 - DEBUG - Received response: {"update":-1466}
+
+2025-04-28 21:10:57,952 - DEBUG - Polling for notifications...
+2025-04-28 21:10:57,964 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1745871023 with data: None
+2025-04-28 21:10:57,965 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 21:10:57,979 - DEBUG - https://127.0.0.1:5000 "GET /notification/1745871023 HTTP/1.1" 200 17
+2025-04-28 21:10:57,979 - DEBUG - Received response: {"update":-1466}
+
+2025-04-28 21:11:02,985 - DEBUG - Polling for notifications...
+2025-04-28 21:11:02,998 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1745871023 with data: None
+2025-04-28 21:11:02,999 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 21:11:03,012 - DEBUG - https://127.0.0.1:5000 "GET /notification/1745871023 HTTP/1.1" 200 17
+2025-04-28 21:11:03,013 - DEBUG - Received response: {"update":-1466}
+
+2025-04-28 21:11:08,018 - DEBUG - Polling for notifications...
+2025-04-28 21:11:08,031 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1745871023 with data: None
+2025-04-28 21:11:08,032 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 21:11:08,046 - DEBUG - https://127.0.0.1:5000 "GET /notification/1745871023 HTTP/1.1" 200 17
+2025-04-28 21:11:08,046 - DEBUG - Received response: {"update":-1466}
+
+2025-04-28 21:11:13,052 - DEBUG - Polling for notifications...
+2025-04-28 21:11:13,064 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1745871023 with data: None
+2025-04-28 21:11:13,065 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 21:11:13,079 - DEBUG - https://127.0.0.1:5000 "GET /notification/1745871023 HTTP/1.1" 200 17
+2025-04-28 21:11:13,079 - DEBUG - Received response: {"update":-1466}
+
+2025-04-28 21:11:18,085 - DEBUG - Polling for notifications...
+2025-04-28 21:11:18,097 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1745871023 with data: None
+2025-04-28 21:11:18,098 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 21:11:18,112 - DEBUG - https://127.0.0.1:5000 "GET /notification/1745871023 HTTP/1.1" 200 17
+2025-04-28 21:11:18,113 - DEBUG - Received response: {"update":-1466}
+
+2025-04-28 21:11:23,118 - DEBUG - Polling for notifications...
+2025-04-28 21:11:23,130 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1745871023 with data: None
+2025-04-28 21:11:23,131 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 21:11:23,145 - DEBUG - https://127.0.0.1:5000 "GET /notification/1745871023 HTTP/1.1" 200 17
+2025-04-28 21:11:23,146 - DEBUG - Received response: {"update":-1466}
+
+2025-04-28 21:11:28,151 - DEBUG - Polling for notifications...
+2025-04-28 21:11:28,163 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1745871023 with data: None
+2025-04-28 21:11:28,164 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 21:11:28,178 - DEBUG - https://127.0.0.1:5000 "GET /notification/1745871023 HTTP/1.1" 200 17
+2025-04-28 21:11:28,179 - DEBUG - Received response: {"update":-1466}
+
+2025-04-28 21:11:33,184 - DEBUG - Polling for notifications...
+2025-04-28 21:11:33,196 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1745871023 with data: None
+2025-04-28 21:11:33,197 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 21:11:33,211 - DEBUG - https://127.0.0.1:5000 "GET /notification/1745871023 HTTP/1.1" 200 17
+2025-04-28 21:11:33,211 - DEBUG - Received response: {"update":-1466}
+
+2025-04-28 21:11:38,212 - DEBUG - Polling for notifications...
+2025-04-28 21:11:38,224 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1745871023 with data: None
+2025-04-28 21:11:38,225 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 21:11:38,239 - DEBUG - https://127.0.0.1:5000 "GET /notification/1745871023 HTTP/1.1" 200 17
+2025-04-28 21:11:38,239 - DEBUG - Received response: {"update":-1466}
+
+2025-04-28 21:11:43,245 - DEBUG - Polling for notifications...
+2025-04-28 21:11:43,257 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1745871023 with data: None
+2025-04-28 21:11:43,258 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 21:11:43,272 - DEBUG - https://127.0.0.1:5000 "GET /notification/1745871023 HTTP/1.1" 200 17
+2025-04-28 21:11:43,273 - DEBUG - Received response: {"update":-1466}
+
+2025-04-28 21:11:48,278 - DEBUG - Polling for notifications...
+2025-04-28 21:11:48,290 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1745871023 with data: None
+2025-04-28 21:11:48,290 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 21:11:48,304 - DEBUG - https://127.0.0.1:5000 "GET /notification/1745871023 HTTP/1.1" 200 17
+2025-04-28 21:11:48,305 - DEBUG - Received response: {"update":-1466}
+
+2025-04-28 21:11:53,310 - DEBUG - Polling for notifications...
+2025-04-28 21:11:53,322 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1745871023 with data: None
+2025-04-28 21:11:53,323 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 21:11:53,337 - DEBUG - https://127.0.0.1:5000 "GET /notification/1745871023 HTTP/1.1" 200 17
+2025-04-28 21:11:53,337 - DEBUG - Received response: {"update":-1466}
+
+2025-04-28 21:11:58,343 - DEBUG - Polling for notifications...
+2025-04-28 21:11:58,355 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1745871023 with data: None
+2025-04-28 21:11:58,356 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 21:11:58,370 - DEBUG - https://127.0.0.1:5000 "GET /notification/1745871023 HTTP/1.1" 200 17
+2025-04-28 21:11:58,370 - DEBUG - Received response: {"update":-1466}
+
+2025-04-28 21:12:03,376 - DEBUG - Polling for notifications...
+2025-04-28 21:12:03,388 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1745871023 with data: None
+2025-04-28 21:12:03,389 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 21:12:03,403 - DEBUG - https://127.0.0.1:5000 "GET /notification/1745871023 HTTP/1.1" 200 17
+2025-04-28 21:12:03,403 - DEBUG - Received response: {"update":-1466}
+
+2025-04-28 21:12:08,409 - DEBUG - Polling for notifications...
+2025-04-28 21:12:08,421 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1745871023 with data: None
+2025-04-28 21:12:08,422 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 21:12:08,436 - DEBUG - https://127.0.0.1:5000 "GET /notification/1745871023 HTTP/1.1" 200 17
+2025-04-28 21:12:08,436 - DEBUG - Received response: {"update":-1466}
+
+2025-04-28 21:12:13,441 - DEBUG - Polling for notifications...
+2025-04-28 21:12:13,453 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1745871023 with data: None
+2025-04-28 21:12:13,454 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 21:12:13,468 - DEBUG - https://127.0.0.1:5000 "GET /notification/1745871023 HTTP/1.1" 200 17
+2025-04-28 21:12:13,468 - DEBUG - Received response: {"update":-1466}
+
+2025-04-28 21:12:15,546 - DEBUG - Sending PATCH request to https://127.0.0.1:5000/edit_plugin/2 with data: {'name': '', 'description': 'Ciao'}
+2025-04-28 21:12:15,546 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 21:12:15,557 - DEBUG - https://127.0.0.1:5000 "PATCH /edit_plugin/2 HTTP/1.1" 500 265
+2025-04-28 21:12:15,567 - DEBUG - Received response: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+
+2025-04-28 21:12:15,567 - ERROR - Error 500: <!doctype html>
+<html lang=en>
+<title>500 Internal Server Error</title>
+<h1>Internal Server Error</h1>
+<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+
+2025-04-28 21:12:15,582 - DEBUG - Sending GET request to https://127.0.0.1:5000/plugin_list with data: None
+2025-04-28 21:12:15,582 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 21:12:15,596 - DEBUG - https://127.0.0.1:5000 "GET /plugin_list HTTP/1.1" 200 57
+2025-04-28 21:12:15,597 - DEBUG - Received response: [{"id":2,"name":"ioSono.py"},{"id":3,"name":"hello.sh"}]
+
+2025-04-28 21:12:17,062 - DEBUG - Sending GET request to https://127.0.0.1:5000/plugin_details/2 with data: None
+2025-04-28 21:12:17,063 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 21:12:17,077 - DEBUG - https://127.0.0.1:5000 "GET /plugin_details/2 HTTP/1.1" 200 35
+2025-04-28 21:12:17,078 - DEBUG - Received response: {"description":"Ciao","params":""}
+
+2025-04-28 21:12:17,678 - DEBUG - Sending GET request to https://127.0.0.1:5000/plugin_details/3 with data: None
+2025-04-28 21:12:17,679 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 21:12:17,694 - DEBUG - https://127.0.0.1:5000 "GET /plugin_details/3 HTTP/1.1" 200 31
+2025-04-28 21:12:17,694 - DEBUG - Received response: {"description":"","params":""}
+
+2025-04-28 21:12:18,061 - DEBUG - Sending GET request to https://127.0.0.1:5000/plugin_details/2 with data: None
+2025-04-28 21:12:18,062 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 21:12:18,077 - DEBUG - https://127.0.0.1:5000 "GET /plugin_details/2 HTTP/1.1" 200 35
+2025-04-28 21:12:18,077 - DEBUG - Received response: {"description":"Ciao","params":""}
+
+2025-04-28 21:12:18,474 - DEBUG - Polling for notifications...
+2025-04-28 21:12:18,486 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1745871136 with data: None
+2025-04-28 21:12:18,487 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 21:12:18,501 - DEBUG - https://127.0.0.1:5000 "GET /notification/1745871136 HTTP/1.1" 200 17
+2025-04-28 21:12:18,501 - DEBUG - Received response: {"update":-1579}
+
+2025-04-28 21:12:24,383 - INFO - Application started.
+2025-04-28 21:12:24,383 - INFO - ClientCore initialized with server URL: https://127.0.0.1:5000
+2025-04-28 21:12:24,383 - INFO - Attempting to log in user: test
+2025-04-28 21:12:24,386 - DEBUG - Loading KWallet
+2025-04-28 21:12:24,387 - DEBUG - Loading SecretService
+2025-04-28 21:12:24,396 - DEBUG - Loading Windows
+2025-04-28 21:12:24,396 - DEBUG - Loading chainer
+2025-04-28 21:12:24,396 - DEBUG - Loading libsecret
+2025-04-28 21:12:24,397 - DEBUG - Loading macOS
+2025-04-28 21:12:24,441 - DEBUG - Sending POST request to https://127.0.0.1:5000/login
+2025-04-28 21:12:24,442 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 21:12:24,446 - DEBUG - https://127.0.0.1:5000 "POST /login HTTP/1.1" 200 349
+2025-04-28 21:12:24,456 - DEBUG - Received response
+2025-04-28 21:12:24,471 - INFO - User test logged in successfully.
+2025-04-28 21:12:24,471 - INFO - Starting polling for notifications.
+2025-04-28 21:12:24,472 - DEBUG - Polling for notifications...
+2025-04-28 21:12:24,482 - DEBUG - Sending GET request to https://127.0.0.1:5000/notification/1745871144 with data: None
+2025-04-28 21:12:24,483 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 21:12:24,496 - DEBUG - https://127.0.0.1:5000 "GET /notification/1745871144 HTTP/1.1" 200 17
+2025-04-28 21:12:24,497 - DEBUG - Received response: {"update":-1587}
+
+2025-04-28 21:12:24,633 - DEBUG - Sending GET request to https://127.0.0.1:5000/plugin_list with data: None
+2025-04-28 21:12:24,634 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 21:12:24,648 - DEBUG - https://127.0.0.1:5000 "GET /plugin_list HTTP/1.1" 200 57
+2025-04-28 21:12:24,649 - DEBUG - Received response: [{"id":2,"name":"ioSono.py"},{"id":3,"name":"hello.sh"}]
+
+2025-04-28 21:12:25,468 - DEBUG - Sending GET request to https://127.0.0.1:5000/plugin_details/2 with data: None
+2025-04-28 21:12:25,469 - DEBUG - Starting new HTTPS connection (1): 127.0.0.1:5000
+2025-04-28 21:12:25,484 - DEBUG - https://127.0.0.1:5000 "GET /plugin_details/2 HTTP/1.1" 200 35
+2025-04-28 21:12:25,484 - DEBUG - Received response: {"description":"Ciao","params":""}
+

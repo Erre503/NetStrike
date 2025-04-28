@@ -357,8 +357,8 @@ class ClientCore:
         frequenza(int): Numero di giorni ogni quanto eseguire il plugin specificato.
         primo_dt(datetime): Giorno e orario della prima esecuzione (le successiva avverrano sempre allo stesso orario)
     """
-    def crea_routine(self, id_plugin, parametri, frequenza, primo_dt):
-        risultati = self.invia_richiesta('/set_routine', 'POST', {'id_plugin':id_plugin, 'parametri':parametri, 'frequenza':frequenza, 'primo_dt':primo_dt})
+    def crea_routine(self, id_plugin, params, frequency, first_dt):
+        risultati = self.invia_richiesta('/create_routine', 'POST', {'script':id_plugin, 'params':params, 'frequency':frequency, 'first_dt':first_dt})
         if risultati:
             self.aggiorna_ui(risultati, UpdateType.RISULTATI_TEST)
 

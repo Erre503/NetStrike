@@ -96,6 +96,9 @@ class MainInterfaccia(ctk.CTkFrame):
         self.bottoneStart = ctk.CTkButton(self.frameDX, text="START TEST",corner_radius=8, command=self.iniziaTest)
         self.bottoneStart.pack(pady=10)
 
+        self.bottoneRoutine = ctk.CTkButton(self.frameDX, text="CREATE ROUTINE TEST",corner_radius=8, command=self.creaRoutine)
+        self.bottoneRoutine.pack(pady=10)
+
 
         self.aggiornaListaPlugin()
 
@@ -214,42 +217,56 @@ class MainInterfaccia(ctk.CTkFrame):
             messagebox.showerror("Error", f"Errore nella rimozione del plug-in: {e}")
 
 
-    def configuraTest(self):
+    def configuraTest(self, edit=True):
         if self.plugin_selezionato is None:
             messagebox.showwarning("Nessun plugin selezionato", "Seleziona un plugin prima di configurare il test.")
             return
 
         # Create the configuration window
-        finestraConfig = ctk.CTkToplevel(self.finestraPrincipale)
-        finestraConfig.title(f"Configurazione di: {self.plugin_selezionato}")
-        finestraConfig.geometry("400x400")
-        finestraConfig.resizable(False, False)
+        finestraRoutine = ctk.CTkToplevel(self.finestraPrincipale)
+        finestraRoutine.title("CREAZIONE ROUTINE")
+        finestraRoutine.geometry("1000x1000")
+        finestraRoutine.resizable(False, False)
 
         # Ensure the window is visible and ready
-        finestraConfig.deiconify()
-        finestraConfig.update_idletasks()  # Force window to process pending events
+        finestraRoutine.deiconify()
+        finestraRoutine.update_idletasks()  # Force window to process pending events
 
         # Delay the grab_set to ensure the window is fully viewable
-        finestraConfig.after(100, finestraConfig.grab_set)  # <-- Fix here
+        finestraRoutine.after(100, finestraRoutine.grab_set)
 
-        # Add widgets to the window
-        ctk.CTkLabel(finestraConfig, text="TEST PARAMETERS").pack(pady=10)
+        # Frequency
+        ctk.CTkLabel(finestraRoutine, text="FREQUENCY").pack(pady=10)
+        frequencyFrame = ctk.CTkFrame(master=finestraRoutine).pack(fill="x", pady=1)
+        frequency = ctk.CTkEntry(master=frequencyFrame).pack(side="left", fill="x", expand=True)
+
+        # First dt
+        ctk.CTkLabel(finestraRoutine, text="FIRST DATETIME").pack(pady=10)
+        first_dtFrame = ctk.CTkFrame(master=finestraRoutine).pack(fill="x", pady=1)
+        first_dt = ctk.CTkEntry(master=first_dtFrame).pack(side="left", fill="x", expand=True)
+
+        # Params
+        ctk.CTkLabel(finestraRoutine, text="PARAMETERS").pack(pady=10)
         plugin_params = self.coreApplicazione.ottieniListaPlugin()
-        parametri_input = {}
+        params = {}
 
         for param in plugin_params:
-            frameCampoInput = ctk.CTkFrame(master=finestraConfig)
+            frameCampoInput = ctk.CTkFrame(master=finestraRoutine)
             frameCampoInput.pack(fill="x", pady=5)
             labelNomeCampo = ctk.CTkLabel(master=frameCampoInput, text=f"Campo: {param}")
             labelNomeCampo.pack(side="left", padx=10)
             valoreInseritoInput = ctk.CTkEntry(master=frameCampoInput)
             valoreInseritoInput.pack(side="left", fill="x", expand=True)
-            parametri_input[param] = valoreInseritoInput
-        ctk.CTkButton(finestraConfig, text="Submit", command=submitParametri).pack(pady=20)
+            params[param] = valoreInseritoInput
+        ctk.CTkButton(finestraRoutine, text="Submit", command=submit).pack(pady=20)
 
 
-        def submitParametri():
-            finestraConfig.destroy()
+        def submit():
+            if(edit):
+                pass
+            else:
+                coreApplicazione.crea_routine(params, frequency, first_dt)
+            finestraRoutine.destroy()
 
 
     def iniziaTest(self):
@@ -266,6 +283,10 @@ class MainInterfaccia(ctk.CTkFrame):
     def aggiungiPlugin(self, name, idPlugin):
         self.plugin_files[name] = {'id': idPlugin}
         self.aggiornaListaPlugin()
+
+    def creaRoutine(self):
+        self.configuraTest(False)
+
 
 
     def cambiaView(self):
