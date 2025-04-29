@@ -295,13 +295,13 @@ class ClientCore:
         - Invia una richiesta POST all'endpoint '/upload_plugin'.
     """
 
-    def aggiungi_plugin(self, file_path):
+    def aggiungi_elemento(self, file_path):
         try:
             with open(file_path, 'r') as file:
                 name = os.path.basename(file_path)
                 parts = name.split('.')
                 if len(parts) == 2 and sf.is_valid_input(parts[0]):
-                    self.invia_richiesta('/upload_plugin', 'POST', {'content': file.read(), 'name': name}, False)
+                    self.invia_richiesta('/upload_plugin', 'POST', {'content': file.read(), 'name': name}, sanitize=False)
                 else:
                     logging.error("Nome file contiene valori non consentiti.")
 

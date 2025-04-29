@@ -237,13 +237,17 @@ class MainInterfaccia(ctk.CTkFrame):
 
         # Frequency
         ctk.CTkLabel(finestraRoutine, text="FREQUENCY").pack(pady=10)
-        frequencyFrame = ctk.CTkFrame(master=finestraRoutine).pack(fill="x", pady=1)
-        frequency = ctk.CTkEntry(master=frequencyFrame).pack(side="left", fill="x", expand=True)
+        frequencyFrame = ctk.CTkFrame(master=finestraRoutine)
+        frequencyFrame.pack(fill="x", pady=1)
+        frequency = ctk.CTkEntry(master=frequencyFrame)
+        frequency.pack(side="left", fill="x", expand=True)
 
         # First dt
         ctk.CTkLabel(finestraRoutine, text="FIRST DATETIME").pack(pady=10)
-        first_dtFrame = ctk.CTkFrame(master=finestraRoutine).pack(fill="x", pady=1)
-        first_dt = ctk.CTkEntry(master=first_dtFrame).pack(side="left", fill="x", expand=True)
+        first_dtFrame = ctk.CTkFrame(master=finestraRoutine)
+        first_dtFrame.pack(fill="x", pady=1)
+        first_dt = ctk.CTkEntry(master=first_dtFrame)
+        first_dt.pack(side="left", fill="x", expand=True)
 
         # Params
         ctk.CTkLabel(finestraRoutine, text="PARAMETERS").pack(pady=10)

@@ -1,6 +1,6 @@
 # Punto d'ingresso del servizio
 from utilities.security_functions import *
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, abort
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String, Sequence
 from core.plugin_loader import *
@@ -120,7 +120,7 @@ def plug_table_details(id=0):
     plugin = PlugTable.query.get(id)  # gestione dell'id tramite il metodo http GET
     if plugin is None:
         return "error 404, no such plugin has been found"
-    return jsonify(plugin.get_description())  # Use the renamed method
+    return jsonify(plugin.get_description())
 
 @app.route("/test_list", endpoint='test_list', methods=["GET"])
 @jwt_required()
@@ -154,12 +154,17 @@ def new_plugin():
     if not data or 'name' not in data:
         return jsonify({"error": "Invalid record"}), 404
 
-    created = creaPlugin(data['name'], data['content'])
-    if created:
+    arr = creaPlugin(data['name'], data['content'])
+    #res = arr[0]
+    #print(f"PARAMS CORE-S: {res}")
+    res = ''
+    success = arr
+    print(success)
+    if success:
         # Create a new plugin instance
         new_plugin = PlugTable(
             name=data['name'],
-            params='',  # DEBUG
+            params=res,  # DEBUG
             description=''  # DEBUG
         )
         # Add the new plugin to the database
@@ -168,7 +173,7 @@ def new_plugin():
         last_update = round(time.time())
         print("Updated time: "+str(last_update))
         # Return a success response
-        return jsonify({"message": "Plugin uploaded successfully"}), 201
+        return jsonify({"message": "Plugin uploaded successfully"}), 200
     else:
         return jsonify({"error": "Error during creation"}), 404
 
@@ -206,11 +211,16 @@ def modifyPlugin(id=0):
 @app.route("/remove_plugin/<int:id>", endpoint='remove_plugin', methods=["GET"])
 def modifyPlugin(id=0):
     plugin = PlugTable.query.get(id)
-    if plugin and elimina_plugin(plugin.name):
+    
+    if not plugin:
+        abort(404, description="Plugin not found")  # Return 404 if plugin does not exist
+
+    if elimina_plugin(plugin.name):
         PlugTable.query.filter_by(id=id).delete()
         db.session.commit()
-        return "200"
-    return "500"
+        return jsonify({"message": "Plugin removed successfully"}), 200  # Return a JSON response with status 200
+
+    abort(500, description="Failed to remove the plugin")  # Return 500 if elimina_plugin fails
 
 
 # Funzione per ottenere la lista dei messaggi di log

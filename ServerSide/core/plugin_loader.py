@@ -40,11 +40,23 @@ def rinomina_plugin(nomeVecchio, nomeNuovo): #dato il nome del file da rinominar
         return False
 
 def elimina_plugin(nome):
+    # Ensure the file has a .py extension
+    if not nome.endswith('.py'):
+        nome += '.py'
+
+    file_path = FOLDER / nome
+
     try:
-        os.remove(FOLDER / nome)
+        os.remove(file_path)
         return True
-    except Exception:
-        print("Errore: impossibile eliminare il nome del file")
+    except FileNotFoundError:
+        print(f"Errore: il file '{file_path}' non esiste.")
+        return False
+    except PermissionError:
+        print(f"Errore: permesso negato per eliminare '{file_path}'.")
+        return False
+    except Exception as e:
+        print(f"Errore: impossibile eliminare il file '{file_path}'. Dettagli: {e}")
         return False
 
 
@@ -95,45 +107,53 @@ def creaPluginPy(nome_file, contenuto):
 
     file = FOLDER / nome_file
 
-    if os.path.isfile(file):
+    if file.is_file():
         return f"Error: File {nome_file} already exists"
 
     # Add required import
-    full_content = f"from core.interfaccia_plugin import Interfaccia_Plugin\n\n{contenuto}"
+    full_content = f"from core.interfaccia_plugin import Interfaccia_Plugin \n\n{contenuto}"
         
     try:
-        # Write to temporary file
-        file.write_text(full_content, encoding="utf-8")
+        # Write to the file
+        file.write_text(full_content)
         
-        # Validate through temporary file
+        # Validate through the temporary file
         spec = importlib.util.spec_from_file_location(nome_file[:-3], file)
         modulo = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(modulo)
 
         # Class validation
         if not hasattr(modulo, "Plugin"):
-            os.remove(file)
             raise AttributeError("Missing 'Plugin' class")
 
         classe_plugin = modulo.Plugin
 
         if not inspect.isclass(classe_plugin):
-            os.remove(file)
             raise TypeError("'Plugin' is not a class")
 
-        if not issubclass(classe_plugin, Interfaccia_Plugin):
-            os.remove(file)
+        if not issubclass(classe_plugin, modulo.Interfaccia_Plugin):  # Use modulo to access Interfaccia_Plugin
             raise TypeError("Must inherit from Interfaccia_Plugin")
 
         if len(classe_plugin.__abstractmethods__) > 0:
-            os.remove(file)
             raise NotImplementedError(f"Unimplemented abstract methods: {classe_plugin.__abstractmethods__}")
 
-        return f"Plugin created successfully: {nome_file}"
+        # Import the module dynamically
+        plugin_module = importlib.import_module('plugins.' + nome_file[:-3])  # Remove ".py"
+        plugin_instance = plugin_module.Plugin()  # Create the plugin instance
+        params = plugin_instance.get_param()
+        print(f"PARAMS PLUGLOADER: {params}")
+        return True  # Return success
 
-    except Exception as e:            
-        # Temporary file is automatically deleted with the directory
-        return f"Validation failed: {e}"
+    except (AttributeError, TypeError, NotImplementedError) as e:
+        print(f"Validation failed: {e}")  # DEBUG
+        return False  # Return failure
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")  # DEBUG
+        return False  # Return failure
+    finally:
+        # Clean up the temporary file if it exists
+        if file.is_file():
+            os.remove(file)
 
 def creaPluginSh(nome_file, contenuto):
     if not nome_file.endswith('.sh'):
