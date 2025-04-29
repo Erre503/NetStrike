@@ -196,8 +196,6 @@ Authorization: Bearer <token>
 ```
 
 ## Execute script
-All parameters are required unless otherwise stated.
-The keys of the parameters in the body of the request must have the correct name (see 'get script description').
 ```https
   POST /execute/<script_name>
 ```
@@ -277,6 +275,41 @@ Authorization: Bearer <token>
   "status": "finished",
   "script_executed": "pythonScript"
 }
+```
+
+## Create routine execution
+```https
+  POST /create_routine
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `token` | `string` | **Required**. JWT token|
+| `script_name` | `string` | **Required**. Name of the script (without extension) |
+| `params` | `dictionary` | **Required**. Dictionary of script parameters. Keys must match those defined by the script (see 'Get Script Description'). All required parameters must be provided. |
+| `frequency` | `integer` | **Required**. Interval in seconds between each scheduled execution |
+| `first_dt` | `datetime` | **Required**. Timestamp of the first execution in format YYYY-MM-DD HH:MM:SS. |
+
+##### Example of request
+```yaml
+POST /create_routine
+Authorization: Bearer <token>
+
+{
+  "script_name": "pythonScript",
+  "params":
+  {
+    "param1": "value",
+    "param2": "value"
+  },
+  "frequency": 86400,
+  "first_dt":  "2025-03-04 14:30:00"
+}
+```
+
+##### Example of response
+```yaml
+{}
 ```
 
 ## Checks for updates of the plugin list or test list
