@@ -12,8 +12,8 @@ class MainInterfaccia(ctk.CTkFrame):
         self.plugin_files = {}
         self.mode = "p"
 
-
         self.plugin_selezionato = None
+        self.selected_params = None
         self.log_selezionato = None
 
 
@@ -124,12 +124,10 @@ class MainInterfaccia(ctk.CTkFrame):
 
 
     def mostra_dettagli(self, d):
+        self.selected_params = d["params"].split(" , ")
         dettagli = ""
         for i in d:
             dettagli += (i+": "+ str(d[i]) + "\n")
-
-        print(dettagli)
-
         self.mostraDescrizioneTest.configure(text=dettagli)
 
 
@@ -191,6 +189,7 @@ class MainInterfaccia(ctk.CTkFrame):
                 finestraEdit.destroy()
                 self.aggiornaListaPlugin()
                 self.plugin_selezionato = None
+                self.selected_params= None
             except Exception as e:
                 messagebox.showerror("Errore", f"Errore nella modifica del plug-in: {e}")
 
@@ -212,6 +211,7 @@ class MainInterfaccia(ctk.CTkFrame):
         try:
             self.coreApplicazione.rimuovi_plugin(str(self.plugin_selezionato))
             self.plugin_selezionato = None
+            self.selected_params= None
             self.labelInfoPluginSelezionato.configure(text="SELECTED PLUG-IN: None")
         except Exception as e:
             messagebox.showerror("Error", f"Errore nella rimozione del plug-in: {e}")
@@ -222,10 +222,11 @@ class MainInterfaccia(ctk.CTkFrame):
             messagebox.showwarning("Nessun plugin selezionato", "Seleziona un plugin prima di configurare il test.")
             return
 
+
         # Create the configuration window
         finestraRoutine = ctk.CTkToplevel(self.finestraPrincipale)
         finestraRoutine.title("CREAZIONE ROUTINE")
-        finestraRoutine.geometry("1000x1000")
+        finestraRoutine.geometry("400x400")
         finestraRoutine.resizable(False, False)
 
         # Ensure the window is visible and ready
@@ -234,43 +235,56 @@ class MainInterfaccia(ctk.CTkFrame):
 
         # Delay the grab_set to ensure the window is fully viewable
         finestraRoutine.after(100, finestraRoutine.grab_set)
+        if not edit:
+            # Frequency
+            ctk.CTkLabel(finestraRoutine, text="FREQUENCY").pack(pady=10)
+            frequencyFrame = ctk.CTkFrame(master=finestraRoutine)
+            frequencyFrame.pack(fill="x", pady=1)
+            frequency = ctk.CTkEntry(master=frequencyFrame)
+            frequency.pack(side="left", fill="x", expand=True)
 
-        # Frequency
-        ctk.CTkLabel(finestraRoutine, text="FREQUENCY").pack(pady=10)
-        frequencyFrame = ctk.CTkFrame(master=finestraRoutine)
-        frequencyFrame.pack(fill="x", pady=1)
-        frequency = ctk.CTkEntry(master=frequencyFrame)
-        frequency.pack(side="left", fill="x", expand=True)
+            # First dt
+            ctk.CTkLabel(finestraRoutine, text="FIRST DATETIME").pack(pady=10)
+            first_dtFrame = ctk.CTkFrame(master=finestraRoutine)
+            first_dtFrame.pack(fill="x", pady=1)
+            first_dt = ctk.CTkEntry(master=first_dtFrame)
+            first_dt.pack(side="left", fill="x", expand=True)
 
-        # First dt
-        ctk.CTkLabel(finestraRoutine, text="FIRST DATETIME").pack(pady=10)
-        first_dtFrame = ctk.CTkFrame(master=finestraRoutine)
-        first_dtFrame.pack(fill="x", pady=1)
-        first_dt = ctk.CTkEntry(master=first_dtFrame)
-        first_dt.pack(side="left", fill="x", expand=True)
+
+        
 
         # Params
         ctk.CTkLabel(finestraRoutine, text="PARAMETERS").pack(pady=10)
-        plugin_params = self.coreApplicazione.ottieniListaPlugin()
-        params = {}
-
-        for param in plugin_params:
+        paramsEntry = []
+        i=0
+        print(self.selected_params)
+        for param in self.selected_params:
             frameCampoInput = ctk.CTkFrame(master=finestraRoutine)
             frameCampoInput.pack(fill="x", pady=5)
             labelNomeCampo = ctk.CTkLabel(master=frameCampoInput, text=f"Campo: {param}")
             labelNomeCampo.pack(side="left", padx=10)
-            valoreInseritoInput = ctk.CTkEntry(master=frameCampoInput)
-            valoreInseritoInput.pack(side="left", fill="x", expand=True)
-            params[param] = valoreInseritoInput
-        ctk.CTkButton(finestraRoutine, text="Submit", command=submit).pack(pady=20)
-
+            paramsEntry.append(ctk.CTkEntry(master=frameCampoInput))
+            paramsEntry[i].pack(side="left", fill="x", expand=True)
+            i+=1
 
         def submit():
             if(edit):
                 pass
             else:
-                coreApplicazione.crea_routine(params, frequency, first_dt)
+                params = {}
+                i = 0
+                for param in paramsEntry:
+                    params[self.selected_params[i]] = param.get()
+                    i+=1
+
+                self.coreApplicazione.crea_routine(self.plugin_selezionato, params, frequency.get(), first_dt.get())
             finestraRoutine.destroy()
+
+        submitButton =  ctk.CTkButton(master=finestraRoutine, text="SUBMIT", corner_radius=5, command=submit)
+        submitButton.pack(pady=50)
+
+
+        
 
 
     def iniziaTest(self):

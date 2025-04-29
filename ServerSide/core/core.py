@@ -154,17 +154,16 @@ def new_plugin():
     if not data or 'name' not in data:
         return jsonify({"error": "Invalid record"}), 404
 
-    arr = creaPlugin(data['name'], data['content'])
-    #res = arr[0]
-    #print(f"PARAMS CORE-S: {res}")
-    res = ''
-    success = arr
-    print(success)
+    success, res = creaPlugin(data['name'], data['content'])
     if success:
+        params = ""
+        for param in res:
+            params += (param+" , ")
+        params = params[:-3]
         # Create a new plugin instance
         new_plugin = PlugTable(
             name=data['name'],
-            params=res,  # DEBUG
+            params=params,  # DEBUG
             description=''  # DEBUG
         )
         # Add the new plugin to the database

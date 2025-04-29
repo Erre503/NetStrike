@@ -108,7 +108,7 @@ def creaPluginPy(nome_file, contenuto):
     file = FOLDER / nome_file
 
     if file.is_file():
-        return f"Error: File {nome_file} already exists"
+        return False, None
 
     # Add required import
     full_content = f"from core.interfaccia_plugin import Interfaccia_Plugin \n\n{contenuto}"
@@ -142,15 +142,16 @@ def creaPluginPy(nome_file, contenuto):
         plugin_instance = plugin_module.Plugin()  # Create the plugin instance
         params = plugin_instance.get_param()
         print(f"PARAMS PLUGLOADER: {params}")
-        return True  # Return success
+        return True, params # Return success
 
     except (AttributeError, TypeError, NotImplementedError) as e:
         print(f"Validation failed: {e}")  # DEBUG
-        return False  # Return failure
+        return False, None  # Return failure
+        if file.is_file():
+            os.remove(file)
     except Exception as e:
         print(f"An unexpected error occurred: {e}")  # DEBUG
-        return False  # Return failure
-    finally:
+        return False, None  # Return failure
         # Clean up the temporary file if it exists
         if file.is_file():
             os.remove(file)
@@ -159,14 +160,14 @@ def creaPluginSh(nome_file, contenuto):
     if not nome_file.endswith('.sh'):
         nome_file = nome_file + ".sh"
     if nome_file in os.listdir(FOLDER):
-        return False
+        return False, None
     if interfacciaBash(contenuto):
         percorso_file = os.path.join(FOLDER, nome_file)
         with open(percorso_file, "w", encoding="utf-8") as file:
             file.write(contenuto)
-        return True
+        return True, None
     else:
-        return False
+        return False, None
     
     
 
