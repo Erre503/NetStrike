@@ -250,22 +250,19 @@ class MainInterfaccia(ctk.CTkFrame):
             first_dt = ctk.CTkEntry(master=first_dtFrame)
             first_dt.pack(side="left", fill="x", expand=True)
 
-
-        
-
         # Params
-        ctk.CTkLabel(finestraRoutine, text="PARAMETERS").pack(pady=10)
         paramsEntry = []
-        i=0
-        print(self.selected_params)
-        for param in self.selected_params:
-            frameCampoInput = ctk.CTkFrame(master=finestraRoutine)
-            frameCampoInput.pack(fill="x", pady=5)
-            labelNomeCampo = ctk.CTkLabel(master=frameCampoInput, text=f"Campo: {param}")
-            labelNomeCampo.pack(side="left", padx=10)
-            paramsEntry.append(ctk.CTkEntry(master=frameCampoInput))
-            paramsEntry[i].pack(side="left", fill="x", expand=True)
-            i+=1
+        if self.selected_params[0]!= '':
+            ctk.CTkLabel(finestraRoutine, text="PARAMETERS").pack(pady=10)
+            i=0
+            for param in self.selected_params:
+                frameCampoInput = ctk.CTkFrame(master=finestraRoutine)
+                frameCampoInput.pack(fill="x", pady=5)
+                labelNomeCampo = ctk.CTkLabel(master=frameCampoInput, text=f"Campo: {param}")
+                labelNomeCampo.pack(side="left", padx=10)
+                paramsEntry.append(ctk.CTkEntry(master=frameCampoInput))
+                paramsEntry[i].pack(side="left", fill="x", expand=True)
+                i+=1
 
         def submit():
             if(edit):

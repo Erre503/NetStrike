@@ -80,6 +80,17 @@ class Log(db.Model):
             'date': self.dateLog.strftime('%Y-%m-%d %H:%M:%S')
         }
 
+class Routine(db.Model):
+    __tablename__ = "routine"
+    id = db.Column(db.Integer, Sequence('id'), primary_key=True)
+    frequency = db.Column(db.Integer, nullable=False)
+    next_execution =db.Column(db.DateTime, default=datetime.datetime.now())
+    script_id = db.Column(db.Integer, db.ForeignKey(PlugTable.id), nullable=False)
+    params = db.Column(db.String(300), default="")
+
+    def __repr__(self):
+        return f"<Routine> \nid: {self.id}\nfrequency: {self.frequency}\nnext_execution: {self.next_execution}\nscript_id: {self.script_id}\nparams: {self.params}"
+
 # Output di default
 
 # output di default all'accesso alla route del server con disclaimer
@@ -231,22 +242,24 @@ def log():
         return "error 404"
     return jsonify([log_entries.logList()])
 
-@app.route("/create_routine", endpoint='set_routine', methods=["POST"])
+@app.route("/create_routine", endpoint='create_routine', methods=["POST"])
 @jwt_required()
-def set_routine():
+def create_routine():
     data = sanitize_dict(request.get_json())
+    params = ""
+    for param in data["params"]:
+        params += (param+" , ")
+    params = params[:-3]
 
-    frequency = data["frequency"]
-    #Check if frequency is accettable
-
-    first_execution_dt = data["first_dt"]
-    #Check if the first execution datetime is accettable
-
-    script = data["script"]
-    #Check if script exists
-
-    params = data["params"]
-    #Check if params are correct and complete
+    new_routine = Routine(
+        frequency = data["frequency"],
+        #next_execution = data["first_dt"],
+        script_id = data["script"],
+        params = params
+    )
+    db.session.add(new_routine)
+    db.session.commit()
+    return "Success",200
 
 # Update del Log
 def logUpdate(result):
