@@ -4,7 +4,13 @@ import importlib #va a sostituire la funzione manuale di import dato che non sia
 import sys  #serve per modificare a riga 38 i percorsi da cui prendere i file python
 import abc
 import inspect #serve per vedere i parametri
-import subprocess #serve per i file bash
+import subprocess #serve per eseguire comandi di sistema
+import platform #serve per il multipiattaforma
+import time #serve per operare con il tempo
+from datetime import datetime #serve per l'ora esatta dei ping
+import matplotlib.pyplot as plt #serve per creare il crafico dei ping
+import smtplib #serve per inviare email via SMTP
+from email.message import EmailMessage #usato per costruire l'email
 from pathlib import Path #serve per ottenere il riferimento al percorso del file corrente
 
 def get_plugin_type(nome_file):
@@ -390,7 +396,116 @@ def elimina_file(folder,nome_file):
         print("Errore: impossibile cancellare il file.")
         return False
 
+def monitoraggio_server(email,url,tempo_monitoraggio):
+    intervallo_ping = 3  # ogni N secondi fa un ping , per ora 3
+    max_fail = 2  # ogni N tentativi manda l'avviso, per ora 2
+    fail_count = 0  # contatore di ping falliti per fermare poi il ciclo
+    dati_ping = []  # salva il futuro output
+    start_time = time.time()  # orario di inizio del monitoraggio
 
+    # loop che continua finché non finisce il tempo di monitoraggio o N tentativi falliscono
+    while (time.time() - start_time) < tempo_monitoraggio: #time.time() da l'orario in quel momento
+        try:
+            # comando diverso a seconda del sistema operativo
+            if platform.system().lower() == "windows":
+                comando = ["ping", "-n", "1", url]
+            else:
+                comando = ["ping", "-c", "1", url] #linux e ios
+
+            # esegue il ping con il comando salvato prima e salva il risultato
+            result = subprocess.run(comando, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+
+            if result.returncode == 0:  # se vero il ping è riuscito
+                output = result.stdout  # prendiamo l’output del ping
+                if platform.system().lower() == "windows": # comando diverso a seconda del sistema operativo
+                    for line in output.splitlines():  # scorriamo ogni riga
+                        if "durata=" in line:
+                            time_part = line.split("durata=")[1].split("ms")[0].strip()
+                            ping_ms = float(time_part)
+                            break
+                        elif "time=" in line:
+                            time_part = line.split("time=")[1].split("ms")[0].strip()
+                            ping_ms = float(time_part)
+                            break
+                    else:
+                        ping_ms = None
+                else:
+                    for line in output.splitlines():
+                        if "time=" in line:
+                            ping_ms = float(line.split("time=")[1].split(" ")[0])  
+                            break
+                    else:
+                        ping_ms = None
+                #fail_count = 0   reset se il ping è ok???
+            else:
+                ping_ms = None  # ping fallito
+                fail_count += 1  
+                
+        except Exception as e:  # errore nel ping
+            ping_ms = None
+            fail_count += 1
+
+        oraPing = datetime.now()  # orario esatto del ping
+        dati_ping.append((oraPing, ping_ms))  #salvo ora e tempo del ping
+
+        if fail_count >= max_fail:
+            invioEmailAvviso(email, url)  # se ha fallito troppe volte, manda avviso
+            break
+
+        time.sleep(intervallo_ping)  # aspetta prima del prossimo ping
+
+    # dopo il monitoraggio manda il grafico via email
+    invioGrafico(email, dati_ping, url)
+    return dati_ping  # ritorna i dati raccolti 
+
+def invioGrafico(email, dati, url):
+    x = [d[0] for d in dati if d[1] is not None]  # orari dei ping riusciti
+    y = [d[1] for d in dati if d[1] is not None]  # valori dei ping riusciti
+
+    # crea il grafico
+    plt.figure(figsize=(10, 5))
+    plt.plot(x, y, marker='o')
+    plt.title(f'Ping Monitor - {url}')
+    plt.xlabel('Orario')
+    plt.ylabel('Ping (ms)')
+    plt.grid(True)
+    plt.xticks(rotation=45)
+
+    # salva il grafico come immagine
+    img_path = os.path.join(os.getcwd(), 'ping_graph.png')
+    plt.tight_layout()
+    plt.savefig(img_path)
+    plt.close()
+
+    # prepara l’email con l’allegato
+    msg = EmailMessage()
+    msg['Subject'] = f'Grafico Monitoraggio - {url}'
+    msg['From'] = 'nicolacasagrande54@gmail.com'
+    msg['To'] = email
+    msg.set_content('In allegato il grafico con i risultati del monitoraggio.')
+
+    # allega l’immagine
+    with open(img_path, 'rb') as f:
+        img_data = f.read()
+        msg.add_attachment(img_data, maintype='image', subtype='png', filename='ping_graph.png')
+
+    # invia l’email con l’allegato
+    with smtplib.SMTP('smtp.gmail.com', 587) as smtp:
+        smtp.starttls()
+        smtp.login('nicolacasagrande54@gmail.com', 'nizh qsff zgzv zasd')
+        smtp.send_message(msg)
+
+def invioEmailAvviso(email, url):
+    msg = EmailMessage()  # crea una nuova email
+    msg['Subject'] = f'⚠️ Server Offline - {url}'  # oggetto dell’email
+    msg['From'] = 'nicolacasagrande54@gmail.com'  # mittente (puoi cambiarlo)
+    msg['To'] = email  # destinatario
+    msg.set_content(f'Il server {url} è stato rilevato come offline.')  # contenuto del messaggio
+
+    with smtplib.SMTP('smtp.gmail.com', 587) as smtp:  # connessione al server SMTP
+        smtp.starttls()  # cifratura della connessione
+        smtp.login('nicolacasagrande54@gmail.com', 'nizh qsff zgzv zasd')  # login al server
+        smtp.send_message(msg)  # invia l’email
 
 if(__name__ == "__main__"):
     print("Quale file PY vuoi eseguire?")
@@ -403,53 +518,87 @@ if(__name__ == "__main__"):
     nome_plugin = input() #il nome per fare i test è dato in input
     
     #esempio plugin
-    contenuto = """#!/bin/bash
+    contenuto = """import socket  # serve per poter creare delle connessione con ad esempio udp e tcp
+from interfaccia_plugin import Interfaccia_Plugin
 
-# Variabili globali con valori di default
-ip="127.0.0.1"
-metodo="tcp"
-rangePorte=("1" "10")
-timeout="1"
 
-# Funzione per impostare i parametri
-function set_param {
-    ip=$1
-    metodo=$2
-    IFS=',' read -ra rangePorte <<< "$3"
-    timeout=$4
-}
+class Plugin(Interfaccia_Plugin):
+    #valori standard 
+    ip = "127.0.0.1"  
+    rangePorte = [1, 65535] 
+    tipoScansione = 'TCP' 
+    timeout = 1
 
-# Funzione per ottenere i parametri
-function get_param {
-    echo "$ip, $metodo, ${rangePorte[*]}, $timeout"
-}
+    @classmethod
+    def execute(cls):
+        print("Esecuzione della scansione per l'IP " + cls.ip + ", Tipo:" + cls.metodo)
+        porteAperte = scan_ports(cls.ip, cls.rangePorte, cls.metodo, cls.timeout)
+        print("Porte aperte: " + str(porteAperte))
 
-# Funzione principale di esecuzione del programma
-function execute {
-    echo "Esecuzione della scansione per l'IP $ip, Metodo: $metodo"
-    echo "Range delle porte: ${rangePorte[@]}"
-    echo "Timeout: $timeout"
 
-    for port in "${rangePorte[@]}"; do
-        echo "Scansione porta $port..."
-    done
-}
+    @classmethod
+    def get_param(cls):
+        vet_param = [
+            {'key': 'ip', 'description': 'Indirizzo IP da scansionare'},
+            {'key': 'metodo', 'description': 'Metodo di scansione: TCP o UDP'},
+            {'key': 'rangePorte', 'description': 'Range delle porte da scansionare'},
+            {'key': 'timeout', 'description': 'Tempo massimo per tentare la connessione'}
+        ]
+        return vet_param
+    
+    @classmethod
+    def set_param(cls, vet_param):
+        cls.ip = vet_param['ip']
+        cls.metodo = vet_param['metodo']
+        cls.rangePorte = vet_param['rangePorte']
+        cls.timeout = vet_param['timeout'] 
+        return True
+    
 
-# Controllo dell'argomento passato
-case "$1" in
-    "set_param")
-        set_param "$2" "$3" "$4" "$5"
-        ;;
-    "get_param")
-        get_param
-        ;;
-    "execute")
-        execute
-        ;;
-    *)
-        echo "Comando non riconosciuto"
-        ;;
-esac
+def scan_tcp(ip, porta, timeout):
+    try:
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # Crea un oggetto TCP(i parametri indicano che e' ipv4 e tcp)
+        sock.settimeout(timeout)  #funzione che imposta un tempo massimo per provare a connettersi alla porta
+        result = sock.connect_ex((ip, porta))  # salva il tentativo di connessione nella porta in una variabile
+        if result == 0:
+            return "Porta " + str(porta) + " aperta"  # se e' 0 la connessione con la porta e' riuscita
+        else:
+            return "Porta " + str(porta) + " chiusa"
+    except socket.error:
+        return "Errore di connessione alla porta " + str(porta)
+    finally:
+        sock.close()  # Interrompe la connessione perche' non piu' necessaria
+
+
+def scan_udp(ip, porta, timeout):
+    try:
+        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # dgram serve per avere un oggetto udp
+        #sock.bind(('127.0.0.1', 12345))
+        sock.settimeout(timeout) 
+        sock.sendto(b'Hello', (ip, porta))  # invio 1 byte vuoto per verificare se la porta e' aperta
+        sock.recvfrom(1024)  # funzione per ricevere il pacchetto ( parametro indica il massimo di byte ricevibili in 1 chiamata)
+        return "Porta " + str(porta) + " aperta"
+    except socket.error:
+        return "Errore di connessione alla porta " + str(porta) + " (probabilmente chiusa)" #in caso scada il time out si da per chiusa la porta
+    finally:
+        sock.close()  
+
+
+def scan_ports(ip, rangePorte, tipoScansione, timeout):
+    porteAperte = [] 
+    for porta in range(rangePorte[0], rangePorte[1] + 1): #il range esclude l'ultima porta, per questo +1
+        if tipoScansione.lower() == 'tcp':  
+            resScansione = scan_tcp(ip, porta, timeout)  
+        elif tipoScansione.lower() == 'udp':  
+            resScansione = scan_udp(ip, porta, timeout) 
+        else:
+            return "Errore: il tipo di scansione non e' ne tcp ne udp"  # Se il tipo di scansione non è valido, restituisce un errore
+        
+        print(resScansione)  # Stampa il risultato della scansione per debug
+        if "aperta" in resScansione:  
+            porteAperte.append(porta)  
+    
+    return porteAperte 
 
 """
 
@@ -492,3 +641,14 @@ esac
                 "timeout": 1         
             }
             avvia_plugin(nome_plugin, vet_param)
+        email = "nicolacasagrande54@gmail.com"
+        url = "google.com"  
+        tempo_monitoraggio = 15 
+
+        # Avvia la funzione
+        dati_ping = monitoraggio_server(email, url, tempo_monitoraggio)
+
+        # Mostra i dati raccolti
+        print("\n--- RISULTATI ---")
+        for dt, ping in dati_ping:
+            print(f"{dt.strftime('%H:%M:%S')} -> {ping} ms")
