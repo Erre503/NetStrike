@@ -138,8 +138,8 @@ Authorization: Bearer <token>
 ##### Example of response
 ```yaml
 {
-  "description": "This script returns the status of every port of the specified host.", 
-  "params": "ip_address"
+  "description": "This script returns the status of every port in the specified range of the specified host.", 
+  "params": ["ip_address", "start_port", "end_port"]
 }
 ```
 
