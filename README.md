@@ -162,8 +162,8 @@ PATCH /edit_script/pythonScript
 Authorization: Bearer <token>
 
 {
-  "name": <name>,
-  "description": <description>
+  "name": "newName",
+  "description": "newDescription"
 }
 ```
 
