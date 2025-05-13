@@ -124,7 +124,10 @@ class MainInterfaccia(ctk.CTkFrame):
 
 
     def mostra_dettagli(self, d):
-        self.selected_params = d["params"].split(" , ")
+        if self.mode == "p":
+            self.selected_params = d["params"].split(" , ")
+        else:
+            self.selected_params = ""
         dettagli = ""
         for i in d:
             dettagli += (i+": "+ str(d[i]) + "\n")
@@ -226,7 +229,7 @@ class MainInterfaccia(ctk.CTkFrame):
         # Create the configuration window
         finestraRoutine = ctk.CTkToplevel(self.finestraPrincipale)
         finestraRoutine.title("CREAZIONE ROUTINE")
-        finestraRoutine.geometry("400x400")
+        finestraRoutine.geometry("400x700")
         finestraRoutine.resizable(False, False)
 
         # Ensure the window is visible and ready
@@ -265,16 +268,15 @@ class MainInterfaccia(ctk.CTkFrame):
                 i+=1
 
         def submit():
-            if(edit):
-                pass
+            params = {}
+            i = 0
+            for param in paramsEntry:
+                params[self.selected_params[i]] = param.get()
+                i+=1
+            if edit:
+                self.coreApplicazione.avvia_test(self.plugin_selezionato, params)
             else:
-                params = {}
-                i = 0
-                for param in paramsEntry:
-                    params[self.selected_params[i]] = param.get()
-                    i+=1
-
-                self.coreApplicazione.crea_routine(self.plugin_selezionato, params, frequency.get(), first_dt.get())
+                self.coreApplicazione.crea_routine(self.plugin_selezionato, params, int(frequency.get()), first_dt.get())
             finestraRoutine.destroy()
 
         submitButton =  ctk.CTkButton(master=finestraRoutine, text="SUBMIT", corner_radius=5, command=submit)
@@ -290,6 +292,7 @@ class MainInterfaccia(ctk.CTkFrame):
             return
         try:
             parametriTest = {}
+
             self.coreApplicazione.avvia_test(self.plugin_selezionato, parametriTest)
         except Exception as e:
             messagebox.showerror("Error", f"Errore nell'inizializzazione del test: {e}")

@@ -5,9 +5,10 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String, Sequence
 from core.plugin_loader import *
 import time
-import datetime
+from datetime import datetime
 from utilities.key_manager import KeyManager
 from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity
+import threading
 
 # from flask_classful import FlaskView, route   Prossima implementazione
 
@@ -84,7 +85,7 @@ class Routine(db.Model):
     __tablename__ = "routine"
     id = db.Column(db.Integer, Sequence('id'), primary_key=True)
     frequency = db.Column(db.Integer, nullable=False)
-    next_execution =db.Column(db.DateTime, default=datetime.datetime.now())
+    next_execution =db.Column(db.DateTime, default=datetime.now())
     script_id = db.Column(db.Integer, db.ForeignKey(PlugTable.id), nullable=False)
     params = db.Column(db.String(300), default="")
 
@@ -190,7 +191,8 @@ def new_plugin():
 # Esecuzione del plugin
 @app.route("/test_execute/<int:id>", endpoint='test_execute', methods=["POST"])
 @jwt_required()
-def plug_table_details(id=0,parametri={}):
+def test_execute(id=0):
+    parametri = request.get_json()
     plugin = PlugTable.query.get(id)  # gestione dell'id tramite il metodo http GET
     if plugin is None:
         return "error 404, no such plugin has been found"
@@ -246,25 +248,49 @@ def log():
 @jwt_required()
 def create_routine():
     data = sanitize_dict(request.get_json())
-    params = ""
-    for param in data["params"]:
-        params += (param+" , ")
-    params = params[:-3]
 
     new_routine = Routine(
         frequency = data["frequency"],
         #next_execution = data["first_dt"],
         script_id = data["script"],
-        params = params
+        params = str(data["params"])
     )
     db.session.add(new_routine)
     db.session.commit()
+    plugin = PlugTable.query.get(data["script"])
+    start_routine_execution(plugin.name, data["params"], data["frequency"], plugin.name.split('.')[1])
     return "Success",200
+
+def start_routine_execution(script_name, vet_param, frequency_seconds, script_type):
+    """
+    Starts a background thread that executes the plugin at fixed intervals.
+
+    :param script_name: str, name of the plugin script (e.g. 'example.py')
+    :param vet_param: list, list of parameters to pass to the plugin
+    :param frequency_seconds: int, interval between executions in seconds
+    :param script_type: str, type of the script ('py', 'sh', etc.)
+    """
+    
+    def routine_runner():
+        with app.app_context():
+            while True:
+                timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                print(f"[{timestamp}] Executing routine: {script_name}")
+                logUpdate(avvia_plugin(script_name, vet_param, script_type))
+
+                # Wait for the next execution
+                time.sleep(frequency_seconds)
+
+    # Start the thread in the background
+    t = threading.Thread(target=routine_runner, daemon=True)
+    t.start()
+    return True
+
 
 # Update del Log
 def logUpdate(result):
     newLog = Log(
-        dateLog = datetime.datetime.fromisoformat(str(result['datetime'])),
+        dateLog = datetime.fromisoformat(str(result['datetime'])),
         success=(result['status']=='finished'),  # DEBUG
         result = result['log']  # DEBUG
     )
@@ -272,9 +298,10 @@ def logUpdate(result):
     db.session.commit()
     return None
 
+
+
 def start():
     with app.app_context():
         db.create_all()  # This will create the tables again
     app.run(ssl_context=("./certificates/server.crt", "./certificates/server.key"), host="0.0.0.0", port=5000, debug=False)
 
-# creaPlugin

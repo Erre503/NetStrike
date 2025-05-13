@@ -191,7 +191,8 @@ def avvia_plugin(nome_plugin, vet_param, type):
             # Importa dinamicamente il modulo Python
             modulo = importlib.import_module('plugins.'+nome_plugin[:-3])  # Rimuove ".py"
             plugin_instance = modulo.Plugin()  # Crea l'istanza del plugin
-            plugin_instance.set_param(vet_param)  # Imposta i parametri
+            print("PARAMS: ",vet_param)
+            plugin_instance.set_param(vet_param)
 
 
             res['log'] = plugin_instance.execute()  # Esegui il plugin
@@ -213,5 +214,3 @@ def avvia_plugin(nome_plugin, vet_param, type):
         res['log'] = "Tipo di plugin non supportato."
         res['status'] = failed
     return res
-
-
