@@ -38,7 +38,7 @@ class PlugTable(db.Model):
     name = db.Column(db.String(64), nullable=False, unique=True)
     params = db.Column(db.String(256), default="")
     description = db.Column(db.String(512), default="Il plugin non esiste")
-    permit  =db.Column(db.Interger(8), default=0 ,nullable=False)
+    permit = db.Column(db.Integer, default=0 ,nullable=False)
 
     def __repr__(self):
         return '<Name %r>' % self.id
@@ -64,52 +64,45 @@ class PlugTable(db.Model):
 class Log(db.Model):
     __tablename__ = 'Log'
     idLog = db.Column(db.Integer, Sequence('logId'), primary_key=True)
-    name = db.Column(db.String(32))
     dateLog = db.Column(db.DateTime, nullable=False)
     success = db.Column(db.Boolean, default=False)
-    result = db.Column(db.String(512), default="Il test non ha fornito risultati")
+    result = db.Column(db.String(300), default="Il test non ha fornito risultati")
 
     def __repr__(self):
         return '<Name %r>' % self.idLog
 
     def logList(self):
         return {
-            'idLog': self.idLog,
-            'dateLog': self.dateLog.strftime('%Y-%m-%d %H:%M:%S')            
+            'id': self.idLog,
+            'name': self.dateLog.strftime('%Y-%m-%d %H:%M:%S')
         }
 
     def logData(self):
         return {
             'success': self.success,
-            'result': self.result
+            'result': self.result,
+            'date': self.dateLog.strftime('%Y-%m-%d %H:%M:%S')
         }
 """
- ProgrammedTest:
+ Routine:
     idRoutine :
     name : optional name for the routine
-    dateStart : start date of the routine
-    dateFinish : finish date of the routine
-    plugin : foreign key poiting to the table PlugTable id
-    frequence : frequence of the execution of the test expressed in days
+    next_execution : date and time of the next execution
+    script_id : foreign key poiting to the table PlugTable id
+    frequency : frequence of the execution of the test expressed in days
+    params : parameters for the functioning of the script
 """
-class ProgrammedTest(db.Model):
-    __tablename__ = 'ProgrammedTest'
-    idRoutine = db.Column(db.Integer, Sequence('routineId'), primary_key=True)
-    name = db.Column(db.String(32))
-    dateStart = db.Column(db.DateTime, nullable=False)
-    dateFinish = db.Column(db.DateTime, nullable=False)
-    plugin = db.Column(db.Integer,ForeignKey('PlugTable.id', ondelete='CASCADE'), nullable=False)
-    frequence = db.Column(db.Integer(255), default=0)
-
-    def __repr__(self):
-        return '<Name %r>' % self.idRoutine
-
-    def routine(self):
-        return {
-            'routineId': self.idRoutine,
-            'dateStart': self.dateLog.strftime('%Y-%m-%d %H:%M:%S'),
-            'dateFinish': self.dateLog.strftime('%Y-%m-%d %H:%M:%S')        
-        }
+class Routine(db.Model):
+     __tablename__ = "routine"
+     id = db.Column(db.Integer, Sequence('id'), primary_key=True)
+     frequency = db.Column(db.Integer, nullable=False)
+     next_execution =db.Column(db.DateTime, default=datetime.datetime.now())
+     script_id = db.Column(db.Integer, db.ForeignKey(PlugTable.id), nullable=False)
+     params = db.Column(db.String(300), default="")
+ 
+     def __repr__(self):
+         return f"<Routine> \nid: {self.id}\nfrequency: {self.frequency}\nnext_execution: {self.next_execution}\nscript_id: {self.script_id}\nparams: {self.params}"
+ 
 
 """
 # Users:
@@ -123,7 +116,7 @@ class Users(db.Model):
     id = db.Column(db.Integer, Sequence('userID'), primary_key=True)
     name = db.Column(db.String(64), nullable=False,unique=True)
     password = db.Column(db.String(64), nullable=False)
-    type = db.Column(db.Interger(8), nullable=False)
+    type = db.Column(db.Integer, nullable=False)
 
     def __repr__(self):
         return '<Name %r>' % self.id
