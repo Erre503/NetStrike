@@ -168,6 +168,7 @@ def new_plugin():
 
     success, res = creaPlugin(data['name'], data['content'])
     if success:
+        print("PARAMSSSSS: ", res)
         params = ""
         for param in res:
             params += (param+" , ")
@@ -197,8 +198,7 @@ def test_execute(id=0):
     if plugin is None:
         return "error 404, no such plugin has been found"
 
-    extension = plugin.name.split('.')[1]
-    result = avvia_plugin(plugin.name ,parametri, extension)
+    result = avvia_plugin(plugin.name ,parametri)
     logUpdate(result)
     return jsonify(result) # Use the renamed method
 

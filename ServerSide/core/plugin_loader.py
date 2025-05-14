@@ -11,23 +11,9 @@ import platform
 
 FOLDER = Path(__file__).resolve().parent.parent / "plugins"
 
-def get_plugin_extension(nome_file):
-    if nome_file.endswith('.sh'):
-        return '.sh'
-    if nome_file.endswith('.py'):
-        return '.py'
-    return None
-
-def lista_plugin(): #crea una lista con tutti i file python all'interno della cartella
-    var = []
-    for file in os.listdir(FOLDER):
-        if get_plugin_type(file)=='sh':
-            if file[:-3] and file.endswith('.sh'):
-                var.append(file)
-        else:
-            if file[:-3] and file.endswith('.py'):
-                var.append(file)
-    return var
+def process_plugin_name(nome_file):
+    processed = nome_file.rsplit('.', 1)
+    return processed[0], processed[1]
 
 def rinomina_plugin(nomeVecchio, nomeNuovo): #dato il nome del file da rinominare e quello nuovo, rinomina il file
     try:
@@ -40,10 +26,6 @@ def rinomina_plugin(nomeVecchio, nomeNuovo): #dato il nome del file da rinominar
         return False
 
 def elimina_plugin(nome):
-    # Ensure the file has a .py extension
-    if not nome.endswith('.py'):
-        nome += '.py'
-
     file_path = FOLDER / nome
 
     try:
@@ -101,10 +83,7 @@ def avvia_plugin_bash(plugin, vet_param):
 
 
 def creaPluginPy(nome_file, contenuto):
-    # Add .py extension if missing
-    if not nome_file.endswith('.py'):
-        nome_file += '.py'
-
+    file_name = nome_file[:-3]
     file = FOLDER / nome_file
 
     if file.is_file():
@@ -118,7 +97,7 @@ def creaPluginPy(nome_file, contenuto):
         file.write_text(full_content)
         
         # Validate through the temporary file
-        spec = importlib.util.spec_from_file_location(nome_file[:-3], file)
+        spec = importlib.util.spec_from_file_location(file_name, file)
         modulo = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(modulo)
 
@@ -138,7 +117,7 @@ def creaPluginPy(nome_file, contenuto):
             raise NotImplementedError(f"Unimplemented abstract methods: {classe_plugin.__abstractmethods__}")
 
         # Import the module dynamically
-        plugin_module = importlib.import_module('plugins.' + nome_file[:-3])  # Remove ".py"
+        plugin_module = importlib.import_module('plugins.' + file_name)  # Remove ".py"
         plugin_instance = plugin_module.Plugin()  # Create the plugin instance
         params = plugin_instance.get_param()
         print(f"PARAMS PLUGLOADER: {params}")
@@ -157,8 +136,6 @@ def creaPluginPy(nome_file, contenuto):
         return False, None  # Return failure
 
 def creaPluginSh(nome_file, contenuto):
-    if not nome_file.endswith('.sh'):
-        nome_file = nome_file + ".sh"
     if nome_file in os.listdir(FOLDER):
         return False, None
     if interfacciaBash(contenuto):
@@ -184,14 +161,14 @@ def creaPlugin(nome_file, contenuto):
     return None
 
 
-def avvia_plugin(nome_plugin, vet_param, type):
-    # Se il plugin è Python
+def avvia_plugin(nome_plugin, vet_param):
     res = {}
     res['datetime'] = datetime.now()
-    if type == 'py':
+    file_name, extension = process_plugin_name(nome_plugin)
+    if extension == 'py':
         try:
             # Importa dinamicamente il modulo Python
-            modulo = importlib.import_module('plugins.'+nome_plugin[:-3])  # Rimuove ".py"
+            modulo = importlib.import_module('plugins.'+file_name)  # Rimuove ".py"
             plugin_instance = modulo.Plugin()  # Crea l'istanza del plugin
             print("PARAMS: ",vet_param)
             plugin_instance.set_param(vet_param)
@@ -206,7 +183,7 @@ def avvia_plugin(nome_plugin, vet_param, type):
             res['status'] = 'failed'
 
     # Se il plugin è Bash
-    elif type == 'sh':
+    elif extension == 'sh':
         # Verifica che il file esista
         percorso_file = FOLDER / nome_plugin
 
