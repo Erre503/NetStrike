@@ -146,15 +146,15 @@ def creaPluginPy(nome_file, contenuto):
 
     except (AttributeError, TypeError, NotImplementedError) as e:
         print(f"Validation failed: {e}")  # DEBUG
-        return False, None  # Return failure
         if file.is_file():
             os.remove(file)
+        return False, None  # Return failure
+
     except Exception as e:
         print(f"An unexpected error occurred: {e}")  # DEBUG
-        return False, None  # Return failure
-        # Clean up the temporary file if it exists
         if file.is_file():
             os.remove(file)
+        return False, None  # Return failure
 
 def creaPluginSh(nome_file, contenuto):
     if not nome_file.endswith('.sh'):
@@ -167,6 +167,8 @@ def creaPluginSh(nome_file, contenuto):
             file.write(contenuto)
         return True, None
     else:
+        if file.is_file():
+            os.remove(file)
         return False, None
     
     
