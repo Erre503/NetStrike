@@ -38,7 +38,7 @@ class PlugTable(db.Model):
     name = db.Column(db.String(64), nullable=False, unique=True)
     params = db.Column(db.String(256), default="")
     description = db.Column(db.String(512), default="Il plugin non esiste")
-    permit = db.Column(db.Integer, default=0 ,nullable=False)
+    permit = db.Column(db.Integer, default=0)
 
     def __repr__(self):
         return '<Name %r>' % self.id

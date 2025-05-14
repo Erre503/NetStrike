@@ -1,6 +1,6 @@
 # Libreria per la classe UpdateType
 from core.updateType import UpdateType
-
+from core.ui_updater import UIUpdater
 
 # Libreria per comunicare tramite i protocolli HTTP/HTTPS.
 import requests
@@ -113,8 +113,11 @@ class ClientCore:
         try:
             url = f"{self.server_url}{endpoint}"
             headers = {"Authorization": f"Bearer {sf.get_token()}"}
-            show_data= not(endpoint in PRIVATE_DATA_ENDPOINTS)
 
+            if dati and sanitize:
+                dati = sf.sanitize_dict(dati)
+
+            show_data= not(endpoint in PRIVATE_DATA_ENDPOINTS)
             if show_data:
                 logging.debug("Sending %s request to %s with data: %s",metodo, url,dati)
             else:
@@ -137,15 +140,11 @@ class ClientCore:
 
             if response.status_code == 200:
                 ret = response.json()
-                if isinstance(ret, list):
-                    ret = sf.sanitize_list(ret)
-                else:
-                    ret = sf.sanitize_dict(ret)
             else:
                 logging.error("Error %s: %s", response.status_code, response.text)
 
         except Exception as e:
-            logging.error("Error during request: %s", sf.sanitize_input(e))
+            logging.error("Error during request: %s", e)
 
         return ret
 
@@ -298,8 +297,10 @@ class ClientCore:
     def aggiungi_plugin(self, file_path):
         try:
             with open(file_path, 'r') as file:
-                if(sf.is_valid_input(os.path.basename(file_path))):
-                    self.invia_richiesta('/upload_plugin', 'POST', {'content': file.read(), 'name': os.path.basename(file_path)}, False)
+                name = os.path.basename(file_path)
+                parts = name.split('.')
+                if len(parts) == 2 and sf.is_valid_input(parts[0]):
+                    self.invia_richiesta('/upload_plugin', 'POST', {'content': file.read(), 'name': name}, False)
                 else:
                     logging.error("Nome file contiene valori non consentiti.")
 
@@ -320,10 +321,8 @@ class ClientCore:
           i dati modificati.
     """
     def modifica_plugin(self, id_plugin, name=None, description=None):
-        if(sf.is_valid_input(name) and sf.is_valid_input(description)):
-            self.invia_richiesta('/edit_plugin/'+id_plugin, 'PATCH', { 'name':name, 'description': description })
-        else:
-            logging.error("Valori inseriti non consentiti.")
+        self.invia_richiesta('/edit_plugin/'+id_plugin, 'PATCH', { 'name':name, 'description': description })
+        
 
     """
     Modifica un test presente nel server.
@@ -393,91 +392,3 @@ class ClientCore:
                 logging.info("Received new notifications, updating UI.")
                 self.aggiorna_ui('', UpdateType.AGGIORNA_LISTA)
             time.sleep(5)
-
-
-
-"""
-Gestisce l'aggiornamento dell'interfaccia grafica.
-
-Questa classe fornisce metodi per aggiornare diversi elementi
-dell'interfaccia utente, come la lista dei plugin, i dettagli di un
-plugin selezionato e i risultati dei test eseguiti.
-
-Attributi:
-    ui: Un riferimento all'interfaccia grafica da aggiornare.
-        Questo oggetto rappresenta il framework UI utilizzato, come
-        PyQt, Tkinter o un altro sistema di interfaccia grafica.
-"""
-class UIUpdater:
-    """
-    Inizializza un'istanza di UIUpdater.
-
-    Args:
-        ui: Il riferimento all'interfaccia grafica che sarà aggiornata
-            tramite i metodi di questa classe.
-    """
-    def __init__(self):
-        self.ui = None
-
-    """
-    Associa l'interfaccia grafica all'istanza di UIUpdater.
-
-    Args:
-        ui: Istanza della UI che verrà aggiornata dai metodi di questa classe.
-
-    Effetti:
-        - L'attributo `ui` viene aggiornato per puntare alla UI specificata.
-    """
-    def initUI(self, ui):
-        self.ui = ui
-
-    """
-    Aggiorna la lista dei plugin nell'interfaccia grafica.
-
-    Args:
-        plugins (dict): Dati per aggiornare la lista dei plugin.
-            Struttura attesa:
-            - name (str): Nome del plugin.
-            - id (str): ID univoco del plugin.
-    """
-    def aggiorna_lista_plugin(self, plugins):
-        self.ui.svuota_lista_plugin()
-
-        for plugin in plugins:
-            self.ui.aggiungi_plugin(plugin["name"], str(plugin["id"]))
-
-    """
-    Mostra i dettagli di un plugin selezionato nell'interfaccia grafica.
-
-    Args:
-        plugin_details (dict): Un dizionario contenente i dettagli del plugin.
-            Struttura attesa:
-            - description (str): Descrizione del plugin.
-            - parameters (dict, opzionale): Parametri del plugin come chiave-valore.
-    """
-    def aggiorna_dettagli_plugin(self, plugin_details):
-        self.ui.mostra_dettagli_plugin(
-            description=plugin_details["description"],
-            parameters=plugin_details.get("params", {})  # Parametri opzionali
-        )
-
-    """
-    Mostra i risultati di un test eseguito nell'interfaccia grafica.
-
-    Args:
-        results (dict): Un dizionario contenente i risultati del test.
-            Struttura attesa:
-            - status (str): Stato del test (es. "success", "failed").
-            - log (str): Log dettagliato del test.
-            - datetime (str): Timestamp del test formattato (es. "YYYY-MM-DD HH:MM:SS").
-    """
-    def aggiorna_risultato_test(self, results):
-        status = results.get("status", "unknown")
-        log = results.get("log", "")
-        datetime = results.get("datetime", "N/A")
-
-        self.ui.mostra_risultato_test(
-            status=status,
-            log=log,
-            datetime=datetime
-        )

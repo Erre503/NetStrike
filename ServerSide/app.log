@@ -203,3 +203,79 @@
 2025-05-02 13:23:11,751 - INFO - Application started.
 2025-05-02 13:23:11,770 - WARNING -  * Debugger is active!
 2025-05-02 13:23:11,780 - INFO -  * Debugger PIN: 913-243-004
+2025-05-14 05:16:11,136 - INFO - Application started.
+2025-05-14 05:16:12,279 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on https://127.0.0.1:5000
+ * Running on https://192.168.55.167:5000
+2025-05-14 05:16:12,279 - INFO - [33mPress CTRL+C to quit[0m
+2025-05-14 05:16:12,285 - INFO -  * Restarting with stat
+2025-05-14 05:16:13,062 - INFO - Application started.
+2025-05-14 05:16:13,081 - WARNING -  * Debugger is active!
+2025-05-14 05:16:13,090 - INFO -  * Debugger PIN: 119-107-231
+2025-05-14 05:17:16,263 - DEBUG - Login attempt on user :test...
+2025-05-14 05:17:16,264 - DEBUG - test: Has logged successfully
+2025-05-14 05:17:16,264 - INFO - 127.0.0.1 - - [14/May/2025 05:17:16] "POST /login HTTP/1.1" 200 -
+2025-05-14 05:17:16,296 - INFO - 127.0.0.1 - - [14/May/2025 05:17:16] "[31m[1mGET /notification/1747192636 HTTP/1.1[0m" 422 -
+2025-05-14 05:17:16,367 - INFO - 127.0.0.1 - - [14/May/2025 05:17:16] "[31m[1mGET /plugin_list HTTP/1.1[0m" 422 -
+2025-05-14 05:17:22,694 - INFO - 127.0.0.1 - - [14/May/2025 05:17:22] "[31m[1mGET /plugin_list HTTP/1.1[0m" 422 -
+2025-05-14 05:17:22,702 - INFO - 127.0.0.1 - - [14/May/2025 05:17:22] "[31m[1mGET /plugin_list HTTP/1.1[0m" 422 -
+2025-05-14 05:17:22,710 - INFO - 127.0.0.1 - - [14/May/2025 05:17:22] "[31m[1mGET /plugin_list HTTP/1.1[0m" 422 -
+2025-05-14 05:17:46,195 - INFO - 127.0.0.1 - - [14/May/2025 05:17:46] "[31m[1mGET /plugin_list HTTP/1.1[0m" 422 -
+2025-05-14 05:17:46,203 - INFO - 127.0.0.1 - - [14/May/2025 05:17:46] "[31m[1mGET /plugin_list HTTP/1.1[0m" 422 -
+2025-05-14 05:17:46,212 - INFO - 127.0.0.1 - - [14/May/2025 05:17:46] "[31m[1mGET /plugin_list HTTP/1.1[0m" 422 -
+2025-05-14 05:19:58,460 - INFO - Application started.
+2025-05-14 05:19:59,404 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on https://127.0.0.1:5000
+ * Running on https://192.168.55.167:5000
+2025-05-14 05:19:59,404 - INFO - [33mPress CTRL+C to quit[0m
+2025-05-14 05:19:59,407 - INFO -  * Restarting with stat
+2025-05-14 05:20:00,175 - INFO - Application started.
+2025-05-14 05:20:00,191 - WARNING -  * Debugger is active!
+2025-05-14 05:20:00,200 - INFO -  * Debugger PIN: 119-107-231
+2025-05-14 05:20:52,897 - DEBUG - Login attempt on user :test...
+2025-05-14 05:20:52,898 - DEBUG - test: Has logged successfully
+2025-05-14 05:20:52,898 - INFO - 127.0.0.1 - - [14/May/2025 05:20:52] "POST /login HTTP/1.1" 200 -
+2025-05-14 05:20:52,931 - INFO - 127.0.0.1 - - [14/May/2025 05:20:52] "GET /notification/1747192853 HTTP/1.1" 200 -
+2025-05-14 05:20:53,089 - INFO - 127.0.0.1 - - [14/May/2025 05:20:53] "[35m[1mGET /plugin_list HTTP/1.1[0m" 500 -
+2025-05-14 05:21:01,599 - INFO - 127.0.0.1 - - [14/May/2025 05:21:01] "[35m[1mPOST /upload_plugin HTTP/1.1[0m" 500 -
+2025-05-14 05:21:01,648 - INFO - 127.0.0.1 - - [14/May/2025 05:21:01] "[35m[1mGET /plugin_list HTTP/1.1[0m" 500 -
+2025-05-14 05:21:01,700 - INFO - 127.0.0.1 - - [14/May/2025 05:21:01] "[35m[1mGET /plugin_list HTTP/1.1[0m" 500 -
+2025-05-14 05:21:01,757 - INFO - 127.0.0.1 - - [14/May/2025 05:21:01] "[35m[1mGET /plugin_list HTTP/1.1[0m" 500 -
+2025-05-14 05:21:18,096 - INFO - 127.0.0.1 - - [14/May/2025 05:21:18] "[35m[1mPOST /upload_plugin HTTP/1.1[0m" 500 -
+2025-05-14 05:21:18,152 - INFO - 127.0.0.1 - - [14/May/2025 05:21:18] "[35m[1mGET /plugin_list HTTP/1.1[0m" 500 -
+2025-05-14 05:21:18,217 - INFO - 127.0.0.1 - - [14/May/2025 05:21:18] "[35m[1mGET /plugin_list HTTP/1.1[0m" 500 -
+2025-05-14 05:21:18,262 - INFO - 127.0.0.1 - - [14/May/2025 05:21:18] "[35m[1mGET /plugin_list HTTP/1.1[0m" 500 -
+2025-05-14 05:22:23,958 - INFO - 127.0.0.1 - - [14/May/2025 05:22:23] "[35m[1mPOST /upload_plugin HTTP/1.1[0m" 500 -
+2025-05-14 05:22:24,004 - INFO - 127.0.0.1 - - [14/May/2025 05:22:24] "[35m[1mGET /plugin_list HTTP/1.1[0m" 500 -
+2025-05-14 05:22:24,050 - INFO - 127.0.0.1 - - [14/May/2025 05:22:24] "[35m[1mGET /plugin_list HTTP/1.1[0m" 500 -
+2025-05-14 05:22:24,111 - INFO - 127.0.0.1 - - [14/May/2025 05:22:24] "[35m[1mGET /plugin_list HTTP/1.1[0m" 500 -
+2025-05-14 05:22:34,954 - INFO - Application started.
+2025-05-14 05:22:35,847 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on https://127.0.0.1:5000
+ * Running on https://192.168.55.167:5000
+2025-05-14 05:22:35,847 - INFO - [33mPress CTRL+C to quit[0m
+2025-05-14 05:22:35,849 - INFO -  * Restarting with stat
+2025-05-14 05:22:36,587 - INFO - Application started.
+2025-05-14 05:22:36,603 - WARNING -  * Debugger is active!
+2025-05-14 05:22:36,610 - INFO -  * Debugger PIN: 119-107-231
+2025-05-14 05:22:54,224 - DEBUG - Login attempt on user :test...
+2025-05-14 05:22:54,225 - DEBUG - test: Has logged successfully
+2025-05-14 05:22:54,225 - INFO - 127.0.0.1 - - [14/May/2025 05:22:54] "POST /login HTTP/1.1" 200 -
+2025-05-14 05:22:54,256 - INFO - 127.0.0.1 - - [14/May/2025 05:22:54] "GET /notification/1747192974 HTTP/1.1" 200 -
+2025-05-14 05:22:54,355 - INFO - 127.0.0.1 - - [14/May/2025 05:22:54] "[35m[1mGET /plugin_list HTTP/1.1[0m" 500 -
+2025-05-14 05:23:00,133 - INFO - 127.0.0.1 - - [14/May/2025 05:23:00] "[35m[1mPOST /upload_plugin HTTP/1.1[0m" 500 -
+2025-05-14 05:23:00,189 - INFO - 127.0.0.1 - - [14/May/2025 05:23:00] "[35m[1mGET /plugin_list HTTP/1.1[0m" 500 -
+2025-05-14 05:23:00,234 - INFO - 127.0.0.1 - - [14/May/2025 05:23:00] "[35m[1mGET /plugin_list HTTP/1.1[0m" 500 -
+2025-05-14 05:23:00,279 - INFO - 127.0.0.1 - - [14/May/2025 05:23:00] "[35m[1mGET /plugin_list HTTP/1.1[0m" 500 -
+2025-05-14 05:27:40,030 - INFO -  * Detected change in 'C:\\Users\\Erre\\Desktop\\PlugInk\\ServerSide\\core\\plugin_loader.py', reloading
+2025-05-14 05:27:40,204 - INFO -  * Restarting with stat
+2025-05-14 05:27:41,406 - INFO - Application started.
+2025-05-14 05:27:41,437 - WARNING -  * Debugger is active!
+2025-05-14 05:27:41,445 - INFO -  * Debugger PIN: 119-107-231
+2025-05-14 05:27:53,484 - INFO - 127.0.0.1 - - [14/May/2025 05:27:53] "[31m[1mPOST /upload_plugin HTTP/1.1[0m" 422 -
+2025-05-14 05:27:53,494 - INFO - 127.0.0.1 - - [14/May/2025 05:27:53] "[31m[1mGET /plugin_list HTTP/1.1[0m" 422 -
+2025-05-14 05:27:53,504 - INFO - 127.0.0.1 - - [14/May/2025 05:27:53] "[31m[1mGET /plugin_list HTTP/1.1[0m" 422 -
+2025-05-14 05:27:53,512 - INFO - 127.0.0.1 - - [14/May/2025 05:27:53] "[31m[1mGET /plugin_list HTTP/1.1[0m" 422 -

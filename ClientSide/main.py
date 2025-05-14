@@ -1,6 +1,6 @@
 # main.py
 from core.core import ClientCore
-from core.core import UIUpdater
+from core.ui_updater import UIUpdater
 from ui.main_window import MainInterfaccia
 import customtkinter as ctk
 from ui.login_window import get_login_info
