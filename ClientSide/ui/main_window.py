@@ -310,7 +310,7 @@ class MainInterfaccia(ctk.CTkFrame):
     def cambiaView(self):
         if self.mode == "p":
             self.mode = "t"
-
+            self.coreApplicazione.stop_polling()
             self.labelCaricaP.pack_forget()
             self.bottoneCaricaP.pack_forget()
 
@@ -337,7 +337,7 @@ class MainInterfaccia(ctk.CTkFrame):
            
         else:
             self.mode = "p"
-
+            self.coreApplicazione.start_polling()
             self.labelCaricaP.pack(pady=10)
             self.bottoneCaricaP.pack(pady=10)
 

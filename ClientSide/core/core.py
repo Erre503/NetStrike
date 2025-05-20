@@ -48,6 +48,7 @@ class ClientCore:
         self.server_url = server_url
         self.ui_handler = ui_handler
         self.last_update = round(time.time())
+        self.poll = False
         logging.basicConfig(
             level=logging.DEBUG,
             format='%(asctime)s - %(levelname)s - %(message)s',
@@ -372,6 +373,7 @@ class ClientCore:
     """
     def start_polling(self):
         logging.info("Starting polling for notifications.")
+        self.poll = True
         polling_thread = threading.Thread(target=self.poll_notifications)
         polling_thread.daemon = True
         polling_thread.start()
@@ -391,7 +393,7 @@ class ClientCore:
             4. Attende 5 secondi prima della successiva richiesta.
     """
     def poll_notifications(self):
-        while True:
+        while self.poll:
             logging.debug("Polling for notifications...")
             dati = self.invia_richiesta("/notification/"+str(self.last_update))["update"]
             if dati is not None and dati > 0:
@@ -399,3 +401,6 @@ class ClientCore:
                 logging.info("Received new notifications, updating UI.")
                 self.aggiorna_ui('', UpdateType.AGGIORNA_LISTA)
             time.sleep(5)
+
+    def stop_polling(self):
+        self.poll = False
