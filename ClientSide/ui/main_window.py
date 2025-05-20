@@ -68,6 +68,9 @@ class MainInterfaccia(ctk.CTkFrame):
         self.labelView.pack(pady=10)
 
 
+        self.bottoneUpdate = ctk.CTkButton(self.frameDX, text="UPDATE SCRIPT LIST", corner_radius=8, command=self.aggiornaListaPlugin)
+        self.bottoneUpdate.pack(pady=10)
+
         self.bottoneView = ctk.CTkButton(self.frameDX, text="VIEW TEST LOGS", corner_radius=8, command=self.cambiaView)
         self.bottoneView.pack(pady=10)
 
@@ -328,6 +331,7 @@ class MainInterfaccia(ctk.CTkFrame):
 
 
             self.bottoneRinominaP.configure(text="EDIT LOG")
+            self.bottoneUpdate.pack_forget()
             self.bottoneView.configure(text="VIEW PLUG-INs")
             self.bottoneRimuoviP.pack_forget()
             self.bottoneConfig.pack_forget()
@@ -368,6 +372,8 @@ class MainInterfaccia(ctk.CTkFrame):
 
 
             self.bottoneRimuoviP.pack(pady=10)
+            self.bottoneView.configure(text="VIEW TEST LOGS")
+            self.bottoneUpdate.pack(before=self.bottoneView)
             self.informazioniTest.pack(pady=10)
             self.bottoneConfig.pack(pady=10)
             self.bottoneStart.pack(pady=10)

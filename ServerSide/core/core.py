@@ -207,6 +207,7 @@ def test_execute(id=0):
 # Funzione per modificare i dati di un plugin
 @app.route("/edit_plugin/<int:id>", endpoint='edit_plugin', methods=["PATCH"])
 def modifyPlugin(id=0):
+    global last_update
     plugin = PlugTable.query.get(id)
     data = request.get_json()
     data = sanitize_dict(data)
@@ -218,10 +219,13 @@ def modifyPlugin(id=0):
     if data['description']:
        plugin.description = data['description']
        db.session.commit()
+    last_update = round(time.time())
+    return jsonify({"message": "Plugin edited successfully"}), 200
 
 #Eliminare dal sistema un plugin
 @app.route("/remove_plugin/<int:id>", endpoint='remove_plugin', methods=["GET"])
 def modifyPlugin(id=0):
+    global last_update
     plugin = PlugTable.query.get(id)
     
     if not plugin:
@@ -230,6 +234,7 @@ def modifyPlugin(id=0):
     if elimina_plugin(plugin.name):
         PlugTable.query.filter_by(id=id).delete()
         db.session.commit()
+        last_update = round(time.time())
         return jsonify({"message": "Plugin removed successfully"}), 200  # Return a JSON response with status 200
 
     abort(500, description="Failed to remove the plugin")  # Return 500 if elimina_plugin fails
