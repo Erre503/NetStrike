@@ -79,7 +79,7 @@ class ClientCore:
         elif update_type == UpdateType.DETTAGLI:
             self.ui_handler.aggiorna_dettagli(data)
         elif update_type == UpdateType.AGGIORNA_LISTA:
-            print("AGGIORNA LA CAZZO DI LISTA") #Chage
+            self.ui_handler.notifica()
         elif update_type == UpdateType.RISULTATI_TEST:
             self.ui_handler.aggiorna_risultato_test(data)
         else:

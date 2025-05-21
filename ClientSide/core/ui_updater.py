@@ -80,3 +80,6 @@ class UIUpdater:
             log=log,
             datetime=datetime
         )
+
+    def notifica(self):
+        self.ui.notifica()
