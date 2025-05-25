@@ -8,7 +8,7 @@ import subprocess #serve per i file bash
 from pathlib import Path #serve per ottenere il riferimento al percorso del file corrente
 from datetime import datetime
 import platform
-from docker_manager import DockerManager
+from .docker_manager import DockerManager
 
 FOLDER = Path(__file__).resolve().parent.parent / "plugins"
 
