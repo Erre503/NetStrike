@@ -279,3 +279,79 @@
 2025-05-14 05:27:53,494 - INFO - 127.0.0.1 - - [14/May/2025 05:27:53] "[31m[1mGET /plugin_list HTTP/1.1[0m" 422 -
 2025-05-14 05:27:53,504 - INFO - 127.0.0.1 - - [14/May/2025 05:27:53] "[31m[1mGET /plugin_list HTTP/1.1[0m" 422 -
 2025-05-14 05:27:53,512 - INFO - 127.0.0.1 - - [14/May/2025 05:27:53] "[31m[1mGET /plugin_list HTTP/1.1[0m" 422 -
+2025-05-14 05:36:57,890 - INFO - Application started.
+2025-05-14 05:36:58,830 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on https://127.0.0.1:5000
+ * Running on https://192.168.55.167:5000
+2025-05-14 05:36:58,831 - INFO - [33mPress CTRL+C to quit[0m
+2025-05-14 05:36:58,833 - INFO -  * Restarting with stat
+2025-05-14 05:36:59,639 - INFO - Application started.
+2025-05-14 05:36:59,657 - WARNING -  * Debugger is active!
+2025-05-14 05:36:59,664 - INFO -  * Debugger PIN: 119-107-231
+2025-05-14 05:38:07,917 - INFO - 127.0.0.1 - - [14/May/2025 05:38:07] "POST /login HTTP/1.1" 200 -
+2025-05-14 05:38:07,953 - INFO - 127.0.0.1 - - [14/May/2025 05:38:07] "GET /notification/1747193888 HTTP/1.1" 200 -
+2025-05-14 05:38:08,067 - INFO - 127.0.0.1 - - [14/May/2025 05:38:08] "[35m[1mGET /plugin_list HTTP/1.1[0m" 500 -
+2025-05-14 05:38:12,244 - ERROR - test: Creation of a plugin has failed
+2025-05-14 05:38:12,244 - INFO - 127.0.0.1 - - [14/May/2025 05:38:12] "[33mPOST /upload_plugin HTTP/1.1[0m" 404 -
+2025-05-14 05:38:12,290 - INFO - 127.0.0.1 - - [14/May/2025 05:38:12] "[35m[1mGET /plugin_list HTTP/1.1[0m" 500 -
+2025-05-14 05:38:12,344 - INFO - 127.0.0.1 - - [14/May/2025 05:38:12] "[35m[1mGET /plugin_list HTTP/1.1[0m" 500 -
+2025-05-14 05:38:12,397 - INFO - 127.0.0.1 - - [14/May/2025 05:38:12] "[35m[1mGET /plugin_list HTTP/1.1[0m" 500 -
+2025-05-14 05:39:08,862 - INFO - 127.0.0.1 - - [14/May/2025 05:39:08] "[35m[1mPOST /upload_plugin HTTP/1.1[0m" 500 -
+2025-05-14 05:39:08,906 - INFO - 127.0.0.1 - - [14/May/2025 05:39:08] "[35m[1mGET /plugin_list HTTP/1.1[0m" 500 -
+2025-05-14 05:39:08,951 - INFO - 127.0.0.1 - - [14/May/2025 05:39:08] "[35m[1mGET /plugin_list HTTP/1.1[0m" 500 -
+2025-05-14 05:39:08,997 - INFO - 127.0.0.1 - - [14/May/2025 05:39:08] "[35m[1mGET /plugin_list HTTP/1.1[0m" 500 -
+2025-05-14 05:39:17,847 - INFO - 127.0.0.1 - - [14/May/2025 05:39:17] "[35m[1mPOST /upload_plugin HTTP/1.1[0m" 500 -
+2025-05-14 05:39:17,897 - INFO - 127.0.0.1 - - [14/May/2025 05:39:17] "[35m[1mGET /plugin_list HTTP/1.1[0m" 500 -
+2025-05-14 05:39:17,943 - INFO - 127.0.0.1 - - [14/May/2025 05:39:17] "[35m[1mGET /plugin_list HTTP/1.1[0m" 500 -
+2025-05-14 05:39:17,984 - INFO - 127.0.0.1 - - [14/May/2025 05:39:17] "[35m[1mGET /plugin_list HTTP/1.1[0m" 500 -
+2025-05-14 05:39:33,653 - INFO - 127.0.0.1 - - [14/May/2025 05:39:33] "[35m[1mPOST /upload_plugin HTTP/1.1[0m" 500 -
+2025-05-14 05:39:33,697 - INFO - 127.0.0.1 - - [14/May/2025 05:39:33] "[35m[1mGET /plugin_list HTTP/1.1[0m" 500 -
+2025-05-14 05:39:33,743 - INFO - 127.0.0.1 - - [14/May/2025 05:39:33] "[35m[1mGET /plugin_list HTTP/1.1[0m" 500 -
+2025-05-14 05:39:33,796 - INFO - 127.0.0.1 - - [14/May/2025 05:39:33] "[35m[1mGET /plugin_list HTTP/1.1[0m" 500 -
+2025-05-14 05:40:42,394 - INFO - Application started.
+2025-05-14 05:40:43,299 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on https://127.0.0.1:5000
+ * Running on https://192.168.55.167:5000
+2025-05-14 05:40:43,299 - INFO - [33mPress CTRL+C to quit[0m
+2025-05-14 05:40:43,301 - INFO -  * Restarting with stat
+2025-05-14 05:40:44,090 - INFO - Application started.
+2025-05-14 05:40:44,107 - WARNING -  * Debugger is active!
+2025-05-14 05:40:44,118 - INFO -  * Debugger PIN: 119-107-231
+2025-05-14 05:41:03,536 - INFO - 127.0.0.1 - - [14/May/2025 05:41:03] "POST /login HTTP/1.1" 200 -
+2025-05-14 05:41:03,571 - INFO - 127.0.0.1 - - [14/May/2025 05:41:03] "GET /notification/1747194063 HTTP/1.1" 200 -
+2025-05-14 05:41:03,634 - ERROR - test: Requested the plugin list but was not found
+2025-05-14 05:41:03,634 - INFO - 127.0.0.1 - - [14/May/2025 05:41:03] "GET /plugin_list HTTP/1.1" 200 -
+2025-05-14 05:41:11,763 - INFO - 127.0.0.1 - - [14/May/2025 05:41:11] "[35m[1mPOST /upload_plugin HTTP/1.1[0m" 500 -
+2025-05-14 05:41:11,773 - ERROR - test: Requested the plugin list but was not found
+2025-05-14 05:41:11,774 - INFO - 127.0.0.1 - - [14/May/2025 05:41:11] "GET /plugin_list HTTP/1.1" 200 -
+2025-05-14 05:41:11,783 - ERROR - test: Requested the plugin list but was not found
+2025-05-14 05:41:11,784 - INFO - 127.0.0.1 - - [14/May/2025 05:41:11] "GET /plugin_list HTTP/1.1" 200 -
+2025-05-14 05:41:11,791 - ERROR - test: Requested the plugin list but was not found
+2025-05-14 05:41:11,793 - INFO - 127.0.0.1 - - [14/May/2025 05:41:11] "GET /plugin_list HTTP/1.1" 200 -
+2025-05-14 05:42:43,196 - INFO -  * Detected change in 'C:\\Users\\Erre\\Desktop\\PlugInk\\ServerSide\\core\\plugin_loader.py', reloading
+2025-05-14 05:42:43,312 - INFO -  * Restarting with stat
+2025-05-14 05:42:44,168 - INFO - Application started.
+2025-05-14 05:42:44,190 - WARNING -  * Debugger is active!
+2025-05-14 05:42:44,198 - INFO -  * Debugger PIN: 119-107-231
+2025-05-14 05:43:14,720 - INFO - 127.0.0.1 - - [14/May/2025 05:43:14] "POST /login HTTP/1.1" 200 -
+2025-05-14 05:43:14,757 - INFO - 127.0.0.1 - - [14/May/2025 05:43:14] "GET /notification/1747194195 HTTP/1.1" 200 -
+2025-05-14 05:43:14,817 - ERROR - test: Requested the plugin list but was not found
+2025-05-14 05:43:14,817 - INFO - 127.0.0.1 - - [14/May/2025 05:43:14] "GET /plugin_list HTTP/1.1" 200 -
+2025-05-14 05:43:25,657 - DEBUG - matplotlib data path: C:\Users\Erre\Desktop\PlugInk\ServerSide\venv\lib\site-packages\matplotlib\mpl-data
+2025-05-14 05:43:25,691 - DEBUG - CONFIGDIR=C:\Users\Erre\.matplotlib
+2025-05-14 05:43:25,694 - DEBUG - interactive is False
+2025-05-14 05:43:25,694 - DEBUG - platform is win32
+2025-05-14 05:43:25,907 - DEBUG - CACHEDIR=C:\Users\Erre\.matplotlib
+2025-05-14 05:43:25,913 - DEBUG - Using fontManager instance from C:\Users\Erre\.matplotlib\fontlist-v390.json
+2025-05-14 05:43:28,931 - ERROR - test: Creation of a plugin has failed
+2025-05-14 05:43:28,932 - INFO - 127.0.0.1 - - [14/May/2025 05:43:28] "[33mPOST /upload_plugin HTTP/1.1[0m" 404 -
+2025-05-14 05:43:28,944 - ERROR - test: Requested the plugin list but was not found
+2025-05-14 05:43:28,944 - INFO - 127.0.0.1 - - [14/May/2025 05:43:28] "GET /plugin_list HTTP/1.1" 200 -
+2025-05-14 05:43:28,953 - ERROR - test: Requested the plugin list but was not found
+2025-05-14 05:43:28,953 - INFO - 127.0.0.1 - - [14/May/2025 05:43:28] "GET /plugin_list HTTP/1.1" 200 -
+2025-05-14 05:43:28,963 - ERROR - test: Requested the plugin list but was not found
+2025-05-14 05:43:28,964 - INFO - 127.0.0.1 - - [14/May/2025 05:43:28] "GET /plugin_list HTTP/1.1" 200 -
+2025-05-14 05:46:23,093 - INFO -  * Detected change in 'C:\\Users\\Erre\\Desktop\\PlugInk\\ServerSide\\core\\plugin_loader.py', reloading
+2025-05-14 05:46:23,287 - INFO -  * Restarting with stat

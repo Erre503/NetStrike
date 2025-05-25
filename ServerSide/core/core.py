@@ -142,12 +142,13 @@ def index():
 def login():
     username = request.json.get('username', None)
     password = request.json.get('password', None)
-    logging.debug("Login attempt on user :"+username+"...")
+    print("username: "+username+"\tpassword: "+password) #DEBUG
     if(username != "test" or password != "password"):
-        logging.error("Login failed due to incorrect credentials")
+        print("Login failed") #DEBUG
         return jsonify({'msg':'Error, login failed'}), 401
+
     access_token = create_access_token(identity=username)
-    logging.debug(username+": Has logged successfully")
+    print('AccessToken: '+access_token) #DEBUG
     return jsonify(access_token=access_token), 200
 
 # Funzione per la lista dei plugin
