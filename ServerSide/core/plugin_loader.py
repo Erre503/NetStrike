@@ -8,6 +8,7 @@ import subprocess #serve per i file bash
 from pathlib import Path #serve per ottenere il riferimento al percorso del file corrente
 from datetime import datetime
 import platform
+from docker_manager import DockerManager
 
 FOLDER = Path(__file__).resolve().parent.parent / "plugins"
 
@@ -161,35 +162,28 @@ def creaPlugin(nome_file, contenuto):
     return None
 
 
-def avvia_plugin(nome_plugin, vet_param):
-    res = {}
-    res['datetime'] = datetime.now()
-    file_name, extension = process_plugin_name(nome_plugin)
-    if extension == 'py':
-        try:
-            # Importa dinamicamente il modulo Python
-            modulo = importlib.import_module('plugins.'+file_name)  # Rimuove ".py"
-            plugin_instance = modulo.Plugin()  # Crea l'istanza del plugin
-            print("PARAMS: ",vet_param)
-            plugin_instance.set_param(vet_param)
+def avvia_plugin(nome_plugin, vet_param, dm: DockerManager):
+    """
+    Avvia un plugin (Python o Bash) usando DockerManager.
+    """
+    res = {
+        'datetime': datetime.now(),
+        'plugin': nome_plugin
+    }
 
+    try:
+        file_path = FOLDER / nome_plugin
+        if not file_path.exists():
+            raise FileNotFoundError(f"Plugin '{nome_plugin}' non trovato.")
 
-            res['log'] = plugin_instance.execute()  # Esegui il plugin
-            res['status'] = 'finished'
+        # Prepariamo la directory e i parametri per DockerManager
+        absolute_path = str(file_path.resolve())
+        dm.run_script(absolute_path, vet_param)
+        res['status'] = 'started'
+        res['log'] = f"Plugin '{nome_plugin}' avviato nel container Docker."
 
+    except Exception as e:
+        res['status'] = 'failed'
+        res['log'] = f"Error during script start '{nome_plugin}': {e}"
 
-        except Exception as e:
-            res['log'] = f"Errore nell'importazione ed esecuzione del modulo Python {nome_plugin}: {e}"
-            res['status'] = 'failed'
-
-    # Se il plugin è Bash
-    elif extension == 'sh':
-        # Verifica che il file esista
-        percorso_file = FOLDER / nome_plugin
-
-        res['log'] = avvia_plugin_bash(percorso_file, vet_param)  # Esegui il plugin Bash
-        res['status'] = 'finished'
-    else:
-        res['log'] = "Tipo di plugin non supportato."
-        res['status'] = failed
     return res

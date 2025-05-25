@@ -23,7 +23,7 @@ class DockerManager:
                 return "bash"
         raise ValueError("Lang not recognized")
 
-    def run_script(self, path_script):
+    def run_script(self, path_script, env_vars=None):
         lang = self.identify_language(path_script)
         script_dir = os.path.dirname(path_script)
         script_name = os.path.basename(path_script)
@@ -43,16 +43,19 @@ class DockerManager:
 
         def _threaded_run():
             try:
-                logging.info(f"executing {script_name} on docker...")
+                logging.info(f"Executed {script_name} on Docker...")
+                container_env = env_vars if env_vars else {}
+
                 output = self.client.containers.run(
                     image=image,
                     command=cmd,
                     volumes={script_dir: {'bind': '/app', 'mode': 'ro'}},
                     working_dir="/app",
+                    environment=container_env,
                     stdout=True, stderr=True, remove=True
                 )
-                logging.info(f"Output from {script_name}:\n{output.decode()}")
+                logging.info(f"Output di {script_name}:\n{output.decode()}")
             except Exception as e:
-                logging.error(f"Error during {script_name}: {e}")
+                logging.error(f"Error during execution of {script_name}: {e}")
 
         threading.Thread(target=_threaded_run).start()

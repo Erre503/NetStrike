@@ -6,18 +6,20 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Nullable, create_engine, Column, Integer, String, Sequence, false
 from sqlalchemy.orm import relationship
 from .plugin_loader import *
+from .docker_manager import DockerManager
 import time
 import datetime
 from utils.key_manager import KeyManager
 from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity
 import logging
 
+
 # from flask_classful import FlaskView, route   Prossima implementazione
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///sqlite.db'
 db = SQLAlchemy(app)
-
+dm = DockerManager()
 app.config['JWT_SECRET_KEY'] =  KeyManager.generate_key()
 jwt = JWTManager(app)
 
@@ -255,7 +257,7 @@ def plug_table_details(id=0,parametri=''):
     if plugin is None:
         logging.error("Tried to execute not existing plugin : "+get_jwt_identity())
         return "error 404, no such plugin has been found"
-    result = avvia_plugin(plugin.name[:-3],parametri)
+    result = avvia_plugin(plugin.name[:-3],parametri, dm)
     logUpdate(result)
     logging.debug( get_jwt_identity()+": Has executed plugin "+plugin.name)
     return jsonify(result) 
