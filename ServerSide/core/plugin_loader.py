@@ -170,10 +170,7 @@ def avvia_plugin(nome_plugin, vet_param):
             # Importa dinamicamente il modulo Python
             modulo = importlib.import_module('plugins.'+file_name)  # Rimuove ".py"
             plugin_instance = modulo.Plugin()  # Crea l'istanza del plugin
-            print("PARAMS: ",vet_param)
             plugin_instance.set_param(vet_param)
-
-
             res['log'] = plugin_instance.execute()  # Esegui il plugin
             res['status'] = 'finished'
 
