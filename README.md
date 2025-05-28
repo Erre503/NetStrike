@@ -9,19 +9,19 @@ The project was initially developed for cybersecurity purposes, enabling the sim
 Due to this focus, NetStrike has been built with a strong emphasis on security, featuring encryption, secure authentication (JWT), and input validation.
 
 # Features
--Upload and manage scripts remotely
+- Upload and manage scripts remotely
 
--Supported script types: .py, .sh, .ps1 (PowerShell support coming in future upgrades)
+- Supported script types: .py, .sh, .ps1 (PowerShell support coming in future upgrades)
 
--Scheduled execution of scripts (future upgrade)
+- Scheduled execution of scripts
 
--Secure communication over HTTPS
+- Secure communication over HTTPS
 
--User authentication via JWT
+- User authentication via JWT
 
--Input and output sanitization to prevent injection attacks
+- Input and output sanitization to prevent injection attacks
 
--Role-based access control (future upgrade)
+- Role-based access control (future upgrade)
 
 # Example - Script Templates
 Scripts must implement a specific interface depending on the language.
@@ -31,17 +31,22 @@ Python script
 class Script(Interface_Script):
     def __init__(self):
         self.params = []
-        self.keys = []
+        self.keys = ["reciver_email", "target_url", "seconds"]
 
     def execute(self):
-        # The actual script
-        return "Output"
+        return "The actual script"
 
     def get_param(self):
         return self.keys
 
     def set_param(self, vet_param):
-        self.params = vet_param
+        try:
+            self.params = []
+            self.params.append(vet_param["reciver_email"])
+            self.params.append(vet_param["target_url"])
+            self.params.append(float(vet_param["seconds"]))
+        except (ValueError, KeyError):
+            return False
         return True
 ```
 Bash script
@@ -114,24 +119,33 @@ Authorization: Bearer <token>
 ##### Example of response
 ```yaml
 {
-  "scripts": ["pythonScript.py", "usefulTool.sh"]
+    [
+        {
+            'id': 1,
+            'name': "pythonScript.py"
+        },
+        {
+            'id': 2,
+            'name': "usefulTool.sh"
+        }
+    ]
 }
 ```
 
 ## Get script description
 
 ```https
-  GET /script_details/<script_name>
+  GET /script_details/<script_id>
 ```
 
 | Parameter | Type     | Description                       |
 | :-------- | :------- | :-------------------------------- |
-| `script_name`      | `string` | **Required**. Name of the script (without extension) |
+| `script_id`      | `integer` | **Required**. ID of the script |
 | `token` | `string` | **Required**. JWT token|
 
 ##### Example of request
 ```yaml
-GET /script_details/pythonScript
+GET /script_details/1
 Authorization: Bearer <token>
 ```
 
@@ -146,19 +160,18 @@ Authorization: Bearer <token>
 ## Edit script
 
 ```https
-  PATCH /edit_script/<script_name>
+  PATCH /edit_script/<script_id>
 ```
 
 | Parameter | Type     | Description                       |
-| :-------- | :------- | :-------------------------------- |
-| `script_name`      | `string` | **Required**. Name of the script (without extension) |
+| `script_id`      | `integer` | **Required**. ID of the script |
 | `token` | `string` | **Required**. JWT token|
 | `name`      | `string` | **Required**. New name (set to None if it should not be changed) |
 | `description`      | `string` | **Required**. New description (set to None if it should not be changed) |
 
 ##### Example of request
 ```yaml
-PATCH /edit_script/pythonScript
+PATCH /edit_script/2
 Authorization: Bearer <token>
 
 {
@@ -176,17 +189,17 @@ Authorization: Bearer <token>
 ## Remove script
 
 ```https
-  DELETE /remove_script/<script_name>
+  DELETE /remove_script/<script_id>
 ```
 
 | Parameter | Type     | Description                       |
 | :-------- | :------- | :-------------------------------- |
-| `script_name`      | `string` | **Required**. Name of the script (without extension) |
+| `script_id`      | `integer` | **Required**. ID of the script |
 | `token` | `string` | **Required**. JWT token|
 
 ##### Example of request
 ```yaml
-DELETE /remove_script/pythonScript
+DELETE /remove_script/12
 Authorization: Bearer <token>
 ```
 
@@ -197,18 +210,18 @@ Authorization: Bearer <token>
 
 ## Execute script
 ```https
-  POST /execute/<script_name>
+  POST /execute/<script_id>
 ```
 
 | Parameter | Type     | Description                       |
 | :-------- | :------- | :-------------------------------- |
-| `script_name`      | `string` | **Required**. Name of the script (without extension) |
+| `script_id`      | `integer` | **Required**. ID of the script |
 | `token` | `string` | **Required**. JWT token|
 | Request body      | `dictionary` | **Required**. Dictionary of parameters. The keys must match the expected names (see 'Get Script Description'). All parameters are required unless otherwise stated. |
 
 ##### Example of request
 ```yaml
-POST /execute/pythonScript
+POST /execute/3
 Authorization: Bearer <token>
 
 {
@@ -222,7 +235,7 @@ Authorization: Bearer <token>
 {
   "date": "2025-04-14 18:51:30",
   "result": "Output of pythonScript", 
-  "status": "finished"
+  "success": true
 }
 ```
 
@@ -245,35 +258,46 @@ Authorization: Bearer <token>
 ##### Example of response
 ```yaml
 {
-  "tests": ["2025-04-14 14:24:51", "2025-04-14 18:52:58", "Routine_test_3"]
+    [
+        {
+            'id': 1
+            'name': "2025-05-27 15:36:37"
+        },
+        {
+            'id': 2
+            'name': "2025-05-30 05:03:18"
+        },
+        {
+            'id': 3
+            'name': "2025-06-17 16:26:09"
+        }
+    ]
 }
 ```
 
 ## Get test description
 
 ```https
-  GET /test_details/<test_name>
+  GET /test_details/<test_id>
 ```
 
 | Parameter | Type     | Description                       |
 | :-------- | :------- | :-------------------------------- |
-| `test_name`      | `string` | **Required**. Name of item to fetch |
+| `test_id`      | `integer` | **Required**. ID of the test |
 | `token` | `string` | **Required**. JWT token|
 
 ##### Example of request
 ```yaml
-GET /test_details/Routine_test_3
+GET /test_details/3
 Authorization: Bearer <token>
 ```
 
 ##### Example of response
 ```yaml
 {
-  "name": "Routine_test_3",
-  "date": "2025-04-14 18:51:30",
+  "data": "2025-06-17 16:26:09",
   "result": "Output of pythonScript", 
-  "status": "finished",
-  "script_executed": "pythonScript"
+  "success": true
 }
 ```
 
@@ -285,10 +309,9 @@ Authorization: Bearer <token>
 | Parameter | Type     | Description                       |
 | :-------- | :------- | :-------------------------------- |
 | `token` | `string` | **Required**. JWT token|
-| `script_name` | `string` | **Required**. Name of the script (without extension) |
+| `script_id`      | `integer` | **Required**. ID of the script |
 | `params` | `dictionary` | **Required**. Dictionary of script parameters. Keys must match those defined by the script (see 'Get Script Description'). All required parameters must be provided. |
 | `frequency` | `integer` | **Required**. Interval in seconds between each scheduled execution |
-| `first_dt` | `datetime` | **Required**. Timestamp of the first execution in format YYYY-MM-DD HH:MM:SS. |
 
 ##### Example of request
 ```yaml
@@ -296,14 +319,13 @@ POST /create_routine
 Authorization: Bearer <token>
 
 {
-  "script_name": "pythonScript",
+  "script_id": 4,
   "params":
   {
     "param1": "value",
     "param2": "value"
   },
   "frequency": 86400,
-  "first_dt":  "2025-03-04 14:30:00"
 }
 ```
 
@@ -315,18 +337,17 @@ Authorization: Bearer <token>
 ## Checks for updates of the plugin list or test list
 
 ```https
-  GET /notification/<list>/<timestamp>
+  GET /notification/<timestamp>
 ```
 
 | Parameter | Type     | Description                       |
 | :-------- | :------- | :-------------------------------- |
-| `list`      | `string` | **Required**. Type of resource to check. Must be either "plugin" or "test". |
 | `timestamp`      | `string` | **Required**. Name of item to fetch |
 | `token` | `string` | **Required**. JWT token|
 
 ##### Example of request
 ```yaml
-GET /notification/plugin/1745667165
+GET /notification/1745667165
 Authorization: Bearer <token>
 ```
 
