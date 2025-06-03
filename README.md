@@ -100,6 +100,34 @@ POST /login
 }
 ```
 
+## Upload new script
+
+```https
+  GET /upload_script
+```
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| Request body      | `dictionary` | **Required**. Contains the code of the script |
+
+##### Example of request
+```yaml
+POST /upload_script
+Authorization: Bearer <token>
+{
+    'content': 'class Plugin(Interfaccia_Plugin):\n    def __init__(self):\n        self.params = []\n        self.keys = ["Ciao", "io", "sono", "giraffa"]\n\n    def execute(self):\n        # The actual script\n        return "Output"\n\n    def get_param(self):\n        return self.keys\n\n    def set_param(self, vet_param):\n        self.params = vet_param\n        return True\n',
+
+    'name': 'fileTestBrutto.py'
+}
+```
+
+##### Example of response
+```yaml
+{
+    "message": "Plugin uploaded successfully"
+}
+```
+
 ## Get all scripts
 
 ```https
