@@ -1,8 +1,6 @@
-# Libreria per la classe UpdateType
+# Import necessary libraries for the ClientCore class
 from core.updateType import UpdateType
 from core.ui_updater import UIUpdater
-
-# Libreria per comunicare tramite i protocolli HTTP/HTTPS.
 import requests
 from flask import jsonify
 import time
@@ -11,39 +9,35 @@ import utilities.security_functions as sf
 import os
 import logging
 
-#Lista di endpoint di cui non loggare gli specifici dati inviati e ricevuti
+# List of endpoints for which specific data sent and received should not be logged
 PRIVATE_DATA_ENDPOINTS = ('/login', '/register')
 
 """
-Classe principale per il lato client del core.
+Main class for the client-side core.
 
-Questa classe si occupa di gestire la logica centrale per:
-    - La comunicazione con l'interfaccia grafica per aggiornare le informazioni visualizzate.
-
-    - L'interazione con il server (Core server-side):
-        Ottenere la lista dei plugin.
-        Richiedere dettagli di un plugin.
-        Avviare un test.
-        Salvare risultati dei test.
+This class manages the central logic for:
+    - Communication with the graphical interface to update displayed information.
+    - Interaction with the server (Core server-side):
+        - Obtaining the list of plugins.
+        - Requesting details of a plugin.
+        - Starting a test.
+        - Saving test results.
 
 Attributes:
-    server_url (str): URL del server a cui inoltrare le richieste.
-    ui_handler (object): Oggetto che gestisce l'aggiornamento dell'interfaccia grafica.
+    server_url (str): URL of the server to which requests are forwarded.
+    ui_handler (object): Object that manages the update of the graphical interface.
 """
-
-
 class ClientCore:
     """
-    Inizializza il ClientCore con il server URL, il gestore dell'interfaccia utente,
-    esegue login con le credenziali, configura il logger e avvia il poll degli aggiornamenti.
+    Initializes the ClientCore with the server URL, UI handler,
+    logs in with credentials, configures the logger, and starts polling for updates.
 
     Args:
-        server_url (str): URL del server a cui inoltrare le richieste.
-        ui_handler (UIUpdater): Oggetto che gestisce l'aggiornamento dell'interfaccia grafica.
-        username (str): Nome utente per effettuare il login
-        password (str): Password per effettuare il login
+        server_url (str): URL of the server to which requests are forwarded.
+        ui_handler (UIUpdater): Object that manages the update of the graphical interface.
+        username (str): Username for login.
+        password (str): Password for login.
     """
-
     def __init__(self, server_url, ui_handler, username, password):
         self.server_url = server_url
         self.ui_handler = ui_handler
@@ -62,16 +56,15 @@ class ClientCore:
         self.login(username, password)
 
     """
-    Invoca metodi del gestore dell'interfaccia grafica per aggiornarla.
+    Invokes methods of the UI handler to update the interface.
 
     Args:
-        data (dict): Dati da visualizzare nell'interfaccia grafica.
-        update_type (UpdateType): Tipo di aggiornamento richiesto.
+        data (dict): Data to be displayed in the graphical interface.
+        update_type (UpdateType): Type of update requested.
 
-    Eccezioni gestite:
-        - Tipo di aggiornamento non riconosciuto.
+    Exceptions handled:
+        - Unrecognized update type.
     """
-
     def aggiorna_ui(self, data, update_type):
         if update_type == UpdateType.LISTA:
             self.ui_handler.aggiorna_lista(data)
@@ -82,31 +75,30 @@ class ClientCore:
         elif update_type == UpdateType.RISULTATI_TEST:
             self.ui_handler.aggiorna_risultato_test(data)
         else:
-            logging.error("Type of UIUpdate unknown: %s",update_type)
+            logging.error("Type of UIUpdate unknown: %s", update_type)
 
     """
-    Invia una richiesta al server e gestisce la relativa risposta.
+    Sends a request to the server and handles the corresponding response.
 
     Args:
-        endpoint (str): Endpoint specifico del server (es. '/plugins').
-        metodo (str): Metodo HTTP da usare ('GET' o 'POST').
+        endpoint (str): Specific server endpoint (e.g., '/script_list').
+        metodo (str): HTTP method to use ('GET' or 'POST').
             Default: 'GET'.
-        dati (dict, opzionale): Payload da inviare in caso di richiesta POST.
+        dati (dict, optional): Payload to send in case of a POST request.
             Default: None.
 
     Returns:
-        ret (dict o None):
-            dict: La risposta decodificata in formato JSON se la richiesta è riuscita.
-            None: Se c'è stato un errore o il server ha restituito una risposta non valida.
+        ret (dict or None):
+            dict: The decoded JSON response if the request was successful.
+            None: If there was an error or the server returned an invalid response.
 
-    Eccezioni gestite:
-        - Timeout e errori di connessione.
-        - Risposte non valide dal server.
+    Exceptions handled:
+        - Timeout and connection errors.
+        - Invalid responses from the server.
 
-    Note:
-        La funzione converte automaticamente i dati in formato JSON per il payload POST.
+    Notes:
+        The function automatically converts data to JSON format for the POST payload.
     """
-
     def invia_richiesta(self, endpoint, metodo="GET", dati=None, sanitize=True):
         ret = None
         try:
@@ -116,12 +108,13 @@ class ClientCore:
             if dati and sanitize:
                 dati = sf.sanitize_dict(dati)
 
-            show_data= not(endpoint in PRIVATE_DATA_ENDPOINTS)
+            show_data = not(endpoint in PRIVATE_DATA_ENDPOINTS)
             if show_data:
-                logging.debug("Sending %s request to %s with data: %s",metodo, url,dati)
+                logging.debug("Sending %s request to %s with data: %s", metodo, url, dati)
             else:
                 logging.debug("Sending %s request to %s", metodo, url)
 
+            # Send the appropriate HTTP request based on the method
             if metodo == "GET":
                 response = requests.get(url, headers=headers, verify='./certificates/server.crt')
             elif metodo == "POST":
@@ -137,6 +130,7 @@ class ClientCore:
             else:
                 logging.debug("Received response")
 
+            # Check the response status code
             if response.status_code == 200:
                 ret = response.json()
             else:
@@ -148,41 +142,41 @@ class ClientCore:
         return ret
 
     """
-    Esegue il login dell'utente utilizzando le credenziali fornite.
+    Performs user login using the provided credentials.
 
     Args:
-        username (str): Il nome utente dell'utente che desidera effettuare il login.
-        password (str): La password dell'utente.
+        username (str): The username of the user attempting to log in.
+        password (str): The password of the user.
 
     Returns:
         str or None:
-            Il token JWT se l'autenticazione ha successo, altrimenti None.
+            The JWT token if authentication is successful, otherwise None.
 
-    Effetti:
-        - Invia una richiesta POST all'endpoint '/login' con le credenziali dell'utente.
-        - Se l'autenticazione ha successo, salva il token JWT utilizzando la funzione `save_token`.
-        - Stampa un messaggio di errore in caso di autenticazione fallita.
+    Effects:
+        - Sends a POST request to the '/login' endpoint with the user's credentials.
+        - If authentication is successful, saves the JWT token using the `save_token` function.
+        - Prints an error message in case of failed authentication.
     """
     def login(self, username, password):
         logging.info("Attempting to log in user: %s", username)
         token = self.invia_richiesta('/login', 'POST', {'username': username, 'password': password}, False)['access_token']
         if token:
             sf.save_token(token)
-            logging.info("User %s logged in successfully.", username)
+            logging.info("User  %s logged in successfully.", username)
             return token
         logging.warning("Authentication failed for user: %s", username)
 
     """
-    Registra un nuovo utente con le credenziali fornite.
+    Registers a new user with the provided credentials.
 
     Args:
-        username (str): Il nome utente da registrare.
-        password (str): La password da associare al nuovo utente.
+        username (str): The username to register.
+        password (str): The password to associate with the new user.
 
-    Effetti:
-        - Invia una richiesta POST all'endpoint '/register' con le credenziali dell'utente.
-        - Se la registrazione ha successo, esegue il login dell'utente.
-        - Stampa un messaggio di errore in caso di registrazione fallita.
+    Effects:
+        - Sends a POST request to the '/register' endpoint with the user's credentials.
+        - If registration is successful, logs in the user.
+        - Prints an error message in case of failed registration.
     """
     def register(self, username, password):
         logging.info("Attempting to register user: %s", username)
@@ -194,114 +188,119 @@ class ClientCore:
             logging.warning("Registration failed for user: %s", username)
 
     """
-    Esegue il logout dell'utente, rimuovendo il token di autenticazione.
+    Logs out the user by removing the authentication token.
 
-    Effetti:
-        - Elimina il token JWT salvato utilizzando la funzione `clear_token`.
-        - Stampa un messaggio di conferma che indica che il logout è stato effettuato con successo.
+    Effects:
+        - Deletes the saved JWT token using the `clear_token` function.
+        - Prints a confirmation message indicating that the logout was successful.
     """
     def logout(self):
         sf.clear_token()
         logging.info("Logout effettuato con successo.")
 
     """
-    Ottiene la lista dei plugin disponibili dal server.
+    Obtains the list of available plugins from the server.
 
-    Effetti:
-       - Invia una richiesta GET all'endpoint '/plugin_list'.
-       - Aggiorna l'interfaccia grafica con i dati ricevuti.
+    Effects:
+       - Sends a GET request to the '/script_list' endpoint.
+       - Updates the graphical interface with the received data.
     """
-
     def ottieni_lista_plugin(self):
-        dati = self.invia_richiesta('/plugin_list')
+        dati = self.invia_richiesta('/script_list')
         if dati:
             self.last_update = round(time.time())
             self.aggiorna_ui(dati, UpdateType.LISTA)
 
     """
-    Ottiene i dettagli di un plugin disponibile dal server.
+    Obtains the details of an available plugin from the server.
 
     Args:
-        id_plugin (id): Identifica il plugin di cui si richiedono i dettagli.
+        id_plugin (id): Identifies the plugin for which details are requested.
 
-    Effetti:
-       - Invia una richiesta GET all'endpoint '/plugin_details/<id_plugin>'.
-       - Aggiorna l'interfaccia grafica con i dati ricevuti.
+    Effects:
+       - Sends a GET request to the '/script_details/<id_plugin>' endpoint.
+       - Updates the graphical interface with the received data.
     """
-
     def ottieni_dettagli_plugin(self, id_plugin):
-        dati = self.invia_richiesta('/plugin_details/'+id_plugin)
+        dati = self.invia_richiesta('/script_details/' + id_plugin)
         if dati:
             self.aggiorna_ui(dati, UpdateType.DETTAGLI)
 
     """
-    Ottiene la lista dei test eseguiti.
+    Obtains the list of executed tests.
 
-    Effetti:
-       - Invia una richiesta GET all'endpoint '/test_list'.
-       - Aggiorna l'interfaccia grafica con i dati ricevuti.
+    Effects:
+       - Sends a GET request to the '/test_list' endpoint.
+       - Updates the graphical interface with the received data.
     """
-
     def ottieni_lista_test(self):
         dati = self.invia_richiesta('/test_list')
         if dati:
             self.aggiorna_ui(dati, UpdateType.LISTA)
 
     """
-    Ottiene i dettagli di un test eseguito.
+    Obtains the details of an executed test.
 
     Args:
-        id_test (id): Identifica il test di cui si richiedono i dettagli.
+        id_test (id): Identifies the test for which details are requested.
 
-    Effetti:
-       - Invia una richiesta GET all'endpoint '/test_details/<id_test>'.
-       - Aggiorna l'interfaccia grafica con i dati ricevuti.
+    Effects:
+       - Sends a GET request to the '/test_details/<id_test>' endpoint.
+       - Updates the graphical interface with the received data.
     """
-
     def ottieni_dettagli_test(self, id_test):
-        dati = self.invia_richiesta('/test_details/'+id_test)
+        dati = self.invia_richiesta('/test_details/' + id_test)
         if dati:
             self.aggiorna_ui(dati, UpdateType.DETTAGLI)
 
+    """
+    Obtains details based on the provided ID and type.
+
+    Args:
+        id (str): The ID of the item (plugin or test).
+        type (str): The type of item ('plugin' or 'test').
+
+    Effects:
+        - Calls the appropriate method to obtain details based on the type.
+    """
     def ottieni_dettagli(self, id, type):
-        if(type == 'plugin'):
+        if type == 'plugin':
             self.ottieni_dettagli_plugin(id)
         else:
             self.ottieni_dettagli_test(id)
+
     """
-    Esegui un test per un plugin specifico con i parametri forniti.
+    Executes a test for a specific plugin with the provided parameters.
 
     Args:
-        id_plugin (id): Identifica il plugin da utilizzare per il test.
-        parametri (dict): Parametri necessari per il test.
+        id_plugin (id): Identifies the plugin to be used for the test.
+        parametri (dict): Parameters required for the test.
 
-    Effetti:
-        - Invia una richiesta POST all'endpoint '/test_execute/<id_plugin>'.
-        - Aggiorna l'interfaccia con il risultato del test.
+    Effects:
+        - Sends a POST request to the '/execute/<id_plugin>' endpoint.
+        - Updates the interface with the test result.
     """
-
     def avvia_test(self, id_plugin, parametri):
-        risultati = self.invia_richiesta('/test_execute/'+id_plugin, 'POST', parametri)
+        risultati = self.invia_richiesta('/execute/' + id_plugin, 'POST', parametri)
         if risultati:
             self.aggiorna_ui(risultati, UpdateType.RISULTATI_TEST)
 
     """
-    Aggiunge un plugin al server inviando un file .py.
+    Adds a plugin to the server by uploading a .py file.
 
     Args:
-        file_path (str): Il percorso del file .py da caricare.
+        file_path (str): The path of the .py file to upload.
 
-    Effetti:
-        - Invia una richiesta POST all'endpoint '/upload_plugin'.
+    Effects:
+        - Sends a POST request to the '/upload_script' endpoint.
     """
-
     def aggiungi_elemento(self, file_path):
         try:
             with open(file_path, 'r') as file:
                 name = os.path.basename(file_path)
                 parts = name.split('.')
                 if len(parts) == 2 and sf.is_valid_input(parts[0]):
-                    self.invia_richiesta('/upload_plugin', 'POST', {'content': file.read(), 'name': name}, sanitize=False)
+                    self.invia_richiesta('/upload_script', 'POST', {'content': file.read(), 'name': name}, sanitize=False)
                 else:
                     logging.error("Nome file contiene valori non consentiti.")
 
@@ -310,65 +309,73 @@ class ClientCore:
             logging.error(f"Errore durante il caricamento del plugin: {e}")
 
     """
-    Modifica un plugin presente nel server.
+    Modifies an existing plugin on the server.
 
     Args:
-        id_plugin (str): L'ID del plugin da modificare.
-        name (str, opzionale): Il nuovo valore per il campo nome, impostato a default None.
-        description (str, opzionale): Il nuovo valore per il campo descrizione, impostato a default None.
+        id_plugin (str): The ID of the plugin to modify.
+        name (str, optional): The new value for the name field, default is None.
+        description (str, optional): The new value for the description field, default is None.
 
-    Effetti:
-        - Invia una richiesta PATCH all'endpoint '/edit_plugin/<id_plugin>' con
-          i dati modificati.
+    Effects:
+        - Sends a PATCH request to the '/edit_plugin/<id_plugin>' endpoint with the modified data.
     """
     def modifica_plugin(self, id_plugin, name=None, description=None):
-        #INPUT VALUES ARE NOT BEIGN VERIFIED
-        dati = self.invia_richiesta('/edit_plugin/'+id_plugin, 'PATCH', { 'name':name, 'description': description })
+        # INPUT VALUES ARE NOT BEING VERIFIED
+        dati = self.invia_richiesta('/edit_script/' + id_plugin, 'PATCH', {'name': name, 'description': description})
         if dati:
             self.aggiorna_ui(dati, UpdateType.LISTA)
 
+    """
+    Removes a plugin from the server.
+
+    Args:
+        id_plugin (str): The ID of the plugin to remove.
+
+    Effects:
+        - Sends a GET request to the '/remove_script/<id_plugin>' endpoint.
+        - Updates the plugin list after removal.
+    """
     def rimuovi_plugin(self, id_plugin):
-        self.invia_richiesta('/remove_plugin/'+id_plugin, 'GET')
+        self.invia_richiesta('/remove_script/' + id_plugin, 'GET')
         self.ottieni_lista_plugin()
 
     """
-    Modifica un test presente nel server.
+    Modifies an existing test on the server.
 
     Args:
-        id_test (str): L'ID del test da modificare.
-        name (str): Il nuovo valore per il campo nome.
+        id_test (str): The ID of the test to modify.
+        name (str): The new value for the name field.
 
-    Effetti:
-        - Invia una richiesta PATCH all'endpoint '/edit_test/<id_test>' con
-          i dati modificati.
+    Effects:
+        - Sends a PATCH request to the '/edit_test/<id_test>' endpoint with the modified data.
     """
     def modifica_test(self, id_test, name):
-        if(sf.is_valid_input(name)):
-            self.invia_richiesta('/edit_test/'+id_test, 'PATCH', {'name':name})
+        if sf.is_valid_input(name):
+            self.invia_richiesta('/edit_test/' + id_test, 'PATCH', {'name': name})
         else:
             logging.error("Valori inseriti non consentiti.")
 
     """
-    Crea una routine che esegue il plugin 'id_plugin' ogni 'frequenza' giorni con i parametri specificati.
+    Creates a routine that executes the specified plugin every 'frequency' days with the given parameters.
 
     Args:
-        id_plugin(str): L'ID del plugin da eseguire.
-        parametri(dict): Paramertri necessari per il test.
-        frequenza(int): Numero di giorni ogni quanto eseguire il plugin specificato.
-        primo_dt(datetime): Giorno e orario della prima esecuzione (le successiva avverrano sempre allo stesso orario)
+        id_plugin (str): The ID of the plugin to execute.
+        parametri (dict): Parameters required for the test.
+        frequenza (int): Number of days to execute the specified plugin.
+        primo_dt (datetime): Date and time of the first execution (subsequent executions will occur at the same time).
     """
     def crea_routine(self, id_plugin, params, frequency, first_dt):
-        risultati = self.invia_richiesta('/create_routine', 'POST', {'script':id_plugin, 'params':params, 'frequency':frequency, 'first_dt':first_dt})
+        risultati = self.invia_richiesta('/create_routine', 'POST', {'script': id_plugin, 'params': params, 'frequency': frequency, 'first_dt': first_dt})
         if risultati:
             self.aggiorna_ui(risultati, UpdateType.RISULTATI_TEST)
 
     """
-    Avvia un thread separato per il polling delle notifiche dal server.
+    Starts a separate thread for polling notifications from the server.
 
-    Effetti:
-        - Crea e avvia un thread in modalità daemon per eseguire la funzione `poll_notifications`
-          senza bloccare il flusso principale del programma.
-        - Il thread esegue continuamente il polling delle notifiche finché il programma è attivo.
+    Effects:
+        - Creates and starts a daemon thread to execute the `poll_notifications` function
+          without blocking the main program flow.
+        - The thread continuously polls for notifications as long as the program is active.
     """
     def start_polling(self):
         logging.info("Starting polling for notifications.")
@@ -378,28 +385,34 @@ class ClientCore:
         polling_thread.start()
 
     """
-    Esegue il polling periodico per verificare la presenza di nuove notifiche dal server.
+    Executes periodic polling to check for new notifications from the server.
 
-    Effetti:
-        - Invia richieste periodiche all'endpoint '/notification/<last_update>'.
-        - Se vengono ricevute nuove notifiche, aggiorna lo stato locale e l'interfaccia utente.
+    Effects:
+        - Sends periodic requests to the endpoint '/notification/<last_update>'.
+        - If new notifications are received, updates the local state and the user interface.
 
-    Logica:
-        - Esegue un ciclo infinito che:
-            1. Invia una richiesta GET al server fornendo il timestamp dell'ultimo aggiornamento ricevuto ('last_update').
-            2. Se il server risponde con dati significativi, aggiorna `self.last_update`.
-            3. Richiama il metodo `aggiorna_ui` per notificare la ricezione dei nuovi dati.
-            4. Attende 5 secondi prima della successiva richiesta.
+    Logic:
+        - Executes an infinite loop that:
+            1. Sends a GET request to the server providing the timestamp of the last update received ('last_update').
+            2. If the server responds with significant data, updates `self.last_update`.
+            3. Calls the `aggiorna_ui` method to notify the receipt of new data.
+            4. Waits 5 seconds before the next request.
     """
     def poll_notifications(self):
         while self.poll:
             logging.debug("Polling for notifications...")
-            dati = self.invia_richiesta("/notification/"+str(self.last_update))["update"]
+            dati = self.invia_richiesta("/notification/" + str(self.last_update))["update"]
             if dati is not None and dati:
                 self.last_update = round(time.time())
                 logging.info("Received new notifications, updating UI.")
                 self.aggiorna_ui('', UpdateType.AGGIORNA_LISTA)
             time.sleep(5)
 
+    """
+    Stops the polling for notifications.
+
+    Effects:
+        - Sets the polling flag to False, stopping the polling thread.
+    """
     def stop_polling(self):
         self.poll = False

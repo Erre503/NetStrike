@@ -1,73 +1,126 @@
-import os #libreria per poter lavorare con le cartelle e file dell'applicazione
-import importlib #va a sostituire la funzione manuale di import dato che non siamo a conoscenza dei nomi dei file
-                 #e per rendere l'importazione dinamica
-import sys  #serve per modificare a riga 38 i percorsi da cui prendere i file python
+import os  # Library for working with application files and directories
+import importlib  # Allows dynamic import of modules since file names are unknown
+import sys  # Used to modify paths for Python files
 import abc
-import inspect #serve per vedere i parametri
-import subprocess #serve per i file bash
-from pathlib import Path #serve per ottenere il riferimento al percorso del file corrente
+import inspect  # Used to inspect parameters and class definitions
+import subprocess  # Used for executing bash files
+from pathlib import Path  # Used to get the current file path reference
 from datetime import datetime
-import platform
+import platform  # Used to determine the operating system
 
+# Define the folder path for plugins
 FOLDER = Path(__file__).resolve().parent.parent / "plugins"
 
 def process_plugin_name(nome_file):
-    processed = nome_file.rsplit('.', 1)
+    """
+    Processes the plugin file name to separate the name and extension.
+
+    Args:
+        nome_file (str): The name of the plugin file.
+
+    Returns:
+        tuple: A tuple containing the name and extension of the file.
+    """
+    processed = nome_file.rsplit('.', 1)  # Split the file name into name and extension
     return processed[0], processed[1]
 
-def rinomina_plugin(nomeVecchio, nomeNuovo): #dato il nome del file da rinominare e quello nuovo, rinomina il file
+def rinomina_plugin(nomeVecchio, nomeNuovo):
+    """
+    Renames a plugin file from the old name to the new name.
+
+    Args:
+        nomeVecchio (str): The current name of the file.
+        nomeNuovo (str): The new name for the file.
+
+    Returns:
+        bool: True if renaming was successful, False otherwise.
+    """
     try:
-        vecchio_path = FOLDER / nomeVecchio
-        nuovo_path = FOLDER / nomeNuovo
-        vecchio_path.rename(nuovo_path)
+        vecchio_path = FOLDER / nomeVecchio  # Get the old file path
+        nuovo_path = FOLDER / nomeNuovo  # Get the new file path
+        vecchio_path.rename(nuovo_path)  # Rename the file
         return True
     except Exception:
-        print("Errore: impossibile rinominare il nome del file")
+        print("Errore: impossibile rinominare il nome del file")  # Print error message
         return False
 
 def elimina_plugin(nome):
-    file_path = FOLDER / nome
+    """
+    Deletes a plugin file.
+
+    Args:
+        nome (str): The name of the file to delete.
+
+    Returns:
+        bool: True if deletion was successful, False otherwise.
+    """
+    file_path = FOLDER / nome  # Get the file path
 
     try:
-        os.remove(file_path)
+        os.remove(file_path)  # Remove the file
         return True
     except FileNotFoundError:
-        print(f"Errore: il file '{file_path}' non esiste.")
+        print(f"Errore: il file '{file_path}' non esiste.")  # File not found error
         return False
     except PermissionError:
-        print(f"Errore: permesso negato per eliminare '{file_path}'.")
+        print(f"Errore: permesso negato per eliminare '{file_path}'.")  # Permission denied error
         return False
     except Exception as e:
-        print(f"Errore: impossibile eliminare il file '{file_path}'. Dettagli: {e}")
+        print(f"Errore: impossibile eliminare il file '{file_path}'. Dettagli: {e}")  # General error
         return False
 
-
-
-
 def estraiParametriBash(plugin):
+    """
+    Extracts parameters from a Bash plugin.
+
+    Args:
+        plugin (str): The name of the Bash plugin file.
+
+    Returns:
+        list: A list of parameters extracted from the plugin.
+    """
     try:
-        comando = ["bash", plugin, "get_param"]
-        parametri = subprocess.run(comando, capture_output=True, text=True, check=True)
-        listaParametri = parametri.stdout.strip().split(", ")
+        comando = ["bash", plugin, "get_param"]  # Command to get parameters
+        parametri = subprocess.run(comando, capture_output=True, text=True, check=True)  # Run the command
+        listaParametri = parametri.stdout.strip().split(", ")  # Process the output
         return listaParametri
     except Exception:
-        return f"Errore nell'estrazione dei parametri Bash"
+        return f"Errore nell'estrazione dei parametri Bash"  # Error message
 
 def interfacciaBash(content):
-    functions_to_check = ['set_param', 'get_param', 'execute']
+    """
+    Checks if the required functions are present in the Bash script.
+
+    Args:
+        content (str): The content of the Bash script.
+
+    Returns:
+        bool: True if all required functions are present, False otherwise.
+    """
+    functions_to_check = ['set_param', 'get_param', 'execute']  # Required functions
     for x in functions_to_check:
-        if x not in content:
+        if x not in content:  # Check for each function
             return False
     return True
 
 def avvia_plugin_bash(plugin, vet_param):
+    """
+    Executes a Bash plugin with the provided parameters.
+
+    Args:
+        plugin (str): The name of the Bash plugin file.
+        vet_param (dict): A dictionary of parameters to pass to the plugin.
+
+    Returns:
+        str: The output of the executed Bash plugin or an error message.
+    """
     try:
         # Prepare the command to execute the Bash script
         if platform.system() == "Windows":
-            shell = "powershell"
+            shell = "powershell"  # Use PowerShell on Windows
             comando = f"& {{ {comando} }}"
         else:
-            shell = "/bin/bash"
+            shell = "/bin/bash"  # Use Bash on other systems
             comando = f"bash {plugin}"
 
         # Prepare the environment variables
@@ -75,18 +128,27 @@ def avvia_plugin_bash(plugin, vet_param):
 
         # Execute the command in a shell
         ret = subprocess.run(comando, shell=True, check=True, env=env_vars, executable=shell, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        return ret.stdout.decode('utf-8')
+        return ret.stdout.decode('utf-8')  # Return the output
     except subprocess.CalledProcessError as e:
-        return f"Errore nell'esecuzione del plugin Bash: {e}"
+        return f"Errore nell'esecuzione del plugin Bash: {e}"  # Error message for execution failure
     except Exception as e:
-        return f"Errore generico: {e}"
-
+        return f"Errore generico: {e}"  # General error message
 
 def creaPluginPy(nome_file, contenuto):
-    file_name = nome_file[:-3]
-    file = FOLDER / nome_file
+    """
+    Creates a Python plugin file and validates its content.
 
-    if file.is_file():
+    Args:
+        nome_file (str): The name of the Python file to create.
+        contenuto (str): The content of the Python file.
+
+    Returns:
+        tuple: A tuple containing a success flag and the parameters if successful, otherwise None.
+    """
+    file_name = nome_file[:-3]  # Remove the .py extension
+    file = FOLDER / nome_file  # Get the file path
+
+    if file.is_file():  # Check if the file already exists
         return False, None
 
     # Add required import
@@ -97,96 +159,119 @@ def creaPluginPy(nome_file, contenuto):
         file.write_text(full_content)
         
         # Validate through the temporary file
-        spec = importlib.util.spec_from_file_location(file_name, file)
-        modulo = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(modulo)
+        spec = importlib.util.spec_from_file_location(file_name, file)  # Create a module spec
+        modulo = importlib.util.module_from_spec(spec)  # Create a module from the spec
+        spec.loader.exec_module(modulo)  # Execute the module
 
         # Class validation
-        if not hasattr(modulo, "Plugin"):
+        if not hasattr(modulo, "Plugin"):  # Check for the Plugin class
             raise AttributeError("Missing 'Plugin' class")
 
-        classe_plugin = modulo.Plugin
+        classe_plugin = modulo.Plugin  # Get the Plugin class
 
-        if not inspect.isclass(classe_plugin):
+        if not inspect.isclass(classe_plugin):  # Check if it is a class
             raise TypeError("'Plugin' is not a class")
 
-        if not issubclass(classe_plugin, modulo.Interfaccia_Plugin):  # Use modulo to access Interfaccia_Plugin
+        if not issubclass(classe_plugin, modulo.Interfaccia_Plugin):  # Check inheritance
             raise TypeError("Must inherit from Interfaccia_Plugin")
 
-        if len(classe_plugin.__abstractmethods__) > 0:
+        if len(classe_plugin.__abstractmethods__) > 0:  # Check for unimplemented abstract methods
             raise NotImplementedError(f"Unimplemented abstract methods: {classe_plugin.__abstractmethods__}")
 
         # Import the module dynamically
         plugin_module = importlib.import_module('plugins.' + file_name)  # Remove ".py"
         plugin_instance = plugin_module.Plugin()  # Create the plugin instance
-        params = plugin_instance.get_param()
+        params = plugin_instance.get_param()  # Get parameters from the plugin
         print(f"PARAMS PLUGLOADER: {params}")
-        return True, params # Return success
+        return True, params  # Return success
 
     except (AttributeError, TypeError, NotImplementedError) as e:
         print(f"Validation failed: {e}")  # DEBUG
         if file.is_file():
-            os.remove(file)
+            os.remove(file)  # Remove the file if validation fails
         return False, None  # Return failure
 
     except Exception as e:
         print(f"An unexpected error occurred: {e}")  # DEBUG
         if file.is_file():
-            os.remove(file)
+            os.remove(file)  # Remove the file if an unexpected error occurs
         return False, None  # Return failure
 
 def creaPluginSh(nome_file, contenuto):
-    if nome_file in os.listdir(FOLDER):
+    """
+    Creates a Bash plugin file if it meets the required interface.
+
+    Args:
+        nome_file (str): The name of the Bash file to create.
+        contenuto (str): The content of the Bash file.
+
+    Returns:
+        tuple: A tuple containing a success flag and None if successful, otherwise None.
+    """
+    if nome_file in os.listdir(FOLDER):  # Check if the file already exists
         return False, None
-    if interfacciaBash(contenuto):
-        percorso_file = os.path.join(FOLDER, nome_file)
-        with open(percorso_file, "w", encoding="utf-8") as file:
+    if interfacciaBash(contenuto):  # Check if the content meets the required interface
+        percorso_file = os.path.join(FOLDER, nome_file)  # Get the file path
+        with open(percorso_file, "w", encoding="utf-8") as file:  # Write the content to the file
             file.write(contenuto)
         return True, None
     else:
         if file.is_file():
-            os.remove(file)
+            os.remove(file)  # Remove the file if it does not meet the interface
         return False, None
-    
-    
-
-
 
 def creaPlugin(nome_file, contenuto):
-    if nome_file.endswith('.sh'):
+    """
+    Creates a plugin based on the file extension.
+
+    Args:
+        nome_file (str): The name of the file to create.
+        contenuto (str): The content of the file.
+
+    Returns:
+        tuple: A tuple containing a success flag and parameters if successful, otherwise None.
+    """
+    if nome_file.endswith('.sh'):  # Check for Bash file
         return creaPluginSh(nome_file, contenuto)
-    if nome_file.endswith('.py'):
+    if nome_file.endswith('.py'):  # Check for Python file
         return creaPluginPy(nome_file, contenuto)
-    print("Il tipo di file non e' supportato")
+    print("Il tipo di file non e' supportato")  # Unsupported file type message
     return None
 
-
 def avvia_plugin(nome_plugin, vet_param):
-    res = {}
-    res['datetime'] = datetime.now()
-    file_name, extension = process_plugin_name(nome_plugin)
-    if extension == 'py':
-        try:
-            # Importa dinamicamente il modulo Python
-            modulo = importlib.import_module('plugins.'+file_name)  # Rimuove ".py"
-            plugin_instance = modulo.Plugin()  # Crea l'istanza del plugin
-            plugin_instance.set_param(vet_param)
-            res['log'] = plugin_instance.execute()  # Esegui il plugin
-            res['status'] = 'finished'
+    """
+    Executes a plugin based on its file extension.
 
+    Args:
+        nome_plugin (str): The name of the plugin file.
+        vet_param (dict): A dictionary of parameters to pass to the plugin.
+
+    Returns:
+        dict: A dictionary containing the execution result and status.
+    """
+    res = {}
+    res['datetime'] = datetime.now()  # Record the current time
+    file_name, extension = process_plugin_name(nome_plugin)  # Process the plugin name
+    if extension == 'py':  # If the plugin is a Python file
+        try:
+            # Dynamically import the Python module
+            modulo = importlib.import_module('plugins.' + file_name)  # Remove ".py"
+            plugin_instance = modulo.Plugin()  # Create the plugin instance
+            plugin_instance.set_param(vet_param)  # Set parameters for the plugin
+            res['log'] = plugin_instance.execute()  # Execute the plugin
+            res['status'] = 'finished'  # Set status to finished
 
         except Exception as e:
-            res['log'] = f"Errore nell'importazione ed esecuzione del modulo Python {nome_plugin}: {e}"
-            res['status'] = 'failed'
+            res['log'] = f"Errore nell'importazione ed esecuzione del modulo Python {nome_plugin}: {e}"  # Error message
+            res['status'] = 'failed'  # Set status to failed
 
-    # Se il plugin è Bash
+    # If the plugin is a Bash file
     elif extension == 'sh':
-        # Verifica che il file esista
+        # Check if the file exists
         percorso_file = FOLDER / nome_plugin
-
-        res['log'] = avvia_plugin_bash(percorso_file, vet_param)  # Esegui il plugin Bash
-        res['status'] = 'finished'
+        res['log'] = avvia_plugin_bash(percorso_file, vet_param)  # Execute the Bash plugin
+        res['status'] = 'finished'  # Set status to finished
     else:
-        res['log'] = "Tipo di plugin non supportato."
-        res['status'] = failed
-    return res
+        res['log'] = "Tipo di plugin non supportato."  # Unsupported plugin type message
+        res['status'] = 'failed'  # Set status to failed
+    return res  # Return the result

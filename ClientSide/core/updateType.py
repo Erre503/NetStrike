@@ -1,24 +1,9 @@
-from enum import Enum
-import os
-
-"""
-Enumeratore che definisce i tipi di aggiornamenti per l'interfaccia grafica.
-
-Questo enumeratore viene utilizzato per identificare il tipo di aggiornamento da effettuare
-nell'interfaccia grafica, consentendo al core client-side di comunicare chiaramente con
-il gestore dell'interfaccia (UI handler).
-
-Membri:
-    LISTA_PLUGIN (str): Indica che l'interfaccia deve aggiornare la lista dei plugin.
-    DETTAGLI_PLUGIN (str): Indica che l'interfaccia deve mostrare i dettagli di un plugin.
-    LISTA_TEST (str): Indica che l'interfaccia deve aggiornare la lista dei test.
-    DETTAGLI_TEST (str): Indica che l'interfaccia deve mostrare i dettagli di un test.
-    RISULTATI_TEST (str): Indica che l'interfaccia deve visualizzare i risultati di un test.
-"""
-
+from enum import Enum  # Import Enum class for creating enumerations
+import os  # Import os for operating system related functionalities (not used in this code)
 
 class UpdateType(Enum):
-    LISTA = 0
-    DETTAGLI = 1
-    RISULTATI_TEST = 2
-    AGGIORNA_LISTA = 3
+    # Enumeration for different types of updates for the graphical interface
+    LISTA = 0  # Indicates that the interface should update the list of plugins
+    DETTAGLI = 1  # Indicates that the interface should show the details of a plugin
+    RISULTATI_TEST = 2  # Indicates that the interface should display the results of a test
+    AGGIORNA_LISTA = 3  # Indicates that the interface should refresh the list
