@@ -23,6 +23,9 @@ jwt = JWTManager(app)  # Initialize JWTManager
 # Variable to track the last update timestamp
 last_update = round(time.time())
 
+# Global dictionary to keep track of running routines
+running_routines = {}
+
 # Database table classes:
 
 class PlugTable(db.Model):
@@ -108,8 +111,6 @@ def login():
 @jwt_required()
 def script_list():
     pluginT = PlugTable.query.all()  # Query all plugins
-    if pluginT is None or not pluginT:
-        return jsonify({"error": "Error 404, no such plugin has been found."}), 404
     return jsonify([plugin.list() for plugin in pluginT]), 200  # Return list of plugins
 
 # Function to get details of a specific plugin
@@ -208,17 +209,32 @@ def edit_script(id=0):
 @app.route("/remove_script/<int:id>", endpoint='remove_script', methods=["GET"])
 def remove_script(id=0):
     global last_update
+    # Stop and remove running routines
+    if id in running_routines:
+        print("Stop")
+        thread, running_state = running_routines[id]
+        running_state['running'] = False  # Set the running state to False
+        thread.join()  # Wait for the thread to finish
+        del running_routines[id]  # Remove from the dictionary
+    # Query for all routines with the specified script_id
+    routines_to_delete = Routine.query.filter(Routine.script_id == id).all()
+    
+    # Check if any routines were found
+    if routines_to_delete:
+        for routine in routines_to_delete:
+            print(f"Deleting: {routine}")  # Optional: Print the routine being deleted
+            db.session.delete(routine)  # Delete the routine
+        db.session.commit()  # Commit the changes to the database
+    
     plugin = PlugTable.query.get(id)  # Get plugin by ID
     
     if not plugin:
         abort(404, description="Plugin not found")  # Return 404 if plugin does not exist
-
     if elimina_plugin(plugin.name):  # Attempt to remove the plugin
-        PlugTable.query.filter_by(id=id).delete()  # Delete plugin from database
+        db.session.delete(plugin)  # Delete plugin from database
         db.session.commit()
         last_update = round(time.time())  # Update last update timestamp
         return jsonify({"message": "Plugin removed successfully."}), 200  # Return success response
-
     abort(500, description="Failed to remove the plugin")  # Return 500 if removal fails
 
 # Function to get the list of log messages
@@ -244,30 +260,32 @@ def create_routine():
     db.session.add(new_routine)  # Add new routine to the database
     db.session.commit()
     plugin = PlugTable.query.get(data["script"])  # Get the associated plugin
-    start_routine_execution(plugin.name, data["params"], data["frequency"])  # Start routine execution
+    start_routine_execution(plugin.name, data["params"], data["frequency"], plugin.id)  # Start routine execution
     return jsonify({"message": "Routine created successfully."}), 200  # Return success response
 
-def start_routine_execution(script_name, vet_param, frequency_seconds):
+def start_routine_execution(script_name, vet_param, frequency_seconds, script_id):
     """
     Starts a background thread that executes the plugin at fixed intervals.
-
     :param script_name: str, name of the plugin script (e.g. 'example.py')
     :param vet_param: list, list of parameters to pass to the plugin
     :param frequency_seconds: int, interval between executions in seconds
+    :param script_id: int, ID of the script to track the thread
     """
+    # Use a dictionary to store the running state
+    running_state = {'running': True}
     def routine_runner():
         with app.app_context():
-            while True:
+            while running_state['running']:  # Check if the running state is True
                 timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                 print(f"[{timestamp}] Executing routine: {script_name}")
                 logUpdate(avvia_plugin(script_name, vet_param))  # Execute the plugin and log the result
-
                 # Wait for the next execution
                 time.sleep(frequency_seconds)
-
     # Start the thread in the background
     t = threading.Thread(target=routine_runner, daemon=True)
     t.start()
+    # Store the thread and running state in the global dictionary using script_id
+    running_routines[script_id] = (t, running_state)
     return True
 
 # Function to update the log with the result of a plugin execution
@@ -291,7 +309,7 @@ def start():
         print(routines)
         for routine in routines:
             plugin = PlugTable.query.get(routine.script_id)  # Get the associated plugin
-            start_routine_execution(plugin.name, ast.literal_eval(routine.params), routine.frequency)  # Start routine execution
+            start_routine_execution(plugin.name, ast.literal_eval(routine.params), routine.frequency, plugin.id)  # Start routine execution
 
     # Run the Flask application with SSL
     app.run(ssl_context=("./certificates/server.crt", "./certificates/server.key"), host="0.0.0.0", port=5000, debug=False)

@@ -349,11 +349,13 @@ class ClientCore:
 
     Effects:
         - Sends a GET request to the '/remove_script/<id_plugin>' endpoint.
-        - Updates the plugin list after removal.
     """
     def rimuovi_plugin(self, id_plugin):
-        self.invia_richiesta('/remove_script/' + str(id_plugin), 'GET')
-        self.ottieni_lista_plugin()
+        response = self.invia_richiesta('/remove_script/' + str(id_plugin), 'GET')
+        if response:  # Check if the response is valid
+            logging.info("Plugin with ID %s removed successfully.", id_plugin)
+        else:
+            logging.error("Failed to remove plugin with ID: %s", id_plugin)
 
     """
     Modifies an existing test on the server.
@@ -381,8 +383,8 @@ class ClientCore:
         frequenza (int): Number of days to execute the specified plugin.
         primo_dt (datetime): Date and time of the first execution (subsequent executions will occur at the same time).
     """
-    def crea_routine(self, id_plugin, params, frequency, first_dt):
-        risultati = self.invia_richiesta('/create_routine', 'POST', {'script': id_plugin, 'params': params, 'frequency': frequency, 'first_dt': first_dt})
+    def crea_routine(self, id_plugin, params, frequency):
+        risultati = self.invia_richiesta('/create_routine', 'POST', {'script': id_plugin, 'params': params, 'frequency': frequency})
         if risultati:
             self.aggiorna_ui(risultati, UpdateType.RISULTATI_TEST)
 
