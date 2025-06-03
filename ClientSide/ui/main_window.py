@@ -321,18 +321,123 @@ class MainInterfaccia(ctk.CTkFrame):
                 paramsEntry.append(ctk.CTkEntry(master=frameCampoInput))  # Entry for parameter value
                 paramsEntry[i].pack(side="left", fill="x", expand=True)
                 i += 1
-
         # Submit function for the configuration
         def submit():
-            params = {}  # Dictionary to store parameter values
+            # Initialize an empty dictionary to hold parameters
+            params = {}
             i = 0
+            # Iterate through the entries in paramsEntry to collect parameter values
             for param in paramsEntry:
-                params[self.selected_params[i]] = param.get()  # Get the value from each entry
-                i += 1
+                params[self.selected_params[i]] = param.get()  # Get the value from the entry
+                i += 1  # Increment the index
+            # Check if we are in edit mode
             if edit:
-                self.coreApplicazione.avvia_test(self.plugin_selezionato, params)  # Start the test with parameters
+                # If in edit mode, start the test with the selected plugin and parameters
+                self.coreApplicazione.avvia_test(self.plugin_selezionato, params)
             else:
-                self.coreApplicazione.crea_routine(self.plugin_selezionato, params, int(frequency.get()), first_dt.get())  # Create a routine
-            finestraRoutine.destroy()  # Close the configuration window
+                # If not in edit mode, create a routine with the selected plugin and parameters
+                self.coreApplicazione.crea_routine(self.plugin_selezionato, params, int(frequency.get()), first_dt.get())
+            # Close the routine window
+            finestraRoutine.destroy()
 
-        submitButton = ctk.CTkButton(master=f
+        # Create a submit button that triggers the submit function when clicked
+        submitButton = ctk.CTkButton(master=finestraRoutine, text="SUBMIT", corner_radius=5, command=submit)
+        submitButton.pack(pady=50)  # Add the button to the window with padding
+
+
+    def iniziaTest(self):
+        # Check if a plugin has been selected
+        if self.plugin_selezionato is None:
+            # Show a warning if no plugin is selected
+            messagebox.showwarning("No Plugin Selected", "Please select a plugin before starting the test.")
+            return
+        try:
+            # Initialize an empty dictionary for test parameters
+            parametriTest = {}
+            # Start the test with the selected plugin and parameters
+            self.coreApplicazione.avvia_test(self.plugin_selezionato, parametriTest)
+        except Exception as e:
+            # Show an error message if there is an issue initializing the test
+            messagebox.showerror("Error", f"Error initializing the test: {e}")
+
+
+    def aggiungiPlugin(self, name, idPlugin):
+        # Add a new plugin to the plugin_files dictionary
+        self.plugin_files[name] = {'id': idPlugin}
+        # Update the plugin list display
+        self.aggiornaListaPlugin()
+
+
+    def creaRoutine(self):
+        # Configure the test for routine creation
+        self.configuraTest(False)
+
+
+    def notifica(self):
+        # Print the current state of the update button
+        print("Button state: ", self.bottoneUpdate.cget("state"))
+        # Enable the update button if it is currently disabled
+        if self.bottoneUpdate.cget("state") == "disabled":
+            self.bottoneUpdate.configure(state="normal")
+
+
+    def cambiaView(self):
+        # Toggle between two modes: "p" (plugin) and "t" (test)
+        if self.mode == "p":
+            self.mode = "t"  # Switch to test mode
+            self.coreApplicazione.stop_polling()  # Stop polling for updates
+            self.labelCaricaP.pack_forget()  # Hide loading label
+            self.bottoneCaricaP.pack_forget()  # Hide loading button
+
+            # Update labels for the test view
+            self.labelInfoP.configure(text="LOG DESCRIPTION")
+            self.labelInfoPluginSelezionato.configure(text="SELECTED LOG: None")
+            self.labelPSelezionabili.configure(text="AVAILABLE LOGS")
+            self.labelGestisciP.configure(text="MANAGE LOGS")
+            self.bottoneRinominaP.configure(text="EDIT LOG")
+            self.bottoneUpdate.pack_forget()  # Hide update button
+            self.bottoneView.configure(text="VIEW PLUG-INS")
+            self.bottoneRimuoviP.pack_forget()  # Hide remove button
+            self.bottoneConfig.pack_forget()  # Hide config button
+            self.bottoneStart.pack_forget()  # Hide start button
+
+            # Update the test list display
+            self.aggiornaListaTest()
+        else:
+            self.mode = "p"  # Switch back to plugin mode
+            self.coreApplicazione.start_polling()  # Start polling for updates
+            self.labelCaricaP.pack(pady=10)  # Show loading label
+            self.bottoneCaricaP.pack(pady=10)  # Show loading button
+
+            # Update labels for the plugin view
+            self.labelInfoP.pack_forget()  # Hide previous info label
+            self.labelInfoP.configure(text="TEST ANALYSIS")
+            self.labelInfoPluginSelezionato.pack_forget()  # Hide previous selected plugin label
+            self.labelInfoPluginSelezionato.configure(text="SELECTED PLUGIN: None")
+            self.labelInfoP.pack(pady=10)  # Show updated info label
+            self.labelInfoPluginSelezionato.pack(pady=10)  # Show updated selected plugin label
+
+            self.labelPSelezionabili.pack_forget()  # Hide previous available plugins label
+            self.labelPSelezionabili.configure(text="AVAILABLE PLUG-INS")
+            self.labelPSelezionabili.pack(pady=10)  # Show updated available plugins label
+            self.listaPlugin.pack_forget()  # Hide previous plugin list
+            self.listaPlugin.pack(pady=10)  # Show updated plugin list
+
+            self.labelGestisciP.pack_forget()  # Hide previous manage label
+            self.labelGestisciP.configure(text="MANAGE PLUG-IN")
+            self.labelGestisciP.pack(pady=10)  # Show updated manage label
+
+            self.bottoneRinominaP.pack_forget()  # Hide previous rename button
+            self.bottoneRinominaP.configure(text="EDIT PLUGIN")
+            self.bottoneRinominaP.pack(pady=10)  # Show updated rename button
+
+            self.bottoneRimuoviP.pack(pady=10)  # Show remove button
+            self.bottoneView.configure(text="VIEW TEST LOGS")  # Update view button text
+            self.bottoneUpdate.pack(before=self.bottoneView)  # Position update button before view button
+            self.bottoneUpdate.configure(state="disabled")  # Disable update button
+            self.informazioniTest.pack(pady=10)  # Show test information
+            self.bottoneConfig.pack(pady=10)  # Show config button
+            self.bottoneStart.pack(pady=10)  # Show start button
+
+            # Update the plugin list display
+            self.aggiornaListaPlugin()

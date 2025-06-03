@@ -271,18 +271,21 @@ class ClientCore:
 
     """
     Executes a test for a specific plugin with the provided parameters.
-
     Args:
         id_plugin (id): Identifies the plugin to be used for the test.
         parametri (dict): Parameters required for the test.
-
     Effects:
         - Sends a POST request to the '/execute/<id_plugin>' endpoint.
         - Updates the interface with the test result.
     """
     def avvia_test(self, id_plugin, parametri):
+        # Run the test in a separate thread
+        threading.Thread(target=self.run_test, args=(id_plugin, parametri)).start()
+    def run_test(self, id_plugin, parametri):
+        # This method runs in a separate thread
         risultati = self.invia_richiesta('/execute/' + id_plugin, 'POST', parametri)
         if risultati:
+            # Update the UI on the main thread
             self.aggiorna_ui(risultati, UpdateType.RISULTATI_TEST)
 
     """
