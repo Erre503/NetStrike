@@ -60,7 +60,6 @@ class ClientCore:
         logging.info("Application started.")
         logging.info("ClientCore initialized with server URL: %s", server_url)
         self.login(username, password)
-        self.start_polling()
 
     """
     Invoca metodi del gestore dell'interfaccia grafica per aggiornarla.
@@ -396,8 +395,8 @@ class ClientCore:
         while self.poll:
             logging.debug("Polling for notifications...")
             dati = self.invia_richiesta("/notification/"+str(self.last_update))["update"]
-            if dati is not None and dati > 0:
-                self.last_update = dati
+            if dati is not None and dati:
+                self.last_update = round(time.time())
                 logging.info("Received new notifications, updating UI.")
                 self.aggiorna_ui('', UpdateType.AGGIORNA_LISTA)
             time.sleep(5)

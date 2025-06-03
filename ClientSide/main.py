@@ -16,6 +16,7 @@ def main():
     m = MainInterfaccia(finestra, c)
     uihandler.initUI(m)
     m.initUI()
+    c.start_polling()
     finestra.mainloop()
 
 

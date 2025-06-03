@@ -156,7 +156,8 @@ def test_table_details(id=0):
 @app.route("/notification/<int:timestamp>", endpoint='notification', methods=["GET"])
 @jwt_required()
 def get_notification(timestamp):
-    return jsonify({'update':last_update-timestamp})
+
+    return jsonify({'update':(last_update-timestamp > 0)})
 
 
 # Funzione per caricare il plugin

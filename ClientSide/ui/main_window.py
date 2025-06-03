@@ -327,9 +327,6 @@ class MainInterfaccia(ctk.CTkFrame):
             self.labelInfoP.configure(text="LOG DESCRIPTION")
             self.labelInfoPluginSelezionato.configure(text="SELECTED LOG: None")
 
-
-
-
             self.labelPSelezionabili.configure(text="AVAILABLE LOGS")
 
 
