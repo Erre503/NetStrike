@@ -1,36 +1,37 @@
-# Punto d'ingresso del servizio
+# Entry point of the service
 from utilities.security_functions import *
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, abort
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String, Sequence
 from core.plugin_loader import *
 import time
-import datetime
+from datetime import datetime
 from utilities.key_manager import KeyManager
 from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity
+import threading
+import ast
 
-# from flask_classful import FlaskView, route   Prossima implementazione
-
+# Initialize Flask application
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///sqlite.db'
-db = SQLAlchemy(app)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///sqlite.db'  # Database URI for SQLite
+db = SQLAlchemy(app)  # Initialize SQLAlchemy
 
-app.config['JWT_SECRET_KEY'] =  KeyManager.generate_key()
-jwt = JWTManager(app)
+# Configure JWT for authentication
+app.config['JWT_SECRET_KEY'] = KeyManager.generate_key()  # Generate a secret key for JWT
+jwt = JWTManager(app)  # Initialize JWTManager
 
+# Variable to track the last update timestamp
 last_update = round(time.time())
-# classi per le tabelle nel database:
 
-# plugTable:
-#   id : Integer
-#   name : String          //nome del plugin
-#   params : String        //parametri modificabili di un plugin
-#   description : String   //descrizione del plugin
+# Global dictionary to keep track of running routines
+running_routines = {}
+
+# Database table classes:
 
 class PlugTable(db.Model):
     __tablename__ = 'plugTable'
     id = db.Column(db.Integer, Sequence('plugin_id_seq'), primary_key=True)
-    name = db.Column(db.String(50), nullable=False)
+    name = db.Column(db.String(50), nullable=False, unique=True)
     params = db.Column(db.String(300), default="")
     description = db.Column(db.String(300), default="Il plugin non esiste")
 
@@ -43,17 +44,11 @@ class PlugTable(db.Model):
             'name': self.name
         }
 
-    def get_description(self):  # Renamed method
+    def get_description(self):  # Renamed method for clarity
         return {
             'params': self.params,
             'description': self.description
         }
-
-# log:
-#   idLog : Integer
-#   dateLog : String       //data dell'esecuzione
-#   success : Boolean      //esito dell'attacco (riuscito? true:false)
-#   result : String        //Informazioni ottenute dall'attacco sul suo esito
 
 class Log(db.Model):
     __tablename__ = 'Log'
@@ -65,14 +60,12 @@ class Log(db.Model):
     def __repr__(self):
         return '<Name %r>' % self.idLog
 
-    #CHANGE
     def logList(self):
         return {
             'id': self.idLog,
             'name': self.dateLog.strftime('%Y-%m-%d %H:%M:%S')
         }
 
-    #CHANGE
     def logData(self):
         return {
             'success': self.success,
@@ -80,168 +73,243 @@ class Log(db.Model):
             'date': self.dateLog.strftime('%Y-%m-%d %H:%M:%S')
         }
 
-# Output di default
+class Routine(db.Model):
+    __tablename__ = "routine"
+    id = db.Column(db.Integer, Sequence('id'), primary_key=True)
+    frequency = db.Column(db.Integer, nullable=False)
+    params = db.Column(db.String(300), default="")
+    script_id = db.Column(db.Integer, db.ForeignKey(PlugTable.id), nullable=False)
 
-# output di default all'accesso alla route del server con disclaimer
-# Le persone che hanno partecipato a questo progetto non hanno responsabilità
-# nella raccolta dei dati di chi accede a questo servizio
+    def __repr__(self):
+        return f"<Routine> \nid: {self.id}\nfrequency: {self.frequency}\nscript_id: {self.script_id}\nparams: {self.params}"
 
+    def info(self):
+        return frequency, params, script_id
+
+# Default output for server access
 @app.route("/")
 @jwt_required()
 def index():
     return "This server is hosting a service and every access is saved, neither the host or the team of development takes accountability for the information collected."
 
+# Login route for user authentication
 @app.route("/login", endpoint='login', methods=["POST"])
 def login():
     username = request.json.get('username', None)
     password = request.json.get('password', None)
-    print("username: "+username+"\tpassword: "+password) #DEBUG
+    print("username: "+username+"\tpassword: "+password)  # DEBUG
     if(username != "test" or password != "password"):
-        print("Login failed") #DEBUG
-        return jsonify({'msg':'Error, login failed'}), 401
+        print("Login failed")  # DEBUG
+        return jsonify({'msg': 'Error, login failed'}), 401
 
-    access_token = create_access_token(identity=username)
-    print('AccessToken: '+access_token) #DEBUG
+    access_token = create_access_token(identity=username)  # Create JWT token
+    print('AccessToken: '+access_token)  # DEBUG
     return jsonify(access_token=access_token), 200
 
-# Funzione per la lista dei plugin
-@app.route("/plugin_list", endpoint='plugin_list', methods=["GET"])
+# Function to get the list of plugins
+@app.route("/script_list", endpoint='script_list', methods=["GET"])
 @jwt_required()
-def plug_table():
-    pluginT = PlugTable.query.all()
-    if pluginT is None or not pluginT:
-        return "error 404, no such plugin has been found"
-    return jsonify([plugin.list() for plugin in pluginT])
+def script_list():
+    pluginT = PlugTable.query.all()  # Query all plugins
+    return jsonify([plugin.list() for plugin in pluginT]), 200  # Return list of plugins
 
-# Funzione per i dettagli del plugin
-@app.route("/plugin_details/<int:id>", endpoint='plugin_details', methods=["GET"])
+# Function to get details of a specific plugin
+@app.route("/script_details/<int:id>", endpoint='script_details', methods=["GET"])
 @jwt_required()
-def plug_table_details(id=0):
-    plugin = PlugTable.query.get(id)  # gestione dell'id tramite il metodo http GET
+def script_details(id=0):
+    plugin = PlugTable.query.get(id)  # Get plugin by ID
     if plugin is None:
-        return "error 404, no such plugin has been found"
-    return jsonify(plugin.get_description())  # Use the renamed method
+        return jsonify({"error": "Error 404, no such plugin has been found."}), 404
+    return jsonify(plugin.get_description()), 200  # Return plugin details
 
+# Function to get the list of tests
 @app.route("/test_list", endpoint='test_list', methods=["GET"])
 @jwt_required()
-def test_table():
-    testT = Log.query.all()
+def test_list():
+    testT = Log.query.all()  # Query all logs
     if testT is None or not testT:
-        return "error 404, no such test has been found"
-    return jsonify([test.logList() for test in testT])
+        return jsonify({"error": "Error 404, no such test has been found."}), 404
+    return jsonify([test.logList() for test in testT]), 200  # Return list of tests
 
+# Function to get details of a specific test
 @app.route("/test_details/<int:id>", endpoint='test_details', methods=["GET"])
 @jwt_required()
-def test_table_details(id=0):
-    test = Log.query.get(id)  # gestione dell'id tramite il metodo http GET
+def test_details(id=0):
+    test = Log.query.get(id)  # Get test by ID
     if test is None:
-        return "error 404, no such plugin has been found"
-    return jsonify(test.logData())  # Use the renamed method
+        return jsonify({"error": "Error 404, no such test has been found."}), 404
+    return jsonify(test.logData()), 200  # Return test details
 
+# Function to check for notifications based on timestamp
 @app.route("/notification/<int:timestamp>", endpoint='notification', methods=["GET"])
 @jwt_required()
-def get_notification(timestamp):
-    return jsonify({'update':last_update-timestamp})
+def notification(timestamp):
+    return jsonify({'update': (last_update - timestamp > 0)}), 200  # Check if there are updates
 
-
-# Funzione per caricare il plugin
-@app.route("/upload_plugin", endpoint='upload_plugin', methods=["POST"])
+# Function to upload a new plugin
+@app.route("/upload_script", endpoint='upload_script', methods=["POST"])
 @jwt_required()
-def new_plugin():
+def upload_script():
     global last_update
-    # Get the JSON data from the request
-    data = request.get_json()
+    data = request.get_json()  # Get JSON data from request
     if not data or 'name' not in data:
-        return jsonify({"error": "Invalid record"}), 404
+        return jsonify({"error": "Invalid record"}), 400
 
-    created = creaPlugin(data['name'], data['content'])
-    if created:
+    success, res = creaPlugin(data['name'], data['content'])  # Create plugin
+    if success:
+        print("PARAMSSSSS: ", res)
+        params = ", ".join(res)  # Join parameters into a string
         # Create a new plugin instance
         new_plugin = PlugTable(
             name=data['name'],
-            params='',  # DEBUG
+            params=params,  # DEBUG
             description=''  # DEBUG
         )
         # Add the new plugin to the database
         db.session.add(new_plugin)
         db.session.commit()
-        last_update = round(time.time())
+        last_update = round(time.time())  # Update last update timestamp
         print("Updated time: "+str(last_update))
-        # Return a success response
-        return jsonify({"message": "Plugin uploaded successfully"}), 201
+        return jsonify({"message": "Plugin uploaded successfully."}), 200  # Return success response
     else:
-        return jsonify({"error": "Error during creation"}), 404
+        return jsonify({"error": "Error during creation."}), 400
 
-# Esecuzione del plugin
-@app.route("/test_execute/<int:id>", endpoint='test_execute', methods=["POST"])
+# Function to execute a plugin
+@app.route("/execute/<int:id>", endpoint='execute', methods=["POST"])
 @jwt_required()
-def plug_table_details(id=0,parametri={}):
-    plugin = PlugTable.query.get(id)  # gestione dell'id tramite il metodo http GET
+def execute(id=0):
+    parametri = request.get_json()  # Get parameters from request
+    plugin = PlugTable.query.get(id)  # Get plugin by ID
     if plugin is None:
-        return "error 404, no such plugin has been found"
+        return jsonify({"error": "Error 404, no such plugin has been found."}), 404
 
-    extension = plugin.name.split('.')[1]
-    result = avvia_plugin(plugin.name ,parametri, extension)
-    logUpdate(result)
-    return jsonify(result) # Use the renamed method
+    result = avvia_plugin(plugin.name, parametri)  # Execute the plugin
+    logUpdate(result)  # Log the result
+    return jsonify(result), 200  # Return the result
 
-
-
-# Funzione per modificare i dati di un plugin
-@app.route("/edit_plugin/<int:id>", endpoint='edit_plugin', methods=["PATCH"])
-def modifyPlugin(id=0):
-    plugin = PlugTable.query.get(id)
-    data = request.get_json()
-    data = sanitize_dict(data)
-    if data['description'] == None and data['name'] == None:
-        return "nessun parametro passato"
+# Function to modify plugin data
+@app.route("/edit_script/<int:id>", endpoint='edit_script', methods=["PATCH"])
+def edit_script(id=0):
+    global last_update
+    plugin = PlugTable.query.get(id)  # Get plugin by ID
+    data = request.get_json()  # Get JSON data from request
+    data = sanitize_dict(data)  # Sanitize input data
+    if data['description'] is None and data['name'] is None:
+        return jsonify({"error": "No parameters passed."}), 400  # No parameters passed
     if data['name'] and rinomina_plugin(plugin.name, data['name']):
-        plugin.name = data['name']
+        plugin.name = data['name']  # Update plugin name
         db.session.commit()
     if data['description']:
-       plugin.description = data['description']
-       db.session.commit()
-
-#Eliminare dal sistema un plugin
-@app.route("/remove_plugin/<int:id>", endpoint='remove_plugin', methods=["GET"])
-def modifyPlugin(id=0):
-    plugin = PlugTable.query.get(id)
-    if plugin and elimina_plugin(plugin.name):
-        PlugTable.query.filter_by(id=id).delete()
+        plugin.description = data['description']  # Update plugin description
         db.session.commit()
-        return "200"
-    return "500"
+    last_update = round(time.time())  # Update last update timestamp
+    return jsonify({"message": "Plugin edited successfully."}), 200  # Return success response
 
+# Function to remove a plugin from the system
+@app.route("/remove_script/<int:id>", endpoint='remove_script', methods=["GET"])
+def remove_script(id=0):
+    global last_update
+    # Stop and remove running routines
+    if id in running_routines:
+        print("Stop")
+        thread, running_state = running_routines[id]
+        running_state['running'] = False  # Set the running state to False
+        thread.join()  # Wait for the thread to finish
+        del running_routines[id]  # Remove from the dictionary
+    # Query for all routines with the specified script_id
+    routines_to_delete = Routine.query.filter(Routine.script_id == id).all()
+    
+    # Check if any routines were found
+    if routines_to_delete:
+        for routine in routines_to_delete:
+            print(f"Deleting: {routine}")  # Optional: Print the routine being deleted
+            db.session.delete(routine)  # Delete the routine
+        db.session.commit()  # Commit the changes to the database
+    
+    plugin = PlugTable.query.get(id)  # Get plugin by ID
+    
+    if not plugin:
+        abort(404, description="Plugin not found")  # Return 404 if plugin does not exist
+    if elimina_plugin(plugin.name):  # Attempt to remove the plugin
+        db.session.delete(plugin)  # Delete plugin from database
+        db.session.commit()
+        last_update = round(time.time())  # Update last update timestamp
+        return jsonify({"message": "Plugin removed successfully."}), 200  # Return success response
+    abort(500, description="Failed to remove the plugin")  # Return 500 if removal fails
 
-# Funzione per ottenere la lista dei messaggi di log
+# Function to get the list of log messages
 @app.route("/log_list", endpoint='log_list', methods=["GET"])
 @jwt_required()
-def log():
-    log_entries = Log.query.all()
+def log_list():
+    log_entries = Log.query.all()  # Query all log entries
     if log_entries is None or not log_entries:
-        return "error 404"
-    return jsonify([log_entries.logList()])
+        return jsonify({"error": "Error 404, no log entries found."}), 404  # Return 404 if no log entries found
+    return jsonify([log_entry.logList() for log_entry in log_entries]), 200  # Return list of log entries
 
-@app.route("/set_routine", endpoint='set_routine', methods=["POST"])
+# Function to create a new routine
+@app.route("/create_routine", endpoint='create_routine', methods=["POST"])
 @jwt_required()
-def set_routine():
-    pass
+def create_routine():
+    data = sanitize_dict(request.get_json())  # Get and sanitize input data
 
+    new_routine = Routine(
+        frequency=data["frequency"],
+        script_id=data["script"],
+        params=str(data["params"])
+    )
+    db.session.add(new_routine)  # Add new routine to the database
+    db.session.commit()
+    plugin = PlugTable.query.get(data["script"])  # Get the associated plugin
+    start_routine_execution(plugin.name, data["params"], data["frequency"], plugin.id)  # Start routine execution
+    return jsonify({"message": "Routine created successfully."}), 200  # Return success response
 
-# Update del Log
+def start_routine_execution(script_name, vet_param, frequency_seconds, script_id):
+    """
+    Starts a background thread that executes the plugin at fixed intervals.
+    :param script_name: str, name of the plugin script (e.g. 'example.py')
+    :param vet_param: list, list of parameters to pass to the plugin
+    :param frequency_seconds: int, interval between executions in seconds
+    :param script_id: int, ID of the script to track the thread
+    """
+    # Use a dictionary to store the running state
+    running_state = {'running': True}
+    def routine_runner():
+        with app.app_context():
+            while running_state['running']:  # Check if the running state is True
+                timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                print(f"[{timestamp}] Executing routine: {script_name}")
+                logUpdate(avvia_plugin(script_name, vet_param))  # Execute the plugin and log the result
+                # Wait for the next execution
+                time.sleep(frequency_seconds)
+    # Start the thread in the background
+    t = threading.Thread(target=routine_runner, daemon=True)
+    t.start()
+    # Store the thread and running state in the global dictionary using script_id
+    running_routines[script_id] = (t, running_state)
+    return True
+
+# Function to update the log with the result of a plugin execution
 def logUpdate(result):
     newLog = Log(
-        dateLog = datetime.datetime.fromisoformat(str(result['datetime'])),
-        success=(result['status']=='finished'),  # DEBUG
-        result = result['log']  # DEBUG
+        dateLog=datetime.fromisoformat(str(result['datetime'])),  # Convert datetime string to datetime object
+        success=(result['status'] == 'finished'),  # Check if the execution was successful
+        result=result['log']  # Log the result
     )
-    db.session.add(newLog)
+    db.session.add(newLog)  # Add new log entry to the database
     db.session.commit()
     return None
 
+# Function to start the application and initialize the database
 def start():
     with app.app_context():
-        db.create_all()  # This will create the tables again
-    app.run(ssl_context=("./certificates/server.crt", "./certificates/server.key"), host="0.0.0.0", port=5000, debug=False)
+        db.create_all()  # Create the database tables
+        # Start all routines
+        routines = Routine.query.all()  # Query all routines
+        print(len(routines))
+        print(routines)
+        for routine in routines:
+            plugin = PlugTable.query.get(routine.script_id)  # Get the associated plugin
+            start_routine_execution(plugin.name, ast.literal_eval(routine.params), routine.frequency, plugin.id)  # Start routine execution
 
-# creaPlugin
+    # Run the Flask application with SSL
+    app.run(ssl_context=("./certificates/server.crt", "./certificates/server.key"), host="0.0.0.0", port=5000, debug=False)

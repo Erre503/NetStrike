@@ -1,82 +1,99 @@
 """
-Gestisce l'aggiornamento dell'interfaccia grafica.
+Manages the update of the graphical user interface (GUI).
 
-Questa classe fornisce metodi per aggiornare diversi elementi
-dell'interfaccia utente, come la lista dei plugin, i dettagli di un
-plugin selezionato e i risultati dei test eseguiti.
+This class provides methods to update various elements
+of the user interface, such as the list of plugins, the details of a
+selected plugin, and the results of executed tests.
 
-Attributi:
-    ui: Un riferimento all'interfaccia grafica da aggiornare.
-        Questo oggetto rappresenta il framework UI utilizzato, come
-        PyQt, Tkinter o un altro sistema di interfaccia grafica.
+Attributes:
+    ui: A reference to the graphical interface to be updated.
+        This object represents the UI framework used, such as
+        PyQt, Tkinter, or another GUI system.
 """
 class UIUpdater:
     """
-    Inizializza un'istanza di UIUpdater.
+    Initializes an instance of UIUpdater.
 
     Args:
-        ui: Il riferimento all'interfaccia grafica che sarà aggiornata
-            tramite i metodi di questa classe.
+        ui: The reference to the graphical interface that will be updated
+            through the methods of this class.
     """
     def __init__(self):
-        self.ui = None
+        self.ui = None  # Initialize the `ui` attribute to None
 
     """
-    Associa l'interfaccia grafica all'istanza di UIUpdater.
+    Associates the graphical interface with the UIUpdater instance.
 
     Args:
-        ui: Istanza della UI che verrà aggiornata dai metodi di questa classe.
+        ui: Instance of the UI that will be updated by the methods of this class.
 
-    Effetti:
-        - L'attributo `ui` viene aggiornato per puntare alla UI specificata.
+    Effects:
+        - The `ui` attribute is updated to point to the specified UI.
     """
     def initUI(self, ui):
-        self.ui = ui
+        self.ui = ui  # Update the `ui` attribute with the provided instance
 
     """
-    Aggiorna la lista nell'interfaccia grafica.
+    Updates the list in the graphical interface.
 
     Args:
-        items (dict): Dati per aggiornare la lista.
-            Struttura attesa:
-            - name (str): Nome.
-            - id (str): ID univoco.
+        items (dict): Data to update the list.
+            Expected structure:
+            - name (str): Name of the item.
+            - id (str): Unique ID of the item.
     """
     def aggiorna_lista(self, items):
-        self.ui.svuota_lista()
+        self.ui.svuota_lista()  # Clear the existing list in the interface
 
+        # Add each item to the list
         for item in items:
             self.ui.aggiungi_elemento(item["name"], str(item["id"]))
 
     """
-    Mostra i dettagli dell'elemento selezionato nell'interfaccia grafica.
+    Displays the details of the selected item in the graphical interface.
 
     Args:
-        details (dict): Un dizionario contenente i dettagli.
-            Struttura attesa:
-            - description (str): Descrizione.
-            - parameters (dict, opzionale): Parametri come chiave-valore.
+        details (dict): A dictionary containing the details.
+            Expected structure:
+            - description (str): Description of the item.
+            - parameters (dict, optional): Parameters as key-value pairs.
     """
     def aggiorna_dettagli(self, details):
-        self.ui.mostra_dettagli(details)
+        self.ui.mostra_dettagli(details)  # Show the provided details in the interface
 
     """
-    Mostra i risultati di un test eseguito nell'interfaccia grafica.
+    Displays the results of an executed test in the graphical interface.
 
     Args:
-        results (dict): Un dizionario contenente i risultati del test.
-            Struttura attesa:
-            - status (str): Stato del test (es. "success", "failed").
-            - log (str): Log dettagliato del test.
-            - datetime (str): Timestamp del test formattato (es. "YYYY-MM-DD HH:MM:SS").
+        results (dict): A dictionary containing the test results.
+            Expected structure:
+            - status (str): Status of the test (e.g., "success", "failed").
+            - log (str): Detailed log of the test.
+            - datetime (str): Formatted timestamp of the test (e.g., "YYYY-MM-DD HH:MM:SS").
     """
     def aggiorna_risultato_test(self, results):
+        # Extract results from the dictionary, providing default values
         status = results.get("status", "unknown")
         log = results.get("log", "")
         datetime = results.get("datetime", "N/A")
 
+        # Display the test results in the interface
         self.ui.mostra_risultato_test(
             status=status,
             log=log,
             datetime=datetime
         )
+
+    """
+    Displays the error in the graphical interface.
+
+    Args:
+        msg (str): The error message.
+    """
+    def show_error(self, msg):
+        print(f"MESSAGE {msg}")
+        self.ui.show_error(msg)
+
+    def notifica(self):
+        # Send a notification to the graphical interface
+        self.ui.notifica()

@@ -1,53 +1,64 @@
-import os, secrets
+import os  # Library for interacting with the operating system
+import secrets  # Library for generating secure random numbers
 
 class KeyManager:
     """
-    Genera una chiave casuale sicura della lunghezza specificata.
+    Manages the generation, storage, and retrieval of secure keys.
 
-    Args:
-        length (int): Lunghezza della chiave da generare. Il valore predefinito è 64 byte.
+    This class provides methods to generate a secure random key, store it in an environment variable,
+    retrieve it from the environment variable, and regenerate the key.
 
-    Returns:
-        str: Una chiave casuale generata in modo sicuro.
+    Attributes:
+        None
     """
+
     @staticmethod
     def generate_key(length=64):
-        KeyManager.store_key(secrets.token_urlsafe(length))
-        return KeyManager.retrieve_key()
+        """
+        Generates a secure random key of the specified length.
 
-    """
-    Memorizza la chiave generata in una variabile d'ambiente.
+        Args:
+            length (int): Length of the key to generate. Default is 64 bytes.
 
-    Args:
-        key (str): La chiave da memorizzare.
-        env_var_name (str): Il nome della variabile d'ambiente. Il valore predefinito è 'JWT_SECRET_KEY'.
-    """
+        Returns:
+            str: A securely generated random key.
+        """
+        KeyManager.store_key(secrets.token_urlsafe(length))  # Generate and store the key
+        return KeyManager.retrieve_key()  # Retrieve and return the stored key
+
     @staticmethod
     def store_key(key, env_var_name='JWT_SECRET_KEY'):
-        os.environ[env_var_name] = key
-        print(f"Chiave memorizzata nella variabile d'ambiente '{env_var_name}'.")
+        """
+        Stores the generated key in an environment variable.
 
-    """
-    Recupera la chiave dalla variabile d'ambiente specificata.
+        Args:
+            key (str): The key to store.
+            env_var_name (str): The name of the environment variable. Default is 'JWT_SECRET_KEY'.
+        """
+        os.environ[env_var_name] = key  # Store the key in the specified environment variable
+        print(f"Chiave memorizzata nella variabile d'ambiente '{env_var_name}'.")  # Print confirmation message
 
-    Args:
-        env_var_name (str): Il nome della variabile d'ambiente. Il valore predefinito è 'JWT_SECRET_KEY'.
-
-    Returns:
-        str: La chiave memorizzata nella variabile d'ambiente, oppure None se non trovata.
-    """
     @staticmethod
     def retrieve_key(env_var_name='JWT_SECRET_KEY'):
-        return os.environ.get(env_var_name)
+        """
+        Retrieves the key from the specified environment variable.
 
-    """
-    Rigenera la chiave e aggiorna la variabile d'ambiente.
+        Args:
+            env_var_name (str): The name of the environment variable. Default is 'JWT_SECRET_KEY'.
 
-    Args:
-        env_var_name (str): Il nome della variabile d'ambiente. Il valore predefinito è 'JWT_SECRET_KEY'.
-    """
+        Returns:
+            str: The key stored in the environment variable, or None if not found.
+        """
+        return os.environ.get(env_var_name)  # Return the value of the environment variable
+
     @staticmethod
     def regenerate_key(env_var_name='JWT_SECRET_KEY'):
-        new_key = KeyManager.generate_key()
-        KeyManager.store_key(new_key, env_var_name)
-        print("Chiave rigenerata.")
+        """
+        Regenerates the key and updates the environment variable.
+
+        Args:
+            env_var_name (str): The name of the environment variable. Default is 'JWT_SECRET_KEY'.
+        """
+        new_key = KeyManager.generate_key()  # Generate a new key
+        KeyManager.store_key(new_key, env_var_name)  # Store the new key in the environment variable
+        print("Chiave rigenerata.")  # Print confirmation message

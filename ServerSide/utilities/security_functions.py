@@ -1,43 +1,39 @@
-import html
-
+import html  # Library for handling HTML entities
 
 """
-Sanifica il parametro inserito rimuovendo caratteri HTML potenzialmente dannosi.
+Sanitizes the input parameter by removing potentially harmful HTML characters.
 
 Args:
-    param (str): Stringa da sanificare. Il valore viene sanificato solo se stringa.
+    param (str): The string to sanitize. The value is sanitized only if it is a string.
 
 Returns:
-    ret (str):
-        La stringa sanificata.
+    str: The sanitized string, or the original value if it is not a string.
 """
-def sanitize_input(param : str) -> str:
-    if(isinstance(param, str)):
-        return html.escape(param);
-    return param
+def sanitize_input(param: str) -> str:
+    if isinstance(param, str):  # Check if the parameter is a string
+        return html.escape(param)  # Escape HTML characters to prevent injection
+    return param  # Return the original value if it is not a string
 
 """
-Sanifica i valori del dizionario inserito attraverso la funzione sanitize_inputs.
+Sanitizes the values of the input dictionary using the sanitize_input function.
 
 Args:
-    input_dict (dict): Dizionario da sanificare.
+    input_dict (dict): The dictionary to sanitize.
 
 Returns:
-    ret (dict):
-        Il dizionario sanificata.
+    dict: The sanitized dictionary with safe values.
 """
-def sanitize_dict(input_dict : dict) -> dict:
-    return {key: sanitize_input(value) for key, value in input_dict.items()}
+def sanitize_dict(input_dict: dict) -> dict:
+    return {key: sanitize_input(value) for key, value in input_dict.items()}  # Sanitize each value in the dictionary
 
 """
-Sanifica i valori della lista inserita attraverso la funzione sanitize_input.
+Sanitizes the values of the input list using the sanitize_input function.
 
 Args:
-    input_list (list): Lista da sanificare.
+    input_list (list): The list to sanitize.
 
 Returns:
-    ret (list):
-        La lista sanificata.
+    list: The sanitized list with safe values.
 """
 def sanitize_list(input_list: list) -> list:
-    return [sanitize_input(item) for item in input_list]
+    return [sanitize_input(item) for item in input_list]  # Sanitize each item in the list
