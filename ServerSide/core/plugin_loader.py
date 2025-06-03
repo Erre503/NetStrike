@@ -6,7 +6,6 @@ import inspect  # Used to inspect parameters and class definitions
 import subprocess  # Used for executing bash files
 from pathlib import Path  # Used to get the current file path reference
 from datetime import datetime
-import platform  # Used to determine the operating system
 
 # Define the folder path for plugins
 FOLDER = Path(__file__).resolve().parent.parent / "plugins"
@@ -112,12 +111,8 @@ def avvia_plugin_bash(plugin, vet_param):
     """
     try:
         # Prepare the command to execute the Bash script
-        if platform.system() == "Windows":
-            shell = "powershell"  # Use PowerShell on Windows
-            comando = f"& {{ {comando} }}"
-        else:
-            shell = "/bin/bash"  # Use Bash on other systems
-            comando = f"bash {plugin}"
+        shell = "/bin/bash"
+        comando = f"bash {plugin}"
 
         # Prepare the environment variables
         env_vars = {**os.environ, **vet_param}  # Combine existing and new environment variables
