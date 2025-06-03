@@ -33,16 +33,15 @@ def rinomina_plugin(nomeVecchio, nomeNuovo):
         nomeNuovo (str): The new name for the file.
 
     Returns:
-        bool: True if renaming was successful, False otherwise.
+        str: Success or error message.
     """
     try:
         vecchio_path = FOLDER / nomeVecchio  # Get the old file path
         nuovo_path = FOLDER / nomeNuovo  # Get the new file path
         vecchio_path.rename(nuovo_path)  # Rename the file
-        return True
+        return "Plugin renamed successfully."
     except Exception:
-        print("Errore: impossibile rinominare il nome del file")  # Print error message
-        return False
+        return "Error: Unable to rename the file."
 
 def elimina_plugin(nome):
     """
@@ -52,22 +51,19 @@ def elimina_plugin(nome):
         nome (str): The name of the file to delete.
 
     Returns:
-        bool: True if deletion was successful, False otherwise.
+        str: Success or error message.
     """
     file_path = FOLDER / nome  # Get the file path
 
     try:
         os.remove(file_path)  # Remove the file
-        return True
+        return "Plugin deleted successfully."
     except FileNotFoundError:
-        print(f"Errore: il file '{file_path}' non esiste.")  # File not found error
-        return False
+        return f"Error: The file '{file_path}' does not exist."
     except PermissionError:
-        print(f"Errore: permesso negato per eliminare '{file_path}'.")  # Permission denied error
-        return False
+        return f"Error: Permission denied to delete '{file_path}'."
     except Exception as e:
-        print(f"Errore: impossibile eliminare il file '{file_path}'. Dettagli: {e}")  # General error
-        return False
+        return f"Error: Unable to delete the file '{file_path}'. Details: {e}"
 
 def estraiParametriBash(plugin):
     """
@@ -77,7 +73,7 @@ def estraiParametriBash(plugin):
         plugin (str): The name of the Bash plugin file.
 
     Returns:
-        list: A list of parameters extracted from the plugin.
+        list: A list of parameters extracted from the plugin or an error message.
     """
     try:
         comando = ["bash", plugin, "get_param"]  # Command to get parameters
@@ -85,7 +81,7 @@ def estraiParametriBash(plugin):
         listaParametri = parametri.stdout.strip().split(", ")  # Process the output
         return listaParametri
     except Exception:
-        return f"Errore nell'estrazione dei parametri Bash"  # Error message
+        return "Error extracting parameters from Bash."
 
 def interfacciaBash(content):
     """
@@ -130,9 +126,9 @@ def avvia_plugin_bash(plugin, vet_param):
         ret = subprocess.run(comando, shell=True, check=True, env=env_vars, executable=shell, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         return ret.stdout.decode('utf-8')  # Return the output
     except subprocess.CalledProcessError as e:
-        return f"Errore nell'esecuzione del plugin Bash: {e}"  # Error message for execution failure
+        return f"Error executing the Bash plugin: {e}"
     except Exception as e:
-        return f"Errore generico: {e}"  # General error message
+        return f"General error: {e}"
 
 def creaPluginPy(nome_file, contenuto):
     """
@@ -149,7 +145,7 @@ def creaPluginPy(nome_file, contenuto):
     file = FOLDER / nome_file  # Get the file path
 
     if file.is_file():  # Check if the file already exists
-        return False, None
+        return False, "Error: The file already exists."
 
     # Add required import
     full_content = f"from core.interfaccia_plugin import Interfaccia_Plugin \n\n{contenuto}"
@@ -182,20 +178,17 @@ def creaPluginPy(nome_file, contenuto):
         plugin_module = importlib.import_module('plugins.' + file_name)  # Remove ".py"
         plugin_instance = plugin_module.Plugin()  # Create the plugin instance
         params = plugin_instance.get_param()  # Get parameters from the plugin
-        print(f"PARAMS PLUGLOADER: {params}")
         return True, params  # Return success
 
     except (AttributeError, TypeError, NotImplementedError) as e:
-        print(f"Validation failed: {e}")  # DEBUG
         if file.is_file():
             os.remove(file)  # Remove the file if validation fails
-        return False, None  # Return failure
+        return False, f"Validation failed: {e}"
 
     except Exception as e:
-        print(f"An unexpected error occurred: {e}")  # DEBUG
         if file.is_file():
             os.remove(file)  # Remove the file if an unexpected error occurs
-        return False, None  # Return failure
+        return False, f"An unexpected error occurred: {e}"
 
 def creaPluginSh(nome_file, contenuto):
     """
@@ -209,16 +202,14 @@ def creaPluginSh(nome_file, contenuto):
         tuple: A tuple containing a success flag and None if successful, otherwise None.
     """
     if nome_file in os.listdir(FOLDER):  # Check if the file already exists
-        return False, None
+        return False, "Error: The file already exists."
     if interfacciaBash(contenuto):  # Check if the content meets the required interface
         percorso_file = os.path.join(FOLDER, nome_file)  # Get the file path
         with open(percorso_file, "w", encoding="utf-8") as file:  # Write the content to the file
             file.write(contenuto)
-        return True, None
+        return True, "Bash plugin created successfully."
     else:
-        if file.is_file():
-            os.remove(file)  # Remove the file if it does not meet the interface
-        return False, None
+        return False, "Error: The content does not meet the required interface."
 
 def creaPlugin(nome_file, contenuto):
     """
@@ -235,8 +226,7 @@ def creaPlugin(nome_file, contenuto):
         return creaPluginSh(nome_file, contenuto)
     if nome_file.endswith('.py'):  # Check for Python file
         return creaPluginPy(nome_file, contenuto)
-    print("Il tipo di file non e' supportato")  # Unsupported file type message
-    return None
+    return False, "Error: Unsupported file type."
 
 def avvia_plugin(nome_plugin, vet_param):
     """
@@ -260,10 +250,12 @@ def avvia_plugin(nome_plugin, vet_param):
             plugin_instance.set_param(vet_param)  # Set parameters for the plugin
             res['log'] = plugin_instance.execute()  # Execute the plugin
             res['status'] = 'finished'  # Set status to finished
+            return res
 
         except Exception as e:
-            res['log'] = f"Errore nell'importazione ed esecuzione del modulo Python {nome_plugin}: {e}"  # Error message
+            res['log'] = f"Error importing and executing the Python module {nome_plugin}: {e}"  # Error message
             res['status'] = 'failed'  # Set status to failed
+            return res
 
     # If the plugin is a Bash file
     elif extension == 'sh':
@@ -271,7 +263,8 @@ def avvia_plugin(nome_plugin, vet_param):
         percorso_file = FOLDER / nome_plugin
         res['log'] = avvia_plugin_bash(percorso_file, vet_param)  # Execute the Bash plugin
         res['status'] = 'finished'  # Set status to finished
+        return res
     else:
-        res['log'] = "Tipo di plugin non supportato."  # Unsupported plugin type message
+        res['log'] = "Error: Unsupported plugin type."  # Unsupported plugin type message
         res['status'] = 'failed'  # Set status to failed
-    return res  # Return the result
+        return res

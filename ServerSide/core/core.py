@@ -25,11 +25,6 @@ last_update = round(time.time())
 
 # Database table classes:
 
-# PlugTable:
-#   id : Integer
-#   name : String          // Name of the plugin
-#   params : String        // Modifiable parameters of a plugin
-#   description : String   // Description of the plugin
 class PlugTable(db.Model):
     __tablename__ = 'plugTable'
     id = db.Column(db.Integer, Sequence('plugin_id_seq'), primary_key=True)
@@ -52,11 +47,6 @@ class PlugTable(db.Model):
             'description': self.description
         }
 
-# Log:
-#   idLog : Integer
-#   dateLog : String       // Date of execution
-#   success : Boolean      // Outcome of the attack (successful? true:false)
-#   result : String        // Information obtained from the attack regarding its outcome
 class Log(db.Model):
     __tablename__ = 'Log'
     idLog = db.Column(db.Integer, Sequence('logId'), primary_key=True)
@@ -80,11 +70,6 @@ class Log(db.Model):
             'date': self.dateLog.strftime('%Y-%m-%d %H:%M:%S')
         }
 
-# Routine:
-#   id : Integer
-#   frequency : Integer    // Frequency of execution in seconds
-#   params : String        // Parameters for the routine
-#   script_id : Integer    // Foreign key referencing the plugin
 class Routine(db.Model):
     __tablename__ = "routine"
     id = db.Column(db.Integer, Sequence('id'), primary_key=True)
@@ -124,8 +109,8 @@ def login():
 def script_list():
     pluginT = PlugTable.query.all()  # Query all plugins
     if pluginT is None or not pluginT:
-        return "error 404, no such plugin has been found"
-    return jsonify([plugin.list() for plugin in pluginT])  # Return list of plugins
+        return jsonify({"error": "Error 404, no such plugin has been found."}), 404
+    return jsonify([plugin.list() for plugin in pluginT]), 200  # Return list of plugins
 
 # Function to get details of a specific plugin
 @app.route("/script_details/<int:id>", endpoint='script_details', methods=["GET"])
@@ -133,8 +118,8 @@ def script_list():
 def script_details(id=0):
     plugin = PlugTable.query.get(id)  # Get plugin by ID
     if plugin is None:
-        return "error 404, no such plugin has been found"
-    return jsonify(plugin.get_description())  # Return plugin details
+        return jsonify({"error": "Error 404, no such plugin has been found."}), 404
+    return jsonify(plugin.get_description()), 200  # Return plugin details
 
 # Function to get the list of tests
 @app.route("/test_list", endpoint='test_list', methods=["GET"])
@@ -142,8 +127,8 @@ def script_details(id=0):
 def test_list():
     testT = Log.query.all()  # Query all logs
     if testT is None or not testT:
-        return "error 404, no such test has been found"
-    return jsonify([test.logList() for test in testT])  # Return list of tests
+        return jsonify({"error": "Error 404, no such test has been found."}), 404
+    return jsonify([test.logList() for test in testT]), 200  # Return list of tests
 
 # Function to get details of a specific test
 @app.route("/test_details/<int:id>", endpoint='test_details', methods=["GET"])
@@ -151,14 +136,14 @@ def test_list():
 def test_details(id=0):
     test = Log.query.get(id)  # Get test by ID
     if test is None:
-        return "error 404, no such plugin has been found"
-    return jsonify(test.logData())  # Return test details
+        return jsonify({"error": "Error 404, no such test has been found."}), 404
+    return jsonify(test.logData()), 200  # Return test details
 
 # Function to check for notifications based on timestamp
 @app.route("/notification/<int:timestamp>", endpoint='notification', methods=["GET"])
 @jwt_required()
 def notification(timestamp):
-    return jsonify({'update': (last_update - timestamp > 0)})  # Check if there are updates
+    return jsonify({'update': (last_update - timestamp > 0)}), 200  # Check if there are updates
 
 # Function to upload a new plugin
 @app.route("/upload_script", endpoint='upload_script', methods=["POST"])
@@ -167,7 +152,7 @@ def upload_script():
     global last_update
     data = request.get_json()  # Get JSON data from request
     if not data or 'name' not in data:
-        return jsonify({"error": "Invalid record"}), 404
+        return jsonify({"error": "Invalid record"}), 400
 
     success, res = creaPlugin(data['name'], data['content'])  # Create plugin
     if success:
@@ -184,9 +169,9 @@ def upload_script():
         db.session.commit()
         last_update = round(time.time())  # Update last update timestamp
         print("Updated time: "+str(last_update))
-        return jsonify({"message": "Plugin uploaded successfully"}), 200  # Return success response
+        return jsonify({"message": "Plugin uploaded successfully."}), 200  # Return success response
     else:
-        return jsonify({"error": "Error during creation"}), 404
+        return jsonify({"error": "Error during creation."}), 400
 
 # Function to execute a plugin
 @app.route("/execute/<int:id>", endpoint='execute', methods=["POST"])
@@ -195,11 +180,11 @@ def execute(id=0):
     parametri = request.get_json()  # Get parameters from request
     plugin = PlugTable.query.get(id)  # Get plugin by ID
     if plugin is None:
-        return "error 404, no such plugin has been found"
+        return jsonify({"error": "Error 404, no such plugin has been found."}), 404
 
     result = avvia_plugin(plugin.name, parametri)  # Execute the plugin
     logUpdate(result)  # Log the result
-    return jsonify(result)  # Return the result
+    return jsonify(result), 200  # Return the result
 
 # Function to modify plugin data
 @app.route("/edit_script/<int:id>", endpoint='edit_script', methods=["PATCH"])
@@ -209,7 +194,7 @@ def edit_script(id=0):
     data = request.get_json()  # Get JSON data from request
     data = sanitize_dict(data)  # Sanitize input data
     if data['description'] is None and data['name'] is None:
-        return "nessun parametro passato"  # No parameters passed
+        return jsonify({"error": "No parameters passed."}), 400  # No parameters passed
     if data['name'] and rinomina_plugin(plugin.name, data['name']):
         plugin.name = data['name']  # Update plugin name
         db.session.commit()
@@ -217,7 +202,7 @@ def edit_script(id=0):
         plugin.description = data['description']  # Update plugin description
         db.session.commit()
     last_update = round(time.time())  # Update last update timestamp
-    return jsonify({"message": "Plugin edited successfully"}), 200  # Return success response
+    return jsonify({"message": "Plugin edited successfully."}), 200  # Return success response
 
 # Function to remove a plugin from the system
 @app.route("/remove_script/<int:id>", endpoint='remove_script', methods=["GET"])
@@ -232,7 +217,7 @@ def remove_script(id=0):
         PlugTable.query.filter_by(id=id).delete()  # Delete plugin from database
         db.session.commit()
         last_update = round(time.time())  # Update last update timestamp
-        return jsonify({"message": "Plugin removed successfully"}), 200  # Return success response
+        return jsonify({"message": "Plugin removed successfully."}), 200  # Return success response
 
     abort(500, description="Failed to remove the plugin")  # Return 500 if removal fails
 
@@ -242,8 +227,8 @@ def remove_script(id=0):
 def log_list():
     log_entries = Log.query.all()  # Query all log entries
     if log_entries is None or not log_entries:
-        return "error 404"  # Return 404 if no log entries found
-    return jsonify([log_entry.logList() for log_entry in log_entries])  # Return list of log entries
+        return jsonify({"error": "Error 404, no log entries found."}), 404  # Return 404 if no log entries found
+    return jsonify([log_entry.logList() for log_entry in log_entries]), 200  # Return list of log entries
 
 # Function to create a new routine
 @app.route("/create_routine", endpoint='create_routine', methods=["POST"])
@@ -260,7 +245,7 @@ def create_routine():
     db.session.commit()
     plugin = PlugTable.query.get(data["script"])  # Get the associated plugin
     start_routine_execution(plugin.name, data["params"], data["frequency"])  # Start routine execution
-    return "Success", 200  # Return success response
+    return jsonify({"message": "Routine created successfully."}), 200  # Return success response
 
 def start_routine_execution(script_name, vet_param, frequency_seconds):
     """

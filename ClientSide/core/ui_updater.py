@@ -84,6 +84,16 @@ class UIUpdater:
             datetime=datetime
         )
 
+    """
+    Displays the error in the graphical interface.
+
+    Args:
+        msg (str): The error message.
+    """
+    def show_error(self, msg):
+        print(f"MESSAGE {msg}")
+        self.ui.show_error(msg)
+
     def notifica(self):
         # Send a notification to the graphical interface
         self.ui.notifica()

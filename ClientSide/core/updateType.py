@@ -7,3 +7,4 @@ class UpdateType(Enum):
     DETTAGLI = 1  # Indicates that the interface should show the details of a plugin
     RISULTATI_TEST = 2  # Indicates that the interface should display the results of a test
     AGGIORNA_LISTA = 3  # Indicates that the interface should refresh the list
+    ERROR = 4 # Indicates that the interface should display the error message

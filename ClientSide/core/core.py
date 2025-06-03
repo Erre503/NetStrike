@@ -74,6 +74,8 @@ class ClientCore:
             self.ui_handler.notifica()
         elif update_type == UpdateType.RISULTATI_TEST:
             self.ui_handler.aggiorna_risultato_test(data)
+        elif update_type == UpdateType.ERROR:
+            self.ui_handler.show_error(data)
         else:
             logging.error("Type of UIUpdate unknown: %s", update_type)
 
@@ -134,10 +136,15 @@ class ClientCore:
             if response.status_code == 200:
                 ret = response.json()
             else:
-                logging.error("Error %s: %s", response.status_code, response.text)
+                error_message = f"Error {response.status_code}: {response.text}"
+                logging.error(error_message)
+                self.aggiorna_ui(error_message, UpdateType.ERROR)  # Call UI handler to show error
+                return None
 
         except Exception as e:
-            logging.error("Error during request: %s", e)
+            error_message = f"Error during request: {e}"
+            logging.error(error_message)
+            self.ui_handler.show_error(error_message)  # Call UI handler to show error
 
         return ret
 
@@ -159,12 +166,14 @@ class ClientCore:
     """
     def login(self, username, password):
         logging.info("Attempting to log in user: %s", username)
-        token = self.invia_richiesta('/login', 'POST', {'username': username, 'password': password}, False)['access_token']
-        if token:
+        response = self.invia_richiesta('/login', 'POST', {'username': username, 'password': password}, False)
+        if response and 'access_token' in response:
+            token = response['access_token']
             sf.save_token(token)
-            logging.info("User  %s logged in successfully.", username)
+            logging.info("User   %s logged in successfully.", username)
             return token
         logging.warning("Authentication failed for user: %s", username)
+        self.ui_handler.show_error("Authentication failed. Please check your credentials.")  # Show error in UI
 
     """
     Registers a new user with the provided credentials.
@@ -186,6 +195,7 @@ class ClientCore:
             self.login(username, password)
         else:
             logging.warning("Registration failed for user: %s", username)
+            self.ui_handler.show_error("Registration failed. Please try again.")  # Show error in UI
 
     """
     Logs out the user by removing the authentication token.
@@ -222,7 +232,7 @@ class ClientCore:
        - Updates the graphical interface with the received data.
     """
     def ottieni_dettagli_plugin(self, id_plugin):
-        dati = self.invia_richiesta('/script_details/' + id_plugin)
+        dati = self.invia_richiesta('/script_details/' + str(id_plugin))
         if dati:
             self.aggiorna_ui(dati, UpdateType.DETTAGLI)
 
@@ -249,7 +259,7 @@ class ClientCore:
        - Updates the graphical interface with the received data.
     """
     def ottieni_dettagli_test(self, id_test):
-        dati = self.invia_richiesta('/test_details/' + id_test)
+        dati = self.invia_richiesta('/test_details/' + str(id_test))
         if dati:
             self.aggiorna_ui(dati, UpdateType.DETTAGLI)
 
@@ -281,9 +291,10 @@ class ClientCore:
     def avvia_test(self, id_plugin, parametri):
         # Run the test in a separate thread
         threading.Thread(target=self.run_test, args=(id_plugin, parametri)).start()
+
     def run_test(self, id_plugin, parametri):
         # This method runs in a separate thread
-        risultati = self.invia_richiesta('/execute/' + id_plugin, 'POST', parametri)
+        risultati = self.invia_richiesta('/execute/' + str(id_plugin), 'POST', parametri)
         if risultati:
             # Update the UI on the main thread
             self.aggiorna_ui(risultati, UpdateType.RISULTATI_TEST)
@@ -306,10 +317,12 @@ class ClientCore:
                     self.invia_richiesta('/upload_script', 'POST', {'content': file.read(), 'name': name}, sanitize=False)
                 else:
                     logging.error("Nome file contiene valori non consentiti.")
+                    self.ui_handler.show_error("Invalid file name. Please check the file name.")  # Show error in UI
 
             self.ottieni_lista_plugin()
         except Exception as e:
             logging.error(f"Errore durante il caricamento del plugin: {e}")
+            self.ui_handler.show_error(f"Error during plugin upload: {e}")  # Show error in UI
 
     """
     Modifies an existing plugin on the server.
@@ -324,7 +337,7 @@ class ClientCore:
     """
     def modifica_plugin(self, id_plugin, name=None, description=None):
         # INPUT VALUES ARE NOT BEING VERIFIED
-        dati = self.invia_richiesta('/edit_script/' + id_plugin, 'PATCH', {'name': name, 'description': description})
+        dati = self.invia_richiesta('/edit_script/' + str(id_plugin), 'PATCH', {'name': name, 'description': description})
         if dati:
             self.aggiorna_ui(dati, UpdateType.LISTA)
 
@@ -339,7 +352,7 @@ class ClientCore:
         - Updates the plugin list after removal.
     """
     def rimuovi_plugin(self, id_plugin):
-        self.invia_richiesta('/remove_script/' + id_plugin, 'GET')
+        self.invia_richiesta('/remove_script/' + str(id_plugin), 'GET')
         self.ottieni_lista_plugin()
 
     """
@@ -354,9 +367,10 @@ class ClientCore:
     """
     def modifica_test(self, id_test, name):
         if sf.is_valid_input(name):
-            self.invia_richiesta('/edit_test/' + id_test, 'PATCH', {'name': name})
+            self.invia_richiesta('/edit_test/' + str(id_test), 'PATCH', {'name': name})
         else:
             logging.error("Valori inseriti non consentiti.")
+            self.ui_handler.show_error("Invalid input values.")  # Show error in UI
 
     """
     Creates a routine that executes the specified plugin every 'frequency' days with the given parameters.
@@ -404,8 +418,8 @@ class ClientCore:
     def poll_notifications(self):
         while self.poll:
             logging.debug("Polling for notifications...")
-            dati = self.invia_richiesta("/notification/" + str(self.last_update))["update"]
-            if dati is not None and dati:
+            dati = self.invia_richiesta("/notification/" + str(self.last_update))
+            if dati and "update" in dati and dati["update"]:
                 self.last_update = round(time.time())
                 logging.info("Received new notifications, updating UI.")
                 self.aggiorna_ui('', UpdateType.AGGIORNA_LISTA)

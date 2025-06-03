@@ -2,7 +2,7 @@ import customtkinter as ctk  # Import the customtkinter library for creating cus
 from tkinter import filedialog, messagebox  # Import file dialog and message box for user interactions
 from core.core import ClientCore  # Import the core application functionality
 import os  # Import the os module for interacting with the operating system
-
+import json
 
 class MainInterfaccia(ctk.CTkFrame):
     """
@@ -177,6 +177,29 @@ class MainInterfaccia(ctk.CTkFrame):
             datetime (str): The date and time of the test execution.
         """
         messagebox.showinfo("Test Result", f"Status: {status}\nLog: {log}\nDateTime: {datetime}")
+
+    def show_error(self, msg):
+        """
+        Displays the error in a message box.
+
+        Args:
+            msg (str): The error message.
+        """
+        try:
+            # Check if the message starts with "Error" and contains JSON
+            if msg.startswith("Error") and ':' in msg:
+                # Split the message to get the JSON part
+                json_part = msg.split(':', 1)[1].strip()
+                error_data = json.loads(json_part)  # Parse the JSON
+                error_message = error_data.get("error", "An unknown error occurred.")
+                error_code = msg.split(' ')[1]  # Extract the error code
+                formatted_message = f"Error Code: {error_code}\nError Message: {error_message}"
+            else:
+                formatted_message = msg  # Fallback to the original message if parsing fails
+        except json.JSONDecodeError:
+            formatted_message = "An unexpected error occurred. Please try again."
+        # Display the formatted error message
+        messagebox.showerror("Error", formatted_message)
 
     def selezionaPlugin(self, name):
         """
